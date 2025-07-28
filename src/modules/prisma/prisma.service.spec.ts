@@ -1,12 +1,14 @@
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from './prisma.service';
 import { vi } from 'vitest';
+import { PrismaService } from './prisma.service';
 
 describe('PrismaService', () => {
 	let service: PrismaService;
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
+			imports: [ConfigModule.forRoot({ isGlobal: true })],
 			providers: [PrismaService],
 		}).compile();
 
