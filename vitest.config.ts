@@ -8,11 +8,12 @@ export default defineConfig({
 		globals: true,
 		root: './',
 		environment: 'node',
+		include: ['**/*.spec.ts'],
 		coverage: {
 			reportsDirectory: './coverage',
 			reporter: ['text', 'html', 'lcov', 'cobertura'],
 			provider: 'v8',
-			include: ['src/**/*.{ts}'],
+			include: ['src/**/*.ts'],
 			exclude: [
 				'**/types/**',
 				'**/*.d.ts',
