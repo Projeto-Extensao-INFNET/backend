@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  postgresql:
+         container_name: db-projeto-extensao
+
+         image: bitnami/postgresql:latest
+
+         ports:
+           - ${POSTGRESQL_PORT}:${POSTGRESQL_PORT}
+
+         restart: unless-stopped
+
+         environment:
+           POSTGRESQL_USERNAME: ${POSTGRESQL_USERNAME}
+           POSTGRESQL_PASSWORD: ${POSTGRESQL_PASSWORD}
+           POSTGRESQL_DATABASE: ${POSTGRESQL_DATABASE}
+
+         volumes:
+           - postgres_data:/bitnami/postgresql
+
+volumes: 
+   postgres_data:
+    

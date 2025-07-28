@@ -22,7 +22,9 @@
 		"prisma:migrate": "bunx prisma migrate dev",
 		"prisma:generate": "bunx prisma generate",
 		"prisma:studio": "bunx prisma studio",
-		"prisma:seed": "ts-node prisma/seed.ts"
+		"prisma:seed": "ts-node prisma/seed.ts",
+		"docker:up": "docker compose up -d",
+		"docker:stop": "docker compose stop"
 	},
 	"dependencies": {
 		"@nestjs/common": "^11.0.1",
