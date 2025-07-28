@@ -1,0 +1,7 @@
+{
+	"src/**/*.ts": [
+		"biome lint --write",
+		"biome format . --write",
+		"bun run test:coverage"
+	]
+}
