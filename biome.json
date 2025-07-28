@@ -1,0 +1,24 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
+	"extends": [
+		"@nedcloarbr/biome-config/nestjs",
+		"@nedcloarbr/biome-config/ignore"
+	],
+	"linter": {
+		"rules": {
+			"style": {
+				"useImportType": "off"
+			}
+		}
+	},
+	"formatter": {
+		"indentStyle": "tab",
+		"indentWidth": 4,
+		"lineWidth": 80
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "single"
+		}
+	}
+}
