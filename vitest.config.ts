@@ -12,12 +12,11 @@ export default defineConfig({
 			reportsDirectory: './coverage',
 			reporter: ['text', 'html', 'lcov', 'cobertura'],
 			provider: 'v8',
-			include: ['src/**/*.{ts,js}'],
+			include: ['src/**/*.{ts}'],
 			exclude: [
 				'**/types/**',
 				'**/*.d.ts',
 				'**/mocks/**',
-				'**/*.test-utils.{ts}',
 				'src/main.ts',
 				'**/*.module.ts',
 			],
