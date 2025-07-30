@@ -38,6 +38,9 @@ jobs:
       - run: pnpm prisma:generate
       - name: Wait For E2E Database
         run: |
-          apt-get update && apt-get install -y wait-for-it
-          wait-for-it localhost:5434 --timeout=60
+          for i in {1..30}; do
+            nc -z localhost 5434 && echo "DB is up!" && break
+            echo "Waiting for DB..."
+            sleep 1
+          done
       - run: pnpm test:coverage:e2e

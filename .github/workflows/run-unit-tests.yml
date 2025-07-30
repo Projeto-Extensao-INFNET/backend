@@ -38,6 +38,9 @@ jobs:
       - run: pnpm prisma:generate
       - name: Wait For Test Database
         run: |
-          apt-get update && apt-get install -y wait-for-it
-          wait-for-it localhost:5433 --timeout=60
+          for i in {1..30}; do
+            nc -z localhost 5433 && echo "DB is up!" && break
+            echo "Waiting for DB..."
+            sleep 1
+          done
       - run: pnpm test:coverage
