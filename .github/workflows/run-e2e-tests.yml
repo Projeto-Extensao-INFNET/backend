@@ -24,4 +24,12 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm prisma:generate
+
+      - name: Start E2E Database
+        run: docker compose up -d postgresql-e2e
+      - name: Wait For E2E Database
+        run: |
+          apt-get update && apt-get install -y wait-for-it
+          wait-for-it localhost:5434 --timeout=60
+
       - run: pnpm test:coverage:e2e
