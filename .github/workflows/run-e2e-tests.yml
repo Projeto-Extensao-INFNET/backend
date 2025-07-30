@@ -13,6 +13,18 @@ jobs:
       name: Run E2E Tests
       runs-on: ubuntu-latest
 
+      services:
+        postgresql-e2e:
+          image: bitnami/postgresql:latest
+          ports:
+            - 5434:5432
+          volumes:
+            - postgres_data_e2e:/bitnami/postgresql
+          env:
+            POSTGRESQL_USERNAME: ${{ secrets.POSTGRESQL_USERNAME }}
+            POSTGRESQL_PASSWORD: ${{ secrets.POSTGRESQL_PASSWORD }}
+            POSTGRESQL_DATABASE: ${{ secrets.POSTGRESQL_DATABASE }}
+
       steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
@@ -24,12 +36,8 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm prisma:generate
-
-      - name: Start E2E Database
-        run: docker compose up -d postgresql-e2e
       - name: Wait For E2E Database
         run: |
           apt-get update && apt-get install -y wait-for-it
           wait-for-it localhost:5434 --timeout=60
-
       - run: pnpm test:coverage:e2e
