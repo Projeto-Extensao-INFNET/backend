@@ -36,6 +36,13 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm prisma:generate
+      - name: Create .env.test
+        run: |
+          echo "POSTGRESQL_USERNAME=${{ secrets.POSTGRESQL_USERNAME_TEST }}" > .env.test
+          echo "POSTGRESQL_PASSWORD=${{ secrets.POSTGRESQL_PASSWORD_TEST }}" >> .env.test
+          echo "POSTGRESQL_PORT=5433" >> .env.test
+          echo "POSTGRESQL_DATABASE=${{ secrets.POSTGRESQL_DATABASE_TEST }}" >> .env.test
+          echo "DATABASE_URL=\"postgresql://${{ secrets.POSTGRESQL_USERNAME_TEST }}:${{ secrets.POSTGRESQL_PASSWORD_TEST }}@localhost:5433/${{ secrets.POSTGRESQL_DATABASE_TEST }}?schema=public\"" >> .env.test
       - name: Wait For Test Database
         run: |
           for i in {1..30}; do
