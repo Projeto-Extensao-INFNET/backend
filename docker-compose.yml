@@ -13,6 +13,11 @@ services:
       POSTGRESQL_DATABASE: ${POSTGRESQL_DATABASE}
     volumes:
       - postgres_data:/bitnami/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRESQL_USERNAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   postgresql-test:
     container_name: db-projeto-extensao-test
@@ -27,6 +32,11 @@ services:
       POSTGRESQL_DATABASE: ${POSTGRESQL_DATABASE}
     volumes:
       - postgres_data_test:/bitnami/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRESQL_USERNAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   postgresql-e2e:
     container_name: db-projeto-extensao-e2e
@@ -41,6 +51,12 @@ services:
       POSTGRESQL_DATABASE: ${POSTGRESQL_DATABASE}
     volumes:
       - postgres_data_e2e:/bitnami/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRESQL_USERNAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 
 volumes:
   postgres_data:
