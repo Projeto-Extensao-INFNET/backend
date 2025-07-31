@@ -18,11 +18,13 @@ services:
     image: bitnami/postgresql:latest
     container_name: db-projeto-extensao-production
     ports:
-      - 5432:5432
+      - ${POSTGRESQL_PORT}:${POSTGRESQL_PORT}
     environment:
-      POSTGRESQL_USERNAME: postgres
-      POSTGRESQL_PASSWORD: postgres
-      POSTGRESQL_DATABASE: db_projeto_extensao_prod
+      POSTGRESQL_USERNAME: ${POSTGRESQL_USERNAME}
+      POSTGRESQL_PASSWORD: ${POSTGRESQL_PASSWORD}
+      POSTGRESQL_DATABASE: ${POSTGRESQL_DATABASE}
+    env_file:
+      - .env.production
     volumes:
       - postgres_data:/bitnami/postgresql
 
