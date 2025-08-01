@@ -1,0 +1,52 @@
+<mxfile host="65bd71144e">
+    <diagram id="R3o7cu8WSwsuCjEYCdSY" name="Page-1">
+        <mxGraphModel dx="1738" dy="1671" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="USER&amp;nbsp;&lt;div&gt;id: string&lt;/div&gt;&lt;div&gt;name: string&lt;/div&gt;&lt;div&gt;password: string&lt;/div&gt;&lt;div&gt;email: string&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(192, 192, 192);&quot;&gt;&lt;span&gt;ROLE: patient | professional | admin&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(192, 192, 192);&quot;&gt;&lt;span&gt;document_type: CPF | RG&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;document: string&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="310" y="320" width="210" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="SPECIALTY&lt;div&gt;id: string&lt;/div&gt;&lt;div&gt;name: string&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="100" width="210" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="PROFISSIONAL&amp;nbsp;&lt;div&gt;id: string&lt;/div&gt;&lt;div&gt;user_id: string&lt;/div&gt;&lt;div&gt;specialty_id: string&lt;/div&gt;&lt;div&gt;type_of_treatment_id: string [ ]&lt;/div&gt;&lt;div&gt;type_of_query: online_video_call | in_person&lt;/div&gt;&lt;div&gt;price: float&lt;/div&gt;&lt;div&gt;payment_method: pix | credit_card |&amp;nbsp;&lt;/div&gt;&lt;div&gt;gender: male | female | others&lt;/div&gt;&lt;div&gt;avatar_img: string&lt;/div&gt;&lt;div&gt;phone: string&amp;nbsp;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-50" y="100" width="248" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;startArrow=ERmany;startFill=0;endArrow=ERmany;endFill=0;endSize=10;startSize=10;" edge="1" parent="1" source="9" target="2">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="PROFESSIONAL AND PATIENT&lt;div&gt;id: string&lt;/div&gt;&lt;div&gt;professional_id: string&lt;/div&gt;&lt;div&gt;user_id: string&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-2" y="370" width="200" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.01;entryY=0.413;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=ERmany;startFill=0;endArrow=ERmany;endFill=0;strokeWidth=2;endSize=10;startSize=10;" edge="1" parent="1" source="8" target="4">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" style="edgeStyle=none;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.589;entryY=1.014;entryDx=0;entryDy=0;entryPerimeter=0;endSize=10;startSize=10;startArrow=ERone;startFill=0;endArrow=ERone;endFill=0;" edge="1" parent="1" source="9" target="8">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" style="html=1;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.1;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=ERzeroToOne;startFill=0;endArrow=ERone;endFill=0;endSize=10;startSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="8" target="2">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="TYPES OF TREATMENT&lt;div&gt;id: string&lt;/div&gt;&lt;div&gt;name: string&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry y="-100" width="160" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.523;entryY=0.071;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=ERmany;startFill=0;endArrow=ERmany;endFill=0;endSize=10;startSize=10;" edge="1" parent="1" source="22" target="8">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" style="edgeStyle=none;html=1;startArrow=classic;startFill=1;endArrow=classic;endFill=1;endSize=10;startSize=10;" edge="1" parent="1" source="27" target="29">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="SCHEDULES&lt;div&gt;id: string&lt;/div&gt;&lt;div&gt;professiona_id: string&lt;/div&gt;&lt;div&gt;schedules: Date&amp;nbsp;&lt;/div&gt;&lt;div&gt;is_available: boolean&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="-250" y="110" width="150" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" style="edgeStyle=none;html=1;entryX=0.992;entryY=0.538;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=ERmany;startFill=0;endSize=10;startSize=10;" edge="1" parent="1" source="8" target="27">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="USER AGENDA&lt;div&gt;id: string&lt;/div&gt;&lt;div&gt;schedule_id: string&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-235" y="330" width="120" height="110" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
