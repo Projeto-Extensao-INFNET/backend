@@ -12,7 +12,7 @@
 
 import { faker } from '@faker-js/faker';
 // ?? devo criar uma entidade User para não ter tanta dependência do prisma? essa entidade seria para manter a tipagem correta talvez?
-import { PrismaClient, type User } from '../generated/prisma'; 
+import { PrismaClient, type User } from '../generated/prisma';
 import { hashPassword } from '../src/utils';
 
 const prisma = new PrismaClient();
