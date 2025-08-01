@@ -11,23 +11,7 @@ Este repositório contém o backend do Projeto **FUTURO NOME DO PROJETO**, desen
 - **Vitest** — Testes automatizados
 - **Docker** — Containers para ambientes e banco de dados
 - **BiomeJs** — Linter e Formatter do projeto
-
-## Estrutura do projeto
-
-```
-├── src/                # Código-fonte principal
-│   ├── modules/        # Módulos da aplicação (ex: prisma, usuários, etc)
-│   ├── config/         # Configurações e schemas globais
-│   └── utils/          # Funções utilitárias
-├── prisma/             # Schema do Prisma e seeds
-├── test/               # Utilitários e ambientes de teste
-├── .husky/             # Hooks de git automatizados
-├── docker-compose*.yml # Arquivos de orquestração Docker
-├── Dockerfile          # Build da aplicação
-├── .env*               # Variáveis de ambiente
-└── README.md           # Documentação do projeto
-```
-
+  
 ## Sobre os arquivos de configuração e ambientes
 
 O projeto utiliza diferentes arquivos `.env` para separar as configurações de cada ambiente:
