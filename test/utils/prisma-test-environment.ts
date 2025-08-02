@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process';
-import { randomUUID } from 'node:crypto';
+import { generateUUID } from '@/utils';
 import { PrismaClient } from '../../generated/prisma';
 
 const generateDatabaseUrl = (schema: string) => {
@@ -12,7 +12,7 @@ const generateDatabaseUrl = (schema: string) => {
 };
 
 export const setupPrismaTestEnv = async () => {
-	const schema = randomUUID();
+	const schema = generateUUID();
 	const databaseUrl = generateDatabaseUrl(schema);
 	process.env.DATABASE_URL = databaseUrl;
 
