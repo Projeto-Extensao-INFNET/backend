@@ -1,4 +1,12 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Delete,
+	Get,
+	HttpCode,
+	Param,
+	Post,
+} from '@nestjs/common';
 import type { createUserBodySchema } from '@/schemas/CreateUserBodySchema';
 import { hashPassword } from '@/utils';
 import { PrismaService } from '../prisma/prisma.service';
@@ -9,8 +17,16 @@ export class UserController {
 
 	@Post()
 	@HttpCode(201)
-	async execute(@Body() body: createUserBodySchema) {
-		const { name, email, password } = body;
+	async create(@Body() body: createUserBodySchema) {
+		const {
+			name,
+			email,
+			password,
+			role,
+			birthDate,
+			document,
+			documentType,
+		} = body;
 
 		const userWithSameEmail = await this.prisma.user.findUnique({
 			where: {
@@ -19,19 +35,73 @@ export class UserController {
 		});
 
 		if (userWithSameEmail) {
-			throw new Error('Usuário com o mesmo email já existe'); // TODO criar uma Exception customizada
+			throw new Error('Usuário com o mesmo email já existe'); // ?? criar uma Exception customizada?
+		}
+
+		const userWithSameDocument = await this.prisma.user.findUnique({
+			where: {
+				document,
+			},
+		});
+
+		if (userWithSameDocument) {
+			throw new Error('Usuário com o mesmo documento já existe'); // ?? criar uma Exception customizada?
 		}
 
 		const hashedPassword = await hashPassword(password);
 
-		await this.prisma.user.create({
+		const user = await this.prisma.user.create({
 			data: {
 				name,
 				email,
 				password: hashedPassword,
-				role: 'PATIENT',
-				documentType: 'CPF',
-				document: '000.000.000-00',
+				birthDate: new Date(birthDate),
+				role,
+				documentType,
+				document,
+			},
+		});
+
+		return user;
+	}
+
+	@Get(':id')
+	@HttpCode(200)
+	async getUserById(@Param('id') id: string) {
+		const user = await this.prisma.user.findUnique({
+			where: {
+				id,
+			},
+		});
+
+		if (!user) {
+			return null; // ?? adicionar uma Exception customizada?
+		}
+
+		return user;
+	}
+	@Get()
+	@HttpCode(200)
+	async getUsers() {
+		const users = await this.prisma.user.findMany({
+			select: {
+				name: true,
+				email: true,
+				password: true,
+				birthDate: true,
+				role: true,
+			},
+		});
+
+		return users;
+	}
+
+	@Delete(':id')
+	@HttpCode(204)
+	async delete(@Param('id') id: string) {
+		await this.prisma.user.delete({
+			where: {
+				id,
 			},
 		});
 	}
