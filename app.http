@@ -1,17 +1,21 @@
 @baseUrl = http://localhost:3333
 
 # @name create_account
-
 POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-  "name": "Jhon Doe",
-  "email": "jhonDoe@acme.com",
+  "name": "Nathan Rodrigues",
+  "email": "nathanRodrigues@acme.com",
   "password": "12345678",
+  "birthDate": "2005-09-26",
   "role": "PATIENT",
   "documentType": "CPF",
   "document": "000.000.000-00"
 }
 
 ### 
+
+# @name get_user_by_id
+GET {{baseUrl}}/accounts/38499eda-ca01-4817-9679-5da744fa7f2d
+
