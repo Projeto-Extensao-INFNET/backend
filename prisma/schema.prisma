@@ -27,7 +27,7 @@ model User {
   birthDate    DateTime     @map("birth_date")
   role         ROLE
   documentType DocumentType @default(CPF) @map("document_type")
-  document     String
+  document     String       @unique
   createdAt    DateTime     @default(now()) @map("created_at")
   updatedAt    DateTime     @updatedAt @map("updated_at")
 
