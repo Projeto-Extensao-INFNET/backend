@@ -17,5 +17,13 @@ Content-Type: application/json
 ### 
 
 # @name get_user_by_id
-GET {{baseUrl}}/accounts/38499eda-ca01-4817-9679-5da744fa7f2d
+GET {{baseUrl}}/accounts/{{create_account.response.body.id}}
 
+###
+
+# @name get_users
+GET {{baseUrl}}/accounts
+###
+
+# @name delete_user
+DELETE  {{baseUrl}}/accounts/{{create_account.response.body.id}}
