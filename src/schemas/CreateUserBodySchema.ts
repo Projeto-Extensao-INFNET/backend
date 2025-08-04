@@ -4,6 +4,7 @@ export const CreateUserBodySchema = z.object({
 	name: z.string().min(1),
 	email: z.email(),
 	password: z.string(),
+	birthDate: z.iso.date(),
 	role: z.enum(['PATIENT', 'PROFESSIONAL', 'ADMIN']),
 	documentType: z.enum(['CPF', 'RG']),
 	document: z.string(),
