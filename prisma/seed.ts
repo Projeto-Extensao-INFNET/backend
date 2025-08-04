@@ -10,8 +10,8 @@
 // ** CRIAR TABELA DE AGENDA DO PROFISSIONAL []
 // ** CRIAR TABELA DE AGENDA DO PACIENTE []
 
-import { faker } from '@faker-js/faker';
-// ?? devo criar um arquivo entity para cada entidade do banco de dados para ter menos dependência do Prisma? 
+import { faker } from '@faker-js/faker/locale/pt_BR';
+// ?? devo criar um arquivo entity para cada entidade do banco de dados para ter menos dependência do Prisma?
 // ?? ou apenas criar interfaces e types?
 import { PrismaClient, type Specialty } from '../generated/prisma';
 import { hashPassword } from '../src/utils';
@@ -27,9 +27,10 @@ const seed = async () => {
 			name: faker.person.fullName(),
 			email: faker.internet.email(),
 			password: await hashPassword('12345678'),
+			birthDate: faker.date.birthdate(),
 			role: 'ADMIN',
 			documentType: 'RG',
-			document: '00.000.000-0',
+			document: faker.helpers.replaceSymbols('##.###.###-#'),
 		},
 	});
 
@@ -39,9 +40,10 @@ const seed = async () => {
 				name: faker.person.fullName(),
 				email: faker.internet.email(),
 				password: await hashPassword('12345678'),
+				birthDate: faker.date.birthdate(),
 				role: 'PROFESSIONAL',
 				documentType: 'CPF',
-				document: '000.000.000-00',
+				document: faker.helpers.replaceSymbols('###.###.###-##'),
 			},
 		});
 	}
@@ -51,9 +53,10 @@ const seed = async () => {
 				name: faker.person.fullName(),
 				email: faker.internet.email(),
 				password: await hashPassword('12345678'),
+				birthDate: faker.date.birthdate(),
 				role: 'PATIENT',
 				documentType: 'CPF',
-				document: '000.000.000-00',
+				document: faker.helpers.replaceSymbols('###.###.###-##'),
 			},
 		});
 	}
@@ -68,7 +71,13 @@ const seed = async () => {
 	specialtyList.push(...specialties);
 };
 
-seed().then(() => {
-	console.log('database seeded 🌱');
-	prisma.$disconnect();
-});
+seed()
+	.then(() => {
+		console.log('database seeded 🌱');
+	})
+	.catch((error) => {
+		console.error('error on seed database:', error);
+	})
+	.finally(async () => {
+		await prisma.$disconnect();
+	});
