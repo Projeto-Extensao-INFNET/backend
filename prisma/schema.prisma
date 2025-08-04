@@ -24,6 +24,7 @@ model User {
   name         String
   email        String       @unique
   password     String
+  birthDate    DateTime     @map("birth_date")
   role         ROLE
   documentType DocumentType @default(CPF) @map("document_type")
   document     String
@@ -61,7 +62,7 @@ model Specialty {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  Professional Professional[]
+  professional Professional?
 
   @@map("specialty")
 }
@@ -86,7 +87,7 @@ model Professional {
   userId String @unique @map("user_id")
 
   specialty   Specialty @relation(fields: [specialtyId], references: [id])
-  specialtyId String    @map("specialty_id")
+  specialtyId String    @unique @map("specialty_id")
 
   typeOfTreatment   TypesOfTreatment @relation(fields: [typeOfTreatmentId], references: [id])
   typeOfTreatmentId String           @map("type_of_treatment")
