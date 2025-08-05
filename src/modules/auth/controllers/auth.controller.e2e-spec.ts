@@ -13,34 +13,31 @@ TODO: TESTES E2E PARA LOGIN
    - [ ] Configurar JwtModule
    - [ ] Usar banco de teste
 
-
 */
 
-import { Test, TestingModule } from '@nestjs/testing';
-import { vi } from 'vitest';
-import { AuthService } from '../services/auth.service';
-import { AuthController } from './auth.controller';
+import type { INestApplication } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
+import { AppModule } from '@/app.module';
 
-describe('AuthController', () => {
-	let controller: AuthController;
+describe('AuthController (E2E)', () => {
+	let app: INestApplication;
 
-	beforeEach(async () => {
-		const mockAuthService = { SignIn: vi.fn() }; // !! FIX remover esse mock para usar implementação real do authService
-
-		const module: TestingModule = await Test.createTestingModule({
-			controllers: [AuthController],
-			providers: [
-				{
-					provide: AuthService, // !! FIX remover esse mock para usar implementação real do authService
-					useValue: mockAuthService, // !! FIX remover esse mock para usar implementação real do authService
-				},
-			],
+	beforeAll(async () => {
+		const moduleRef = await Test.createTestingModule({
+			imports: [AppModule],
 		}).compile();
 
-		controller = module.get<AuthController>(AuthController);
+		app = moduleRef.createNestApplication();
+
+		await app.init();
 	});
 
+	afterAll(async () => {
+		await app.close();
+	});
+
+	// Teste temporário para evitar erro "No test found in suite"
 	it('should be defined', () => {
-		expect(controller).toBeDefined();
+		expect(app).toBeDefined();
 	});
 });
