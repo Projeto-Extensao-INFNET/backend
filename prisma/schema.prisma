@@ -8,13 +8,140 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ROLE {
+  PATIENT
+  PROFESSIONAL
+  ADMIN
+}
+
+enum DocumentType {
+  CPF
+  RG
+}
+
 model User {
+  id           String       @id @default(uuid())
+  name         String
+  email        String       @unique
+  password     String
+  birthDate    DateTime     @map("birth_date")
+  role         ROLE
+  documentType DocumentType @default(CPF) @map("document_type")
+  document     String       @unique
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+
+  professional           Professional?
+  ProfessionalAndPatient ProfessionalAndPatient[]
+
+  UserAgenda UserAgenda[]
+
+  @@map("users")
+}
+
+enum TypeOfQuery {
+  ONLINE_VIDEO_CALL
+  IN_PERSON
+}
+
+enum PaymentMethod {
+  PIX
+  CREDIT_CARD
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  TRANSGENDER
+  NON_BINARY
+}
+
+model Specialty {
   id        String   @id @default(uuid())
   name      String
-  email     String   @unique
-  password  String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("users")
+  professional Professional?
+
+  @@map("specialty")
+}
+
+enum ProfessionalDocumentType {
+  CRM
+  CRP
+}
+
+model Professional {
+  id            String                   @id @default(uuid())
+  typeOfQuery   TypeOfQuery              @map("type_of_query")
+  price         Float
+  paymentMethod PaymentMethod            @map("payment_method")
+  documentType  ProfessionalDocumentType @map("document_type")
+  document      String
+  gender        Gender
+  avatar        String
+  phone         String?
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique @map("user_id")
+
+  specialty   Specialty @relation(fields: [specialtyId], references: [id])
+  specialtyId String    @unique @map("specialty_id")
+
+  typeOfTreatment   TypesOfTreatment @relation(fields: [typeOfTreatmentId], references: [id])
+  typeOfTreatmentId String           @map("type_of_treatment")
+
+  ProfessionalAndPatient ProfessionalAndPatient[]
+  Schedule               Schedule[]
+
+  @@map("professionals")
+}
+
+model TypesOfTreatment {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  Professional Professional[]
+
+  @@map("types_of_treatment")
+}
+
+model ProfessionalAndPatient {
+  id String @id @default(uuid())
+
+  professional   Professional @relation(fields: [professionalId], references: [id])
+  professionalId String       @map("professional_id")
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  @@map("professional_and_patient")
+}
+
+model Schedule {
+  id          String   @id @default(uuid())
+  isAvailable Boolean  @default(true)
+  schedules   DateTime
+
+  professional   Professional @relation(fields: [professionalId], references: [id])
+  professionalId String       @map("professional_id")
+
+  UserAgenda UserAgenda[]
+
+  @@map("schedules")
+}
+
+model UserAgenda {
+  id String @id @default(uuid())
+
+  schedule   Schedule @relation(fields: [scheduleId], references: [id])
+  scheduleId String   @map("schedule_id")
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  @@map("user_agenda")
 }

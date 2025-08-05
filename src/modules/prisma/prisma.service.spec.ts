@@ -9,7 +9,19 @@ describe('PrismaService', () => {
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			imports: [ConfigModule.forRoot({ isGlobal: true })],
-			providers: [PrismaService],
+			// Mock do PrismaService para evitar que o teste seja dependente do Docker estar rodando ou não
+			providers: [
+				{
+					provide: PrismaService,
+					useValue: {
+						$connect: vi.fn(),
+						$disconnect: vi.fn(),
+						onModuleInit: PrismaService.prototype.onModuleInit,
+						onModuleDestroy:
+							PrismaService.prototype.onModuleDestroy,
+					},
+				},
+			],
 		}).compile();
 
 		service = module.get<PrismaService>(PrismaService);
@@ -20,17 +32,13 @@ describe('PrismaService', () => {
 	});
 
 	it('should call $connect', async () => {
-		const spyConnect = vi.spyOn(service, '$connect');
-
 		await service.onModuleInit();
 
-		expect(spyConnect).toHaveBeenCalledTimes(1);
+		expect(service.$connect).toHaveBeenCalledTimes(1);
 	});
 	it('should call $disconnect', async () => {
-		const spyConnect = vi.spyOn(service, '$disconnect');
-
 		await service.onModuleDestroy();
 
-		expect(spyConnect).toHaveBeenCalledTimes(1);
+		expect(service.$disconnect).toHaveBeenCalledTimes(1);
 	});
 });

@@ -1,1 +1,4 @@
-bun run test:coverage
+pnpm test:coverage
+# pnpm test:e2e:coverage
+
+echo "pre-push hook has been executed 🚀"

@@ -17,13 +17,16 @@ jobs:
         postgresql-e2e:
           image: bitnami/postgresql:latest
           ports:
-            - 5434:5432
-          volumes:
-            - postgres_data_e2e:/bitnami/postgresql
+            - 5432:5432
           env:
-            POSTGRESQL_USERNAME: ${{ secrets.POSTGRESQL_USERNAME }}
-            POSTGRESQL_PASSWORD: ${{ secrets.POSTGRESQL_PASSWORD }}
-            POSTGRESQL_DATABASE: ${{ secrets.POSTGRESQL_DATABASE }}
+              POSTGRESQL_USERNAME: ${{ secrets.POSTGRESQL_USERNAME_TEST_E2E }}
+              POSTGRESQL_PASSWORD: ${{ secrets.POSTGRESQL_PASSWORD_TEST_E2E }}
+              POSTGRESQL_DATABASE: ${{ secrets.POSTGRESQL_DATABASE_TEST_E2E }}
+       
+      env:
+        DATABASE_URL: postgresql://${{ secrets.POSTGRESQL_USERNAME_TEST_E2E }}:${{ secrets.POSTGRESQL_PASSWORD_TEST_E2E }}@localhost:5432/${{ secrets.POSTGRESQL_DATABASE_TEST_E2E }}
+        CORS_ORIGIN: http://localhost:5173
+   
 
       steps:
       - uses: actions/checkout@v4
@@ -39,7 +42,7 @@ jobs:
       - name: Wait For E2E Database
         run: |
           for i in {1..30}; do
-            nc -z localhost 5434 && echo "DB is up!" && break
+            nc -z localhost 5432 && echo "DB is up!" && break
             echo "Waiting for DB..."
             sleep 1
           done

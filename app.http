@@ -1,0 +1,29 @@
+@baseUrl = http://localhost:3333
+
+# @name create_account
+POST {{baseUrl}}/accounts
+Content-Type: application/json
+
+{
+  "name": "Nathan Rodrigues",
+  "email": "nathanRodrigues@acme.com",
+  "password": "12345678",
+  "birthDate": "2005-09-26",
+  "role": "PATIENT",
+  "documentType": "CPF",
+  "document": "000.000.000-00"
+}
+
+### 
+
+# @name get_user_by_id
+GET {{baseUrl}}/accounts/{{create_account.response.body.id}}
+
+###
+
+# @name get_users
+GET {{baseUrl}}/accounts
+###
+
+# @name delete_user
+DELETE  {{baseUrl}}/accounts/{{create_account.response.body.id}}

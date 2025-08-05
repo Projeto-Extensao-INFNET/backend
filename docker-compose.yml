@@ -2,43 +2,23 @@ version: '3.9'
 
 services:
   postgresql:
-         container_name: db-projeto-extensao
-         image: bitnami/postgresql:latest
-         ports:
-           - ${POSTGRESQL_PORT}:${POSTGRESQL_PORT}
-         restart: unless-stopped
-         environment:
-           POSTGRESQL_USERNAME: ${POSTGRESQL_USERNAME}
-           POSTGRESQL_PASSWORD: ${POSTGRESQL_PASSWORD}
-           POSTGRESQL_DATABASE: ${POSTGRESQL_DATABASE}
-         volumes:
-           - postgres_data:/bitnami/postgresql
-
-  postgresql-test:
-    container_name: db-projeto-extensao-test
+    container_name: db-projeto-extensao
     image: bitnami/postgresql:latest
     ports:
-      - "5433:5432"
+      - "5432:5432"
+    restart: unless-stopped
     environment:
-      POSTGRESQL_USERNAME: postgres
-      POSTGRESQL_PASSWORD: postgres_test
-      POSTGRESQL_DATABASE: db_projeto_extensao_test
+      POSTGRESQL_USERNAME: ${POSTGRESQL_USERNAME}
+      POSTGRESQL_PASSWORD: ${POSTGRESQL_PASSWORD}
+      POSTGRESQL_DATABASE: ${POSTGRESQL_DATABASE}
     volumes:
-      - postgres_data_test:/bitnami/postgresql
-
-  postgresql-e2e:
-    container_name: db-projeto-extensao-e2e
-    image: bitnami/postgresql:latest
-    ports:
-      - "5434:5432"
-    environment:
-      POSTGRESQL_USERNAME: postgres
-      POSTGRESQL_PASSWORD: postgres_e2e
-      POSTGRESQL_DATABASE: db_projeto_extensao_e2e
-    volumes:
-      - postgres_data_e2e:/bitnami/postgresql
+      - postgres_data:/bitnami/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRESQL_USERNAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
-  postgres_data_test:
-  postgres_data_e2e:  
+
