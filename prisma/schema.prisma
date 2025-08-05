@@ -62,7 +62,7 @@ model Specialty {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  professional Professional?
+  professional Professional[]
 
   @@map("specialty")
 }
@@ -87,7 +87,7 @@ model Professional {
   userId String @unique @map("user_id")
 
   specialty   Specialty @relation(fields: [specialtyId], references: [id])
-  specialtyId String    @unique @map("specialty_id")
+  specialtyId String    @map("specialty_id")
 
   typeOfTreatment   TypesOfTreatment @relation(fields: [typeOfTreatmentId], references: [id])
   typeOfTreatmentId String           @map("type_of_treatment")
