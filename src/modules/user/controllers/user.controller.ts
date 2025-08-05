@@ -9,9 +9,9 @@ import {
 	Param,
 	Post,
 } from '@nestjs/common';
+import { PrismaService } from '@/modules/prisma/prisma.service';
 import type { createUserBodySchema } from '@/schemas/CreateUserBodySchema';
 import { hashPassword } from '@/utils';
-import { PrismaService } from '../prisma/prisma.service';
 
 /* 
 TODO: JWT SIMPLES - Proteger rotas do usuário:
