@@ -17,13 +17,15 @@ jobs:
         postgresql-e2e:
           image: bitnami/postgresql:latest
           ports:
-            - 5434:5432
-          volumes:
-            - postgres_data_e2e:/bitnami/postgresql
+            - 5432:5432
           env:
-            POSTGRESQL_USERNAME: ${{ secrets.POSTGRESQL_USERNAME }}
-            POSTGRESQL_PASSWORD: ${{ secrets.POSTGRESQL_PASSWORD }}
-            POSTGRESQL_DATABASE: ${{ secrets.POSTGRESQL_DATABASE }}
+              POSTGRESQL_USERNAME: ${{ secrets.POSTGRESQL_USERNAME_TEST_E2E }}
+              POSTGRESQL_PASSWORD: ${{ secrets.POSTGRESQL_PASSWORD_TEST_E2E }}
+              POSTGRESQL_DATABASE: ${{ secrets.POSTGRESQL_DATABASE_TEST_E2E }}
+       
+
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5434/postgres
 
       steps:
       - uses: actions/checkout@v4
