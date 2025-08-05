@@ -17,14 +17,23 @@ TODO: TESTES E2E PARA LOGIN
 */
 
 import { Test, TestingModule } from '@nestjs/testing';
+import { AuthService } from '../services/auth.service';
 import { AuthController } from './auth.controller';
 
 describe('AuthController', () => {
 	let controller: AuthController;
 
 	beforeEach(async () => {
+		const mockAuthService = { SignIn: vi.fn() }; // !! FIX remover esse mock para usar implementação real do authService
+
 		const module: TestingModule = await Test.createTestingModule({
 			controllers: [AuthController],
+			providers: [
+				{
+					provide: AuthService, // !! FIX remover esse mock para usar implementação real do authService
+					useValue: mockAuthService, // !! FIX remover esse mock para usar implementação real do authService
+				},
+			],
 		}).compile();
 
 		controller = module.get<AuthController>(AuthController);
