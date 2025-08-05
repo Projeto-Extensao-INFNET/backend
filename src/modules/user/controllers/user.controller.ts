@@ -10,7 +10,7 @@ import {
 	Post,
 } from '@nestjs/common';
 import { PrismaService } from '@/modules/prisma/prisma.service';
-import type { createUserBodySchema } from '@/schemas/CreateUserBodySchema';
+import type { CreateUserRequest } from '@/modules/user/dto/create-user.dto';
 import { hashPassword } from '@/utils';
 
 /* 
@@ -40,7 +40,7 @@ export class UserController {
 
 	@Post()
 	@HttpCode(201)
-	async create(@Body() body: createUserBodySchema) {
+	async create(@Body() body: CreateUserRequest) {
 		const {
 			name,
 			email,

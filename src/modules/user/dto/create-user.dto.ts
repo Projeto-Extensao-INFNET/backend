@@ -1,6 +1,6 @@
 import z from 'zod';
 
-export const CreateUserBodySchema = z
+export const CreateUserDTO = z
 	.object({
 		name: z.string().min(1),
 		email: z.email(),
@@ -32,4 +32,4 @@ export const CreateUserBodySchema = z
 		},
 	);
 
-export type createUserBodySchema = z.infer<typeof CreateUserBodySchema>;
+export type CreateUserRequest = z.infer<typeof CreateUserDTO>;
