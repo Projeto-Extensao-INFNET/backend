@@ -1,9 +1,11 @@
 import {
 	Body,
+	ConflictException,
 	Controller,
 	Delete,
 	Get,
 	HttpCode,
+	NotFoundException,
 	Param,
 	Post,
 } from '@nestjs/common';
@@ -35,7 +37,7 @@ export class UserController {
 		});
 
 		if (userWithSameEmail) {
-			throw new Error('Usuário com o mesmo email já existe'); // ?? criar uma Exception customizada?
+			throw new ConflictException('Usuário com o mesmo email já existe');
 		}
 
 		const userWithSameDocument = await this.prisma.user.findUnique({
@@ -45,7 +47,9 @@ export class UserController {
 		});
 
 		if (userWithSameDocument) {
-			throw new Error('Usuário com o mesmo documento já existe'); // ?? criar uma Exception customizada?
+			throw new ConflictException(
+				'Usuário com o mesmo documento já existe',
+			);
 		}
 
 		const hashedPassword = await hashPassword(password);
@@ -75,7 +79,7 @@ export class UserController {
 		});
 
 		if (!user) {
-			return null; // ?? adicionar uma Exception customizada?
+			throw new NotFoundException('Usuário não encontrado');
 		}
 
 		return user;
@@ -87,7 +91,6 @@ export class UserController {
 			select: {
 				name: true,
 				email: true,
-				password: true,
 				birthDate: true,
 				role: true,
 			},
