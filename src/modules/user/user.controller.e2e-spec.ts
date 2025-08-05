@@ -1,3 +1,50 @@
+/* 
+TODO: TESTES COM JWT
+
+⚠️ IMPORTANTE: ANTES DOS TESTES, PRECISA REFATORAR O user.controller.ts:
+   1. Adicionar @UseGuards(JwtAuthGuard) nas rotas GET e DELETE
+   2. Criar rotas /me para usuário logado acessar próprios dados
+   3. Configurar AuthModule e JwtModule
+
+QUANDO JWT ESTIVER FUNCIONANDO, ADICIONAR ESTES TESTES:
+
+1. TESTES PARA ROTAS PROTEGIDAS:
+   - [ ] GET /accounts/:id SEM token → deve dar erro 401
+   - [ ] GET /accounts/:id COM token → deve funcionar 200
+   - [ ] GET /accounts SEM token → deve dar erro 401  
+   - [ ] GET /accounts COM token PATIENT → deve dar erro 403
+   - [ ] GET /accounts COM token ADMIN → deve funcionar 200
+   - [ ] DELETE /accounts/:id SEM token → deve dar erro 401
+   - [ ] DELETE /accounts/:id COM token → deve funcionar 204
+
+2. TESTES PARA ROTAS /me (QUANDO CRIADAS):
+   - [ ] GET /accounts/me SEM token → deve dar erro 401
+   - [ ] GET /accounts/me COM token → deve retornar dados do usuário
+   - [ ] DELETE /accounts/me SEM token → deve dar erro 401
+   - [ ] DELETE /accounts/me COM token → deve deletar própria conta
+
+  HELPER FUNCTION PARA LOGIN:
+   ```typescript
+   async function loginAndGetToken(app, email, password) {
+     const response = await request(app.getHttpServer())
+       .post('/auth/login')
+       .send({ email, password });
+     return response.body.access_token;
+   }
+   ```
+
+3. EXEMPLO DE TESTE COM TOKEN:
+   ```typescript
+   it('should return 401 without token', async () => {
+     const response = await request(app.getHttpServer())
+       .get('/accounts/some-id');
+     expect(response.status).toBe(401);
+   });
+   ```
+
+RESUMO: Manter testes atuais + Adicionar versões com/sem token
+*/
+
 import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';

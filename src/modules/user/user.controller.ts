@@ -13,6 +13,27 @@ import type { createUserBodySchema } from '@/schemas/CreateUserBodySchema';
 import { hashPassword } from '@/utils';
 import { PrismaService } from '../prisma/prisma.service';
 
+/* 
+TODO: JWT SIMPLES - Proteger rotas do usuário:
+
+1. CRIAR GUARD SIMPLES PRIMEIRO:
+   - [ ] Criar pasta: src/guards/
+   - [ ] Criar arquivo: jwt.guard.ts
+   - [ ] Guard básico que verifica token
+
+2. USAR O GUARD NAS ROTAS:
+   - [ ] import { UseGuards } from '@nestjs/common';
+   - [ ] import { JwtGuard } from '@/guards/jwt.guard';
+   - [ ] @UseGuards(JwtGuard) nas rotas protegidas
+
+3. MUDAR ROTAS PARA /me:
+   - [ ] @Get('me') em vez de @Get(':id')
+   - [ ] @Delete('me') em vez de @Delete(':id')
+   - [ ] Pegar user da request: req.user.id
+
+RESUMO: Guard simples → Proteger rotas → Usar /me
+*/
+
 @Controller('/accounts')
 export class UserController {
 	constructor(private readonly prisma: PrismaService) {}
