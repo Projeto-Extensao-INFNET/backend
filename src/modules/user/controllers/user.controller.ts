@@ -6,8 +6,8 @@ import {
 	Get,
 	HttpCode,
 	NotFoundException,
-	Param,
 	Post,
+	Request,
 } from '@nestjs/common';
 import { PrismaService } from '@/modules/prisma/prisma.service';
 import type { CreateUserRequest } from '@/modules/user/dto/create-user.dto';
@@ -17,8 +17,8 @@ import { hashPassword } from '@/utils';
 TODO: JWT SIMPLES - Proteger rotas do usuário:
 
 1. CRIAR GUARD SIMPLES PRIMEIRO:
-   - [ ] Criar pasta: src/guards/
-   - [ ] Criar arquivo: jwt.guard.ts
+   - [x] Criar pasta: src/auth/guards/
+   - [x] Criar arquivo: jwt.guard.ts
    - [ ] Guard básico que verifica token
 
 2. USAR O GUARD NAS ROTAS:
@@ -27,12 +27,26 @@ TODO: JWT SIMPLES - Proteger rotas do usuário:
    - [ ] @UseGuards(JwtGuard) nas rotas protegidas
 
 3. MUDAR ROTAS PARA /me:
-   - [ ] @Get('me') em vez de @Get(':id')
-   - [ ] @Delete('me') em vez de @Delete(':id')
-   - [ ] Pegar user da request: req.user.id
+   - [x] @Get('me') em vez de @Get(':id')
+   - [x] @Delete('me') em vez de @Delete(':id')
+   - [x] Pegar user da request: req.user.id
 
-RESUMO: Guard simples → Proteger rotas → Usar /me
+4. Novas Rotas: 
+  - [] @Put('me') editar perfil (?)
+  - [] @Post('appointments') -> agendar consulta
+  - [] @Get('appointments/me') -> listar consultas do usuário
+  - [] @Put('appointments/:id') -> alterar consultas do usuário
+  - [] @Delete('appointments/:id') -> cancelar consultas do usuário
+  - [] @Get('professionals/:id') -> ver detalhes de um profissional (perfil do profissional?)
+
 */
+
+interface AuthenticatedRequest extends Request {
+	user: {
+		id: string;
+		email: string;
+	};
+}
 
 @Controller('/accounts')
 export class UserController {
@@ -90,12 +104,14 @@ export class UserController {
 		return user;
 	}
 
-	@Get(':id')
+	@Get('me')
 	@HttpCode(200)
-	async getUserById(@Param('id') id: string) {
+	async getUserById(@Request() req: AuthenticatedRequest) {
+		const userId = req.user.id;
+
 		const user = await this.prisma.user.findUnique({
 			where: {
-				id,
+				id: userId,
 			},
 		});
 
@@ -120,12 +136,14 @@ export class UserController {
 		return users;
 	}
 
-	@Delete(':id')
+	@Delete('me')
 	@HttpCode(204)
-	async delete(@Param('id') id: string) {
+	async delete(@Request() req: AuthenticatedRequest) {
+		const userId = req.user.id;
+
 		await this.prisma.user.delete({
 			where: {
-				id,
+				id: userId,
 			},
 		});
 	}
