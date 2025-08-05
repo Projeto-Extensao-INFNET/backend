@@ -43,7 +43,7 @@ GET {{baseUrl}}/professionals
 ###
 
 # @name get_professional_by_id
-GET {{baseUrl}}/professionals/123e4567-e89b-12d3-a456-426614174000
+GET {{baseUrl}}/professionals/63d353ec-6526-4ff4-86e1-f0b65654f13d
 
 ###
 
