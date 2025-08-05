@@ -1,6 +1,6 @@
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { vi } from 'vitest';
+import { PrismaServiceMock } from 'test/mocks/prismaService.mock';
 import { PrismaService } from './prisma.service';
 
 describe('PrismaService', () => {
@@ -10,18 +10,7 @@ describe('PrismaService', () => {
 		const module: TestingModule = await Test.createTestingModule({
 			imports: [ConfigModule.forRoot({ isGlobal: true })],
 			// Mock do PrismaService para evitar que o teste seja dependente do Docker estar rodando ou não
-			providers: [
-				{
-					provide: PrismaService,
-					useValue: {
-						$connect: vi.fn(),
-						$disconnect: vi.fn(),
-						onModuleInit: PrismaService.prototype.onModuleInit,
-						onModuleDestroy:
-							PrismaService.prototype.onModuleDestroy,
-					},
-				},
-			],
+			providers: [PrismaServiceMock],
 		}).compile();
 
 		service = module.get<PrismaService>(PrismaService);
