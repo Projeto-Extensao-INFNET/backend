@@ -17,6 +17,7 @@ TODO: TESTES E2E PARA LOGIN
 */
 
 import { Test, TestingModule } from '@nestjs/testing';
+import { vi } from 'vitest';
 import { AuthService } from '../services/auth.service';
 import { AuthController } from './auth.controller';
 

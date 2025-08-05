@@ -19,8 +19,12 @@ RESUMO: Buscar user → Verificar senha → Gerar token → Retornar
 */
 
 import { Injectable } from '@nestjs/common';
+import type { AuthResponseDto } from '../dto/auth.dto';
 
 @Injectable()
 export class AuthService {
-	async SignIn() {}
+	async SignIn(email: string, password: string): Promise<AuthResponseDto> {
+		// TODO: implementar esse método
+		throw new Error('Implementar este método');
+	}
 }
