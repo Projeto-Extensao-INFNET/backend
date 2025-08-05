@@ -6,19 +6,19 @@ TODO: JWT SIMPLES - Controller de Autenticação:
    - [ ] Retornar apenas { access_token: string }
 */
 
-// import { Body, Controller, Post } from '@nestjs/common';
-// import type { authBodySchema } from '@/schemas/AuthBodySchema';
-// import type { AuthResponseDto } from './auth.dto';
-// import type { AuthService } from './auth.service';
+import { Body, Controller, Post } from '@nestjs/common';
+import type { LoginRequest } from '@/modules/auth/dto/login.dto';
+import type { AuthResponseDto } from '../dto/auth.dto';
+import type { AuthService } from '../services/auth.service';
 
-// @Controller('auth')
-// export class AuthController {
-// 	constructor(private readonly authService: AuthService) {}
+@Controller('auth')
+export class AuthController {
+	constructor(private readonly authService: AuthService) {}
 
-// 	@Post('login')
-// 	SignIn(@Body() body: authBodySchema): AuthResponseDto {
-// 		const { email, password } = body;
+	@Post('login')
+	SignIn(@Body() body: LoginRequest): AuthResponseDto {
+		const { email, password } = body;
 
-// 		return this.authService.SignIn(email, password);
-// 	}
-// }
+		return this.authService.SignIn(email, password);
+	}
+}
