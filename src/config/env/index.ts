@@ -7,6 +7,7 @@ export const envSchema = z.object({
 		.enum(['development', 'test', 'production'])
 		.default('development'),
 	CORS_ORIGIN: z.url().startsWith('http://localhost:'),
+	JWT_SECRET: z.string(),
 });
 
 export type Env = z.infer<typeof envSchema>;
