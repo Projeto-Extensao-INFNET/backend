@@ -1,312 +1,41 @@
 @baseUrl = http://localhost:3333
 
-# TODO: JWT - Modificações necessárias após implementar JWT:
-# - [ ] Criar rota POST /auth/login para obter token
-# - [ ] Adicionar Authorization header nas rotas protegidas
-# - [ ] Mudar GET /accounts/:id para GET /accounts/me (com token)
-# - [ ] Mudar DELETE /accounts/:id para DELETE /accounts/me (com token)
-# - [ ] Testar fluxo: 1. Criar conta → 2. Fazer login → 3. Usar token nas rotas protegidas
-
-#
 # 🔓 ROTAS PÚBLICAS (sem autenticação)
-#
-# @name create_account
-POST {{baseUrl}}/accounts
-Content-Type: application/json
-
-{
-  "name": "Cabo das Tormentas",
-  "email": "cabo@acme.com",
-  "password": "12345678",
-  "birthDate": "1498-09-26",
-  "role": "PATIENT",
-  "documentType": "CPF",
-  "document": "333.436.555-00"
-}
 
 ### 
+# Cadastrar um usuário
+# @name SignUp
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+ 
+ {
+  "name": "Bombardilo Crocodilo",
+  "email": "bombardilo@acme.com",
+  "password": "12345678",
+  "birthDate": "1990-01-01T00:00:00.000Z", 
+  "role": "PATIENT",
+  "documentType": "CPF",
+  "document": "123.456.789-99"
+}
 
-# @name login
-# TODO: [ ] Implementar rota de login
-# POST {{baseUrl}}/auth/login
-# Content-Type: application/json
-# {
-#   "email": "cabo@acme.com",
-#   "password": "12345678"
-# }
+###
+# fazer login para obter token jwt
+# @name SignIn
+POST {{baseUrl}}/auth/signin
+Content-Type: application/json
+ 
+ {
+  "email": "bombardilo@acme.com",
+  "password": "12345678"
+}
 
 ###
 
-# @name list_professionals
-GET {{baseUrl}}/professionals
+# 👤 ROTAS DE USUÁRIOS (com autenticação)
 
-###
+# ver o perfil do usuário logado
+# @name get_user_profile
+GET {{baseUrl}}/accounts/me
+Authorization: Bearer {{SignIn.response.body.accessToken}}
 
-# @name get_professional_by_id
-GET {{baseUrl}}/professionals/63d353ec-6526-4ff4-86e1-f0b65654f13d
-
-###
-
-# @name get_specialties
-# TODO: [ ] Implementar rota de listar especialidades disponíveis
-# GET {{baseUrl}}/specialties
-
-###
-
-# @name get_treatment_types
-# TODO: [ ] Implementar rota de listar tipos de tratamentos disponíveis
-# GET {{baseUrl}}/treatment-types
-
-###
-
-#
-# 🔒 ROTAS PROTEGIDAS (requerem JWT)
-#
-
-# 👤 PACIENTE - Perfil
-# @name get_user_me
-# TODO: [ ] Mudar para GET /accounts/me com Authorization header
-GET {{baseUrl}}/accounts/{{create_account.response.body.id}}
-
-###
-
-# @name update_user_me
-# TODO: [ ] Implementar PUT /accounts/me com Authorization header
-# PUT {{baseUrl}}/accounts/me
-# Authorization: Bearer {{login.response.body.token}}
-# Content-Type: application/json
-# {
-#   "name": "Nome Atualizado"
-# }
-
-###
-
-# @name delete_user_me
-# TODO: [ ] Mudar para DELETE /accounts/me com Authorization header
-DELETE {{baseUrl}}/accounts/{{create_account.response.body.id}}
-
-###
-
-# 👤 PACIENTE - Agendamentos
-# @name create_appointment
-# TODO: [ ] Implementar rota de agendamento de consultas
-# POST {{baseUrl}}/appointments
-# Authorization: Bearer {{login.response.body.token}}
-# Content-Type: application/json
-# {
-#   "professionalId": "123e4567-e89b-12d3-a456-426614174000",
-#   "scheduleId": "123e4567-e89b-12d3-a456-426614174001",
-#   "date": "2025-08-10T10:00:00.000Z"
-# }
-
-###
-
-# @name get_appointments_me
-# TODO: [ ] Implementar rota de listagem de consultas do usuário
-# GET {{baseUrl}}/appointments/me
-# Authorization: Bearer {{login.response.body.token}}
-
-###
-
-# @name update_appointment
-# TODO: [ ] Implementar rota de editar consulta
-# PUT {{baseUrl}}/appointments/123e4567-e89b-12d3-a456-426614174002
-# Authorization: Bearer {{login.response.body.token}}
-# Content-Type: application/json
-# {
-#   "date": "2025-08-11T14:00:00.000Z"
-# }
-
-###
-
-# @name delete_appointment
-# TODO: [ ] Implementar rota de cancelar consulta
-# DELETE {{baseUrl}}/appointments/123e4567-e89b-12d3-a456-426614174002
-# Authorization: Bearer {{login.response.body.token}}
-
-###
-
-# 👨‍⚕️ PROFISSIONAL - Agenda
-# @name create_schedule
-# TODO: [ ] Implementar rota de criar horários disponíveis
-# POST {{baseUrl}}/schedules
-# Authorization: Bearer {{login.response.body.token}}
-# Content-Type: application/json
-# {
-#   "date": "2025-08-10",
-#   "startTime": "09:00",
-#   "endTime": "17:00",
-#   "intervalMinutes": 60
-# }
-
-###
-
-# @name get_schedules_me
-# TODO: [ ] Implementar rota de ver própria agenda
-# GET {{baseUrl}}/schedules/me
-# Authorization: Bearer {{login.response.body.token}}
-
-###
-
-# @name update_schedule
-# TODO: [ ] Implementar rota de editar horário
-# PUT {{baseUrl}}/schedules/123e4567-e89b-12d3-a456-426614174003
-# Authorization: Bearer {{login.response.body.token}}
-# Content-Type: application/json
-# {
-#   "startTime": "08:00",
-#   "endTime": "18:00"
-# }
-
-###
-
-# @name delete_schedule
-# TODO: [ ] Implementar rota de remover horário
-# DELETE {{baseUrl}}/schedules/123e4567-e89b-12d3-a456-426614174003
-# Authorization: Bearer {{login.response.body.token}}
-
-###
-
-# @name get_professional_appointments
-# TODO: [ ] Implementar rota de ver agendamentos com pacientes
-# GET {{baseUrl}}/appointments/me
-# Authorization: Bearer {{login.response.body.token}}
-
-###
-
-# @name upload_avatar
-# TODO: [ ] Implementar rota de upload foto de perfil
-# POST {{baseUrl}}/profile/avatar
-# Authorization: Bearer {{login.response.body.token}}
-# Content-Type: multipart/form-data
-
-###
-
-# @name get_patients_me
-# TODO: [ ] Implementar rota de ver pacientes agendados
-# GET {{baseUrl}}/patients/me
-# Authorization: Bearer {{login.response.body.token}}
-
-###
-
-# 👑 ADMIN - Gestão de usuários
-# @name get_all_users
-# TODO: [ ] Adicionar Authorization header - apenas ADMIN pode listar todos
-GET {{baseUrl}}/accounts
-
-###
-
-# @name get_user_by_id_admin
-# TODO: [ ] Implementar rota para admin ver usuário específico
-# GET {{baseUrl}}/accounts/123e4567-e89b-12d3-a456-426614174000
-# Authorization: Bearer {{admin_login.response.body.token}}
-
-###
-
-# @name update_user_admin
-# TODO: [ ] Implementar rota para admin editar qualquer usuário
-# PUT {{baseUrl}}/accounts/123e4567-e89b-12d3-a456-426614174000
-# Authorization: Bearer {{admin_login.response.body.token}}
-# Content-Type: application/json
-# {
-#   "name": "Nome Alterado pelo Admin"
-# }
-
-###
-
-# @name delete_user_admin
-# TODO: [ ] Implementar rota para admin excluir qualquer usuário
-# DELETE {{baseUrl}}/accounts/123e4567-e89b-12d3-a456-426614174000
-# Authorization: Bearer {{admin_login.response.body.token}}
-
-###
-
-# @name change_user_role
-# TODO: [ ] Implementar rota para alterar role do usuário
-# PUT {{baseUrl}}/accounts/123e4567-e89b-12d3-a456-426614174000/role
-# Authorization: Bearer {{admin_login.response.body.token}}
-# Content-Type: application/json
-# {
-#   "role": "PROFESSIONAL"
-# }
-
-###
-
-# @name change_user_status
-# TODO: [ ] Implementar rota para suspender/reativar conta
-# PUT {{baseUrl}}/accounts/123e4567-e89b-12d3-a456-426614174000/status
-# Authorization: Bearer {{admin_login.response.body.token}}
-# Content-Type: application/json
-# {
-#   "status": "SUSPENDED"
-# }
-
-###
-
-# 👑 ADMIN - Gestão de agendamentos
-# @name get_all_appointments
-# TODO: [ ] Implementar rota para ver todos os agendamentos
-# GET {{baseUrl}}/appointments
-# Authorization: Bearer {{admin_login.response.body.token}}
-
-###
-
-# 👑 ADMIN - Gestão de especialidades
-# @name create_specialty
-# TODO: [ ] Implementar rota para criar especialidade
-# POST {{baseUrl}}/specialties
-# Authorization: Bearer {{admin_login.response.body.token}}
-# Content-Type: application/json
-# {
-#   "name": "Psicologia Infantil",
-#   "description": "Especialidade focada em crianças"
-# }
-
-###
-
-# @name update_specialty
-# TODO: [ ] Implementar rota para editar especialidade
-# PUT {{baseUrl}}/specialties/123e4567-e89b-12d3-a456-426614174004
-# Authorization: Bearer {{admin_login.response.body.token}}
-# Content-Type: application/json
-# {
-#   "name": "Psicologia Infantil Atualizada"
-# }
-
-###
-
-# @name delete_specialty
-# TODO: [ ] Implementar rota para excluir especialidade
-# DELETE {{baseUrl}}/specialties/123e4567-e89b-12d3-a456-426614174004
-# Authorization: Bearer {{admin_login.response.body.token}}
-
-###
-
-# 👑 ADMIN - Gestão de tipos de tratamento
-# @name create_treatment_type
-# TODO: [ ] Implementar rota para criar tipo de tratamento
-# POST {{baseUrl}}/treatment-types
-# Authorization: Bearer {{admin_login.response.body.token}}
-# Content-Type: application/json
-# {
-#   "name": "Terapia Cognitivo-Comportamental",
-#   "description": "Abordagem terapêutica focada em padrões de pensamento"
-# }
-
-###
-
-# @name update_treatment_type
-# TODO: [ ] Implementar rota para editar tipo de tratamento
-# PUT {{baseUrl}}/treatment-types/123e4567-e89b-12d3-a456-426614174005
-# Authorization: Bearer {{admin_login.response.body.token}}
-# Content-Type: application/json
-# {
-#   "name": "TCC Atualizada"
-# }
-
-###
-
-# @name delete_treatment_type
-# TODO: [ ] Implementar rota para excluir tipo de tratamento
-# DELETE {{baseUrl}}/treatment-types/123e4567-e89b-12d3-a456-426614174005
-# Authorization: Bearer {{admin_login.response.body.token}}
+### 
