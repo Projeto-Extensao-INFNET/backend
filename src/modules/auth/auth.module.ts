@@ -1,21 +1,28 @@
-/* 
-TODO: JWT SIMPLES - Module de Autenticação:
-
-1. CONFIGURAÇÃO BÁSICA:
-   - [ ] Adicionar JwtModule com configuração simples
-   - [ ] Adicionar variável JWT_SECRET no .env e no envSchema
-
-2. IMPORTS MÍNIMOS:
-   - [ ] import { JwtModule } from '@nestjs/jwt';
-   - [ ] import { PrismaModule } from '../prisma/prisma.module';
-*/
-
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import type { Env } from '@/config/env';
+import { PrismaModule } from '@/modules/prisma/prisma.module';
 import { AuthController } from './controllers/auth.controller';
+import { JwtStrategy } from './jwt.strategy';
 import { AuthService } from './services/auth.service';
 
 @Module({
-	providers: [AuthService],
+	imports: [
+		PrismaModule,
+		PassportModule,
+		ConfigModule,
+		JwtModule.registerAsync({
+			inject: [ConfigService],
+			useFactory: (config: ConfigService<Env, true>) => ({
+				secret: config.get('JWT_SECRET'),
+				signOptions: { expiresIn: '30m' },
+			}),
+		}),
+	],
+	providers: [AuthService, JwtStrategy],
+	exports: [AuthService],
 	controllers: [AuthController],
 })
 export class AuthModule {}
