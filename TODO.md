@@ -2,10 +2,10 @@
 
 ## Requisitos do Sistema
 
-- [ ] Validação dos dados
+- [ ] Validação dos dados 
 - [ ] Deploy em alguma plataforma (Vercel ou Render)
 - [ ] Cache com redis (?)
-- [ ] Testes unitários, integração e E2E com vitest + supertest
+- [] Testes unitários, integração e E2E com vitest + supertest
 
 ## Regras Gerais do Sistema
 
@@ -23,7 +23,7 @@
 
 #### ✅ Pode
 
-- [ ] Se cadastrar
+- [x] Se cadastrar
 - [ ] Consultar lista de profissionais
 - [ ] Editar somente seu propio perfil ( do usuário logado)
 - [ ] Excluir somente seu propio usuario logado
@@ -79,68 +79,69 @@
 
 ## 📋 API Routes
 
-- [ ] Autenticação JWT
+- [x] Autenticação JWT - ✅ **Auth module implementado**
 - [ ] Proteção de rotas
 - [ ] RBAC - Autorização baseada em roles (PATIENT, PROFESSIONAL, ADMIN)
 - [ ] Documentação com SWAGGER
 
 ### 🔓 Rotas Públicas (sem autenticação JWT)
 
-| Método | Rota | Descrição | Permissão |
-|--------|------|-----------|-----------|
-| `POST` | `/accounts` | Criar conta de usuário | Todos |
-| `POST` | `/auth/login` | Login e obtenção do token JWT | Todos |
-| `GET` | `/professionals` | Listar profissionais disponíveis | Todos |
-| `GET` | `/specialties` | Listar especialidades | Todos |
-| `GET` | `/treatment-types` | Listar tipos de tratamento | Todos |
+| Método | Rota | Descrição | Permissão | Status |
+|--------|------|-----------|-----------|--------|
+| `POST` | `/auth/signup` | Criar conta de usuário | Todos | ✅ **Implementado + E2E Tests** |
+| `POST` | `/auth/signin` | Login e obtenção do token JWT | Todos | ✅ **Implementado + E2E Tests** |
+| `GET` | `/professionals` | Listar profissionais disponíveis | Todos | ✅ **Implementado** |
+| `GET` | `/professionals/:id` | Ver detalhes de profissional específico | Todos | ✅ **Implementado** |
+| `GET` | `/specialty` | Listar especialidades | Todos | ✅ **Implementado** |
+| `GET` | `/treatment-type` | Listar tipos de tratamento | Todos | ✅ **Implementado** |
 
 ### 🔒 Rotas Privadas (requerem autenticação JWT)
 
 #### 👤 PACIENTE - Rotas
 
-| Método | Rota | Descrição | Validação |
-|--------|------|-----------|-----------|
-| `GET` | `/accounts/me` | Ver próprio perfil | Próprio usuário |
+| Método | Rota | Descrição | Validação | Status |
+|--------|------|-----------|-----------|--------|
+| `GET` | `/accounts/me` | Ver próprio perfil | Próprio usuário | ✅ **Implementado** | 
 | `PUT` | `/accounts/me` | Editar próprio perfil | Próprio usuário |
 | `DELETE` | `/accounts/me` | Excluir própria conta | Próprio usuário |
-| `POST` | `/appointments` | Agendar consulta | Próprio usuário |
-| `GET` | `/appointments/me` | Ver próprios agendamentos | Próprio usuário |
-| `PUT` | `/appointments/:id` | Alterar próprio agendamento | Próprio agendamento |
-| `DELETE` | `/appointments/:id` | Cancelar próprio agendamento | Próprio agendamento |
-| `GET` | `/professionals/:id` | Ver detalhes de profissional | Todos pacientes |
+| `POST` | `/appointments` | Agendar consulta | Próprio usuário | 
+| `GET` | `/appointments/me` | Ver próprios agendamentos | Próprio usuário | 
+| `PUT` | `/appointments/:id` | Alterar próprio agendamento | Próprio agendamento | 
+| `DELETE` | `/appointments/:id` | Cancelar próprio agendamento | Próprio agendamento | 
+| `GET` | `/professionals/:id` | Ver detalhes de profissional | Todos pacientes | ✅ **Implementado** |
 
 #### 👨‍⚕️ PROFISSIONAL - Rotas
 
-| Método | Rota | Descrição | Validação |
-|--------|------|-----------|-----------|
-| `GET` | `/accounts/me` | Ver próprio perfil | Próprio usuário |
+| Método | Rota | Descrição | Validação | Status |
+|--------|------|-----------|-----------|--------|
+| `GET` | `/accounts/me` | Ver próprio perfil | Próprio usuário | ✅ **Implementado** |
 | `PUT` | `/accounts/me` | Editar próprio perfil | Próprio usuário |
 | `DELETE` | `/accounts/me` | Excluir própria conta | Próprio usuário |
-| `POST` | `/schedules` | Criar horários disponíveis | Próprio profissional |
-| `GET` | `/schedules/me` | Ver própria agenda | Próprio profissional |
-| `PUT` | `/schedules/:id` | Editar horário | Próprio horário |
-| `DELETE` | `/schedules/:id` | Remover horário | Próprio horário |
-| `GET` | `/appointments/me` | Ver agendamentos com pacientes | Próprios agendamentos |
-| `POST` | `/profile/avatar` | Upload foto de perfil | Próprio usuário |
-| `GET` | `/patients/me` | Ver pacientes agendados | Próprios pacientes |
+| `POST` | `/schedules` | Criar horários disponíveis | Próprio profissional | 
+| `GET` | `/schedules/me` | Ver própria agenda | Próprio profissional | 
+| `PUT` | `/schedules/:id` | Editar horário | Próprio horário | 
+| `DELETE` | `/schedules/:id` | Remover horário | Próprio horário | 
+| `GET` | `/appointments/me` | Ver agendamentos com pacientes | Próprios agendamentos | 
+| `POST` | `/accounts/me/avatar` | Upload foto de perfil | Próprio usuário |
+| `GET` | `/patients/me` | Ver pacientes agendados | Próprios pacientes | 
 
 #### 👑 ADMIN - Rotas
 
-| Método | Rota | Descrição | Permissão |
-|--------|------|-----------|-----------|
+| Método | Rota | Descrição | Permissão | Status |
+|--------|------|-----------|-----------|--------|
 | `GET` | `/accounts` | Listar todos os usuários | Admin |
 | `GET` | `/accounts/:id` | Ver usuário específico | Admin |
 | `PUT` | `/accounts/:id` | Editar qualquer usuário | Admin |
 | `DELETE` | `/accounts/:id` | Excluir qualquer usuário | Admin |
 | `PUT` | `/accounts/:id/role` | Alterar role do usuário | Admin |
 | `PUT` | `/accounts/:id/status` | Suspender/reativar conta | Admin |
-| `GET` | `/appointments` | Ver todos os agendamentos | Admin |
-| `POST` | `/specialties` | Criar especialidade | Admin |
-| `PUT` | `/specialties/:id` | Editar especialidade | Admin |
-| `DELETE` | `/specialties/:id` | Excluir especialidade | Admin |
-| `POST` | `/treatment-types` | Criar tipo de tratamento | Admin |
-| `PUT` | `/treatment-types/:id` | Editar tipo de tratamento | Admin |
-| `DELETE` | `/treatment-types/:id` | Excluir tipo de tratamento | Admin |
+| `GET` | `/appointments` | Ver todos os agendamentos | Admin | 
+| `POST` | `/specialty` | Criar especialidade | Admin |
+| `PUT` | `/specialty/:id` | Editar especialidade | Admin |
+| `DELETE` | `/specialty/:id` | Excluir especialidade | Admin |
+| `POST` | `/treatment-type` | Criar tipo de tratamento | Admin |
+| `PUT` | `/treatment-type/:id` | Editar tipo de tratamento | Admin |
+| `DELETE` | `/treatment-type/:id` | Excluir tipo de tratamento | Admin |
 
 ### 🛡️ Regras de Autorização
 
