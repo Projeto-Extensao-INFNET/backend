@@ -1,15 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ServicesService } from './user.service';
+import { PrismaServiceMock } from '../../../../test/mocks/prismaService.mock';
+import { UserService } from './user.service';
 
-describe('ServicesService', () => {
-	let service: ServicesService;
+describe('UserService', () => {
+	let service: UserService;
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
-			providers: [ServicesService],
+			providers: [UserService, PrismaServiceMock],
 		}).compile();
 
-		service = module.get<ServicesService>(ServicesService);
+		service = module.get<UserService>(UserService);
+
+		vi.clearAllMocks();
 	});
 
 	it('should be defined', () => {
