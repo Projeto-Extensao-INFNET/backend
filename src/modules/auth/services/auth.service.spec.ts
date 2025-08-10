@@ -1,4 +1,8 @@
-import { ConflictException, UnauthorizedException } from '@nestjs/common';
+import {
+	BadRequestException,
+	ConflictException,
+	UnauthorizedException,
+} from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtServiceMock, mockJwtSign } from 'test/mocks/jwtService.mock';
 import {
@@ -169,6 +173,21 @@ describe('AuthService', () => {
 				service.SignIn('test@acme.com', 'senha_errada_123'),
 			).rejects.toThrow(
 				new UnauthorizedException('Credenciais inválidas'),
+			);
+		});
+		it('should throw bad request exception when not pass data', async () => {
+			const invalidData = {
+				name: '',
+				email: '',
+				password: '',
+				birthDate: new Date(),
+				role: ROLE.PATIENT,
+				documentType: DocumentType.CPF,
+				document: '123.456.789-44',
+			};
+
+			await expect(service.SignUp(invalidData)).rejects.toThrow(
+				new BadRequestException('Campos obrigatórios não fornecidos'),
 			);
 		});
 	});
