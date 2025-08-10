@@ -1,5 +1,4 @@
-export type ROLE = 'PATIENT' | 'PROFESSIONAL' | 'ADMIN';
-export type DocumentType = 'CPF' | 'RG';
+import type { DocumentType, ROLE } from '@/_types';
 
 export interface GetUserDto {
 	id: string;
