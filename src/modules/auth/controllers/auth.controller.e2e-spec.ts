@@ -3,7 +3,6 @@ import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '@/app.module';
-import { DocumentType, ROLE } from '../dto/signUp.dto';
 
 describe('AuthController (E2E)', () => {
 	let app: INestApplication;
@@ -16,9 +15,9 @@ describe('AuthController (E2E)', () => {
 		name: 'Usuário Teste',
 		email: generateUniqueEmail(),
 		password: '12345678',
-		role: ROLE.PATIENT,
+		role: 'PATIENT',
 		birthDate: '2005-09-26T00:00:00.000Z',
-		documentType: DocumentType.CPF,
+		documentType: 'CPF',
 		document: generateUniqueDocument(),
 	});
 
@@ -40,7 +39,7 @@ describe('AuthController (E2E)', () => {
 		expect(app).toBeDefined();
 	});
 
-	describe('Success Cases - Happy Path', () => {
+	describe('SignUp ', () => {
 		it('[POST] /auth/signup - should create a new user successfully', async () => {
 			const userData = createValidUserData();
 
@@ -54,6 +53,57 @@ describe('AuthController (E2E)', () => {
 			expect(response.body).not.toHaveProperty('password');
 		});
 
+		it('[POST] /auth/signup - should return 409 when email already exists', async () => {
+			const userData = createValidUserData();
+
+			await request(app.getHttpServer())
+				.post('/auth/signup')
+				.send(userData);
+
+			const duplicateEmailData = {
+				...userData,
+				document: generateUniqueDocument(),
+			};
+
+			const response = await request(app.getHttpServer())
+				.post('/auth/signup')
+				.send(duplicateEmailData);
+
+			expect(response.statusCode).toBe(409);
+			expect(response.body).toHaveProperty(
+				'message',
+				'Credenciais já estão em uso',
+			);
+		});
+
+		// !! FIX corrigir DTOs para validação correta de email
+		// it('[POST] /auth/signup - should return 400 with invalid email format', async () => {
+		// 	const userData = createValidUserData();
+
+		// 	const signUpResponse = await request(app.getHttpServer())
+		// 		.post('/auth/signup')
+		// 		.send({
+		// 			...userData,
+		// 			email: 'emailFalha.com',
+		// 		});
+
+		// 	expect([400, 500]).toContain(signUpResponse.statusCode);
+		// });
+
+		it('[POST] /auth/signup - should return 400 with missing required fields', async () => {
+			const signUpResponse = await request(app.getHttpServer())
+				.post('/auth/signup')
+				.send({ name: 'Teste' });
+
+			expect(signUpResponse.statusCode).toBe(400);
+			expect(signUpResponse.body).toHaveProperty(
+				'message',
+				'Campos obrigatórios não fornecidos',
+			);
+		});
+	});
+
+	describe('SignIn', () => {
 		it('[POST] /auth/signin - should return access token with valid credentials', async () => {
 			const userData = createValidUserData();
 
@@ -92,31 +142,6 @@ describe('AuthController (E2E)', () => {
 			expect(signinResponse.statusCode).toBe(201);
 			expect(signinResponse.body).toHaveProperty('accessToken');
 		});
-	});
-
-	describe('Business Logic Errors', () => {
-		it('[POST] /auth/signup - should return 409 when email already exists', async () => {
-			const userData = createValidUserData();
-
-			await request(app.getHttpServer())
-				.post('/auth/signup')
-				.send(userData);
-
-			const duplicateEmailData = {
-				...userData,
-				document: generateUniqueDocument(),
-			};
-
-			const response = await request(app.getHttpServer())
-				.post('/auth/signup')
-				.send(duplicateEmailData);
-
-			expect(response.statusCode).toBe(409);
-			expect(response.body).toHaveProperty(
-				'message',
-				'Credenciais já estão em uso',
-			);
-		});
 
 		it('[POST] /auth/signin - should return 401 with invalid email', async () => {
 			const signinResponse = await request(app.getHttpServer())
@@ -151,34 +176,6 @@ describe('AuthController (E2E)', () => {
 			expect(signinResponse.body).toHaveProperty(
 				'message',
 				'Credenciais inválidas',
-			);
-		});
-	});
-
-	describe('Input Validation', () => {
-		// !! FIX corrigir DTOs para validação correta de email
-		// it('[POST] /auth/signup - should return 400 with invalid email format', async () => {
-		// 	const userData = createValidUserData();
-
-		// 	const signUpResponse = await request(app.getHttpServer())
-		// 		.post('/auth/signup')
-		// 		.send({
-		// 			...userData,
-		// 			email: 'emailFalha.com',
-		// 		});
-
-		// 	expect([400, 500]).toContain(signUpResponse.statusCode);
-		// });
-
-		it('[POST] /auth/signup - should return 400 with missing required fields', async () => {
-			const signUpResponse = await request(app.getHttpServer())
-				.post('/auth/signup')
-				.send({ name: 'Teste' });
-
-			expect(signUpResponse.statusCode).toBe(400);
-			expect(signUpResponse.body).toHaveProperty(
-				'message',
-				'Campos obrigatórios não fornecidos',
 			);
 		});
 	});
