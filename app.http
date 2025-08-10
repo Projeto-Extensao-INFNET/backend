@@ -39,3 +39,8 @@ GET {{baseUrl}}/accounts/me
 Authorization: Bearer {{SignIn.response.body.accessToken}}
 
 ### 
+
+# deletar um perfil de usuário
+# @name delete_user_profile
+DELETE {{baseUrl}}/accounts/me
+Authorization: Bearer {{SignIn.response.body.accessToken}}

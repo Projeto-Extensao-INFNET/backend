@@ -32,7 +32,23 @@ export class UserService {
 		return user;
 	}
 	async editProfile() {}
-	async deleteAccount() {}
+	async deleteAccount(id: string) {
+		const userExists = await this.prismaService.user.findUnique({
+			where: {
+				id,
+			},
+		});
+
+		if (!userExists) {
+			throw new NotFoundException('User not found');
+		}
+
+		await this.prismaService.user.delete({
+			where: {
+				id,
+			},
+		});
+	}
 	async createAppointment() {}
 	async getAppointments() {}
 	async changeAppointment() {}

@@ -1,12 +1,8 @@
 import {
-	Body,
-	ConflictException,
 	Controller,
 	Delete,
 	Get,
 	HttpCode,
-	NotFoundException,
-	Post,
 	Request,
 	UseGuards,
 } from '@nestjs/common';
@@ -19,6 +15,7 @@ export class UserController {
 	constructor(private readonly userService: UserService) {}
 
 	@Get('me')
+	@HttpCode(200)
 	@UseGuards(JwtAuthGuard)
 	async getUserProfile(
 		@Request() req: AuthenticatedUserRequest,
@@ -26,5 +23,16 @@ export class UserController {
 		const userId = req.user.userId;
 
 		return await this.userService.getProfile(userId);
+	}
+
+	@Delete('me')
+	@UseGuards(JwtAuthGuard)
+	@HttpCode(204)
+	async deleteUserProfile(
+		@Request() req: AuthenticatedUserRequest,
+	): Promise<void> {
+		const userId = req.user.userId;
+
+		await this.userService.deleteAccount(userId);
 	}
 }
