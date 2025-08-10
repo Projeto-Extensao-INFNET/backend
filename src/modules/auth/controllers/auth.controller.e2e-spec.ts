@@ -3,6 +3,7 @@ import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '@/app.module';
+import { DocumentType, ROLE } from '../dto/signUp.dto';
 
 describe('AuthController (E2E)', () => {
 	let app: INestApplication;
@@ -15,9 +16,9 @@ describe('AuthController (E2E)', () => {
 		name: 'Usuário Teste',
 		email: generateUniqueEmail(),
 		password: '12345678',
-		role: 'PATIENT' as const,
+		role: ROLE.PATIENT,
 		birthDate: '2005-09-26T00:00:00.000Z',
-		documentType: 'CPF' as const,
+		documentType: DocumentType.CPF,
 		document: generateUniqueDocument(),
 	});
 
