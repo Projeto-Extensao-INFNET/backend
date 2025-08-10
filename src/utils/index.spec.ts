@@ -1,6 +1,6 @@
 import { comparePassword, generateUUID, hashPassword } from '@/utils';
 
-describe('Utils testing', () => {
+describe('Utility functions tests', () => {
 	it('should hash password correctly', async () => {
 		const password = '12345678';
 
