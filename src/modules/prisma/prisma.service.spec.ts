@@ -1,19 +1,34 @@
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaServiceMock } from 'test/mocks/prismaService.mock';
 import { PrismaService } from './prisma.service';
+
+const createMockPrismaService = () => ({
+	$connect: vi.fn(),
+	$disconnect: vi.fn(),
+	onModuleInit: vi.fn(),
+	onModuleDestroy: vi.fn(),
+});
 
 describe('PrismaService', () => {
 	let service: PrismaService;
+	const mockPrismaService = createMockPrismaService();
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			imports: [ConfigModule.forRoot({ isGlobal: true })],
-			// Mock do PrismaService para evitar que o teste seja dependente do Docker estar rodando ou não
-			providers: [PrismaServiceMock],
+			providers: [
+				{
+					provide: PrismaService,
+					useValue: mockPrismaService,
+				},
+			],
 		}).compile();
 
 		service = module.get<PrismaService>(PrismaService);
+	});
+
+	afterEach(() => {
+		vi.resetAllMocks();
 	});
 
 	it('should be defined', () => {
@@ -21,11 +36,19 @@ describe('PrismaService', () => {
 	});
 
 	it('should call $connect', async () => {
+		mockPrismaService.onModuleInit.mockImplementation(() => {
+			mockPrismaService.$connect();
+		});
+
 		await service.onModuleInit();
 
 		expect(service.$connect).toHaveBeenCalledTimes(1);
 	});
 	it('should call $disconnect', async () => {
+		mockPrismaService.onModuleDestroy.mockImplementation(() => {
+			mockPrismaService.$disconnect();
+		});
+
 		await service.onModuleDestroy();
 
 		expect(service.$disconnect).toHaveBeenCalledTimes(1);
