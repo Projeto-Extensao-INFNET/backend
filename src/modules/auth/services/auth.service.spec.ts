@@ -5,9 +5,9 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+import type { DocumentType, ROLE } from '@/_types';
 import { PrismaService } from '@/modules/prisma/prisma.service';
 import { hashPassword } from '@/utils';
-import { DocumentType, ROLE, type SignUpDto } from '../dto/signUp.dto';
 import { AuthService } from './auth.service';
 
 const createMockPrismaService = () => ({
@@ -56,13 +56,13 @@ describe('AuthService', () => {
 
 	describe('SignUp', () => {
 		it('should create a new user and return user without password', async () => {
-			const userSignUpData: SignUpDto = {
+			const userSignUpData = {
 				name: 'Cobra Coral',
 				email: 'signUp@acme.com',
 				password: await hashPassword('1234567878'),
 				birthDate: new Date(),
-				role: ROLE.PATIENT,
-				documentType: DocumentType.CPF,
+				role: 'PATIENT' as ROLE,
+				documentType: 'CPF' as DocumentType,
 				document: '000.888.333-02',
 			};
 
@@ -108,13 +108,13 @@ describe('AuthService', () => {
 		it('should hash password', async () => {
 			const plainPassword = 'senha_normal_123';
 
-			const userSignUpData: SignUpDto = {
+			const userSignUpData = {
 				name: 'User User',
 				email: 'email@acme.com.br',
 				password: plainPassword,
 				birthDate: new Date(),
-				role: ROLE.PATIENT,
-				documentType: DocumentType.CPF,
+				role: 'PATIENT' as ROLE,
+				documentType: 'CPF' as DocumentType,
 				document: '123.456.789-03',
 			};
 
@@ -142,8 +142,8 @@ describe('AuthService', () => {
 				email: 'test@acme.com',
 				password: '23456678',
 				birthDate: new Date(),
-				role: ROLE.PATIENT,
-				documentType: DocumentType.CPF,
+				role: 'PATIENT' as ROLE,
+				documentType: 'CPF' as DocumentType,
 				document: '000.888.666-17',
 			};
 
@@ -210,8 +210,8 @@ describe('AuthService', () => {
 				email: '',
 				password: '',
 				birthDate: new Date(),
-				role: ROLE.PATIENT,
-				documentType: DocumentType.CPF,
+				role: 'PATIENT' as ROLE,
+				documentType: 'CPF' as DocumentType,
 				document: '123.456.789-44',
 			};
 
