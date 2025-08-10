@@ -1,24 +1,38 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-	mockDelete,
-	mockFindUnique,
-	PrismaServiceMock,
-} from '../../../../test/mocks/prismaService.mock';
+import { PrismaService } from '@/modules/prisma/prisma.service';
 import { UserService } from './user.service';
+
+const createMockPrismaService = () => ({
+	user: {
+		findUnique: vi.fn(),
+		findMany: vi.fn(),
+		create: vi.fn(),
+		delete: vi.fn(),
+	},
+});
 
 describe('UserService', () => {
 	let service: UserService;
+	const mockPrismaService = createMockPrismaService();
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
-			providers: [UserService, PrismaServiceMock],
+			providers: [
+				UserService,
+				{
+					provide: PrismaService,
+					useValue: mockPrismaService,
+				},
+			],
 		}).compile();
 
 		service = module.get<UserService>(UserService);
+	});
 
-		vi.clearAllMocks();
+	afterEach(() => {
+		vi.resetAllMocks();
 	});
 
 	it('should be defined', () => {
@@ -29,22 +43,22 @@ describe('UserService', () => {
 	it('should delete user profile', async () => {
 		const userId = 'user-123';
 
-		mockFindUnique.mockResolvedValue({
+		mockPrismaService.user.findUnique.mockResolvedValue({
 			id: userId,
 			name: faker.person.fullName(),
 			email: faker.internet.email(),
 		});
 
-		mockDelete.mockResolvedValue({ id: userId });
+		mockPrismaService.user.delete.mockResolvedValue({ id: userId });
 
 		await service.deleteAccount(userId);
 
-		expect(mockFindUnique).toHaveBeenCalledWith({
+		expect(mockPrismaService.user.findUnique).toHaveBeenCalledWith({
 			where: {
 				id: userId,
 			},
 		});
-		expect(mockDelete).toHaveBeenCalledWith({
+		expect(mockPrismaService.user.delete).toHaveBeenCalledWith({
 			where: {
 				id: userId,
 			},
@@ -54,11 +68,11 @@ describe('UserService', () => {
 	it('it should throw NotFoundException when user not found', async () => {
 		const userId = 'non-existent-id';
 
-		mockFindUnique.mockResolvedValue(null);
+		mockPrismaService.user.findUnique.mockResolvedValue(null);
 
 		await expect(service.deleteAccount(userId)).rejects.toThrow(
 			new NotFoundException('User not found'),
 		);
-		expect(mockDelete).not.toHaveBeenCalled();
+		expect(mockPrismaService.user.delete).not.toHaveBeenCalled();
 	});
 });
