@@ -1,4 +1,13 @@
-import type { DocumentType, ROLE } from '../../../../generated/prisma';
+export enum ROLE {
+	PATIENT = 'PATIENT',
+	PROFESSIONAL = 'PROFESSIONAL',
+	ADMIN = 'ADMIN',
+}
+
+export enum DocumentType {
+	CPF = 'CPF',
+	RG = 'RG',
+}
 
 export interface GetUserDto {
 	id: string;
