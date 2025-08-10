@@ -3,7 +3,6 @@ import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '@/app.module';
-import { DocumentType, ROLE } from '../dto/get-user.dto';
 
 describe('User (E2E)', () => {
 	let app: INestApplication;
@@ -28,9 +27,9 @@ describe('User (E2E)', () => {
 				name: 'Kiko',
 				email: fakeEmail,
 				password: '12345678',
-				role: ROLE.PATIENT,
+				role: 'PATIENT',
 				birthDate: new Date(),
-				documentType: DocumentType.CPF,
+				documentType: 'CPF',
 				document: fakeDocument,
 			});
 
