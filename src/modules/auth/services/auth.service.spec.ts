@@ -3,28 +3,51 @@ import {
 	ConflictException,
 	UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { JwtServiceMock, mockJwtSign } from 'test/mocks/jwtService.mock';
-import {
-	mockCreate,
-	mockFindUnique,
-	PrismaServiceMock,
-} from 'test/mocks/prismaService.mock';
+import { PrismaService } from '@/modules/prisma/prisma.service';
 import { hashPassword } from '@/utils';
 import { DocumentType, ROLE, type SignUpDto } from '../dto/signUp.dto';
 import { AuthService } from './auth.service';
 
+const createMockPrismaService = () => ({
+	user: {
+		findUnique: vi.fn(),
+		findMany: vi.fn(),
+		create: vi.fn(),
+		delete: vi.fn(),
+	},
+});
+
+const createJWTMockService = () => ({
+	sign: vi.fn(),
+});
+
 describe('AuthService', () => {
 	let service: AuthService;
+	const mockPrismaService = createMockPrismaService();
+	const mockJwtService = createJWTMockService();
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
-			providers: [AuthService, PrismaServiceMock, JwtServiceMock],
+			providers: [
+				AuthService,
+				{
+					provide: PrismaService,
+					useValue: mockPrismaService,
+				},
+				{
+					provide: JwtService,
+					useValue: mockJwtService,
+				},
+			],
 		}).compile();
 
 		service = module.get<AuthService>(AuthService);
+	});
 
-		vi.clearAllMocks();
+	afterEach(() => {
+		vi.resetAllMocks();
 	});
 
 	it('should be defined', () => {
@@ -43,7 +66,7 @@ describe('AuthService', () => {
 				document: '000.888.333-02',
 			};
 
-			mockFindUnique.mockResolvedValue(null);
+			mockPrismaService.user.findUnique.mockResolvedValue(null);
 
 			const mockCreatedUser = {
 				id: 'new-user-id',
@@ -58,7 +81,7 @@ describe('AuthService', () => {
 				updatedAt: new Date(),
 			};
 
-			mockCreate.mockResolvedValue(mockCreatedUser);
+			mockPrismaService.user.create.mockResolvedValue(mockCreatedUser);
 
 			const result = await service.SignUp(userSignUpData);
 
@@ -74,6 +97,12 @@ describe('AuthService', () => {
 				createdAt: expect.any(Date),
 				updatedAt: expect.any(Date),
 			});
+			expect(mockPrismaService.user.findUnique).toHaveBeenCalledWith({
+				where: {
+					email: userSignUpData.email,
+				},
+			});
+			expect(mockPrismaService.user.create).toHaveBeenCalledTimes(1);
 		});
 
 		it('should hash password', async () => {
@@ -89,8 +118,8 @@ describe('AuthService', () => {
 				document: '123.456.789-03',
 			};
 
-			mockFindUnique.mockResolvedValue(null);
-			mockCreate.mockResolvedValue({
+			mockPrismaService.user.findUnique.mockResolvedValue(null);
+			mockPrismaService.user.create.mockResolvedValue({
 				id: 'user-id',
 				...userSignUpData,
 				password: 'hashed_password',
@@ -100,7 +129,7 @@ describe('AuthService', () => {
 
 			await service.SignUp(userSignUpData);
 
-			expect(mockCreate).toHaveBeenCalledWith({
+			expect(mockPrismaService.user.create).toHaveBeenCalledWith({
 				data: expect.objectContaining({
 					password: expect.not.stringMatching(plainPassword),
 				}),
@@ -118,7 +147,7 @@ describe('AuthService', () => {
 				document: '000.888.666-17',
 			};
 
-			mockFindUnique.mockResolvedValue({
+			mockPrismaService.user.findUnique.mockResolvedValue({
 				id: 'user-id',
 				email: userSignUpData.email,
 			});
@@ -133,25 +162,25 @@ describe('AuthService', () => {
 		it('should sign-in and return JWT token', async () => {
 			const hashedPassword = await hashPassword('12345667');
 
-			mockFindUnique.mockResolvedValue({
+			mockPrismaService.user.findUnique.mockResolvedValue({
 				id: 'user-id',
 				email: 'test@acme.com',
 				password: hashedPassword,
 			});
 
-			mockJwtSign.mockReturnValue('fake-jwt-token');
+			mockJwtService.sign.mockReturnValue('fake-jwt-token');
 
 			const result = await service.SignIn('test@acme.com', '12345667');
 
 			expect(result).toEqual({ accessToken: 'fake-jwt-token' });
-			expect(mockJwtSign).toHaveBeenCalledWith({
+			expect(mockJwtService.sign).toHaveBeenCalledWith({
 				username: 'test@acme.com',
 				sub: 'user-id',
 			});
 		});
 
 		it('should throw unauthorized exception when email is incorrect', async () => {
-			mockFindUnique.mockResolvedValue(null);
+			mockPrismaService.user.findUnique.mockResolvedValue(null);
 
 			await expect(
 				service.SignIn('test_errado@acme.com', 'senha__123'),
@@ -163,7 +192,7 @@ describe('AuthService', () => {
 		it('should throw unauthorized exception when password is incorrect', async () => {
 			const hashedPassword = await hashPassword('deve_ser_hashed_123');
 
-			mockFindUnique.mockResolvedValue({
+			mockPrismaService.user.findUnique.mockResolvedValue({
 				id: 'user-id',
 				email: 'test@acme.com',
 				password: hashedPassword,
