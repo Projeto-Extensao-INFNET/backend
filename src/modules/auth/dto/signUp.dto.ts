@@ -1,13 +1,5 @@
-export enum ROLE {
-	PATIENT = 'PATIENT',
-	PROFESSIONAL = 'PROFESSIONAL',
-	ADMIN = 'ADMIN',
-}
-
-export enum DocumentType {
-	CPF = 'CPF',
-	RG = 'RG',
-}
+export type ROLE = 'PATIENT' | 'PROFESSIONAL' | 'ADMIN';
+export type DocumentType = 'CPF' | 'RG';
 
 export interface SignUpDto {
 	name: string;
