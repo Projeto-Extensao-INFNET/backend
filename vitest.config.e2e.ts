@@ -10,6 +10,7 @@ export default defineConfig({
 		root: './',
 		setupFiles: ['./test/setup-e2e.ts'],
 		environment: 'node',
+		hookTimeout: 60000,
 		coverage: {
 			reportsDirectory: './coverage-e2e',
 			provider: 'v8',
