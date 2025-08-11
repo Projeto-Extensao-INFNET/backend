@@ -6,14 +6,16 @@ import { UserRepository } from '../repositories/user.repository';
 export class UserService {
 	constructor(private readonly userRepository: UserRepository) {}
 
-	async getProfile(userId: string): Promise<UserEntity> {
+	async getProfile(userId: string): Promise<Omit<UserEntity, 'password'>> {
 		const user = await this.userRepository.getProfile(userId);
 
 		if (!user) {
 			throw new NotFoundException('User not found');
 		}
 
-		return user;
+		// biome-ignore lint/correctness/noUnusedVariables: don't need use this variable
+		const { password, ...userWithoutPassword } = user; // não exibe a senha o listar os dados do usuário
+		return userWithoutPassword;
 	}
 	async editProfile() {}
 	async deleteAccount(id: string): Promise<void> {
