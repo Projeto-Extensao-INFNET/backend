@@ -11,8 +11,8 @@ import { UserService } from './services/user.service';
 		UserService,
 		PrismaUserRepository,
 		{
-			provide: UserRepository,
-			useExisting: PrismaUserRepository,
+			provide: UserRepository, // injeta o repositório com os métodos abstratos
+			useExisting: PrismaUserRepository, // implementa os métodos reais
 		},
 	],
 	controllers: [UserController],

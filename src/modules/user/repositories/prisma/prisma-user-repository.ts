@@ -3,6 +3,7 @@ import { PrismaService } from '@/modules/prisma/prisma.service';
 import type { UserEntity } from '../../entities/user.entity';
 import { UserRepository } from '../user.repository';
 
+// implementação real do UserRepository usando o Prisma para acessar o banco de dados
 @Injectable()
 export class PrismaUserRepository extends UserRepository {
 	constructor(private readonly prismaService: PrismaService) {
