@@ -1,4 +1,5 @@
 @baseUrl = http://localhost:3333
+@authToken = {{SignIn.response.body.accessToken}}
 
 # 🔓 ROTAS PÚBLICAS (sem autenticação)
 
@@ -36,11 +37,11 @@ Content-Type: application/json
 # ver o perfil do usuário logado
 # @name get_user_profile
 GET {{baseUrl}}/accounts/me
-Authorization: Bearer {{SignIn.response.body.accessToken}}
+Authorization: Bearer {{authToken}}
 
 ### 
 
 # deletar um perfil de usuário
 # @name delete_user_profile
 DELETE {{baseUrl}}/accounts/me
-Authorization: Bearer {{SignIn.response.body.accessToken}}
+Authorization: Bearer {{authToken}}
