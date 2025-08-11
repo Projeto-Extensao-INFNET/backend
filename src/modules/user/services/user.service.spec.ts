@@ -36,32 +36,72 @@ describe('UserService', () => {
 		expect(service).toBeDefined();
 	});
 
-	it('should get user profile', async () => {});
-	it('should delete user profile', async () => {
-		const userId = 'user-123';
+	describe('getProfile', () => {
+		it('should get user profile', async () => {
+			const userId = 'user-id-123';
+			const mockUser = {
+				id: userId,
+				name: faker.person.fullName(),
+				email: faker.internet.email(),
+				password: '123455678',
+				birthDate: new Date(),
+				role: 'PATIENT',
+				documentType: 'CPF',
+				document: faker.helpers.replaceSymbols('###.###.###-##'),
+			};
 
-		mockUserRepository.findById.mockResolvedValue({
-			id: userId,
-			name: faker.person.fullName(),
-			email: faker.internet.email(),
+			mockUserRepository.getProfile.mockResolvedValue(mockUser);
+
+			const result = await service.getProfile(userId);
+
+			expect(mockUserRepository.getProfile).toHaveBeenCalledWith(userId);
+			expect(result).not.toHaveProperty('password');
+		});
+		it('it should throw NotFoundException when user not found', async () => {
+			const userId = 'non-existent-id';
+
+			mockUserRepository.getProfile.mockResolvedValue(null);
+
+			await expect(service.getProfile(userId)).rejects.toThrow(
+				new NotFoundException('User not found'),
+			);
+			expect(mockUserRepository.getProfile).toHaveBeenCalledWith(userId);
+		});
+	});
+	describe('deleteAccount ', () => {
+		it('should delete user profile', async () => {
+			const userId = 'user-123';
+
+			mockUserRepository.findById.mockResolvedValue({
+				id: userId,
+				name: faker.person.fullName(),
+				email: faker.internet.email(),
+			});
+
+			mockUserRepository.deleteAccount.mockResolvedValue({ id: userId });
+
+			await service.deleteAccount(userId);
+
+			expect(mockUserRepository.findById).toHaveBeenCalledWith(userId);
+			expect(mockUserRepository.deleteAccount).toHaveBeenCalledWith(
+				userId,
+			);
 		});
 
-		mockUserRepository.deleteAccount.mockResolvedValue({ id: userId });
+		it('it should throw NotFoundException when user not found', async () => {
+			const userId = 'non-existent-id';
 
-		await service.deleteAccount(userId);
+			mockUserRepository.findById.mockResolvedValue(null);
 
-		expect(mockUserRepository.findById).toHaveBeenCalledWith(userId);
-		expect(mockUserRepository.deleteAccount).toHaveBeenCalledWith(userId);
+			await expect(service.deleteAccount(userId)).rejects.toThrow(
+				new NotFoundException('User not found'),
+			);
+			expect(mockUserRepository.deleteAccount).not.toHaveBeenCalled();
+			expect(mockUserRepository.findById).toHaveBeenCalled();
+		});
 	});
-
-	it('it should throw NotFoundException when user not found', async () => {
-		const userId = 'non-existent-id';
-
-		mockUserRepository.findById.mockResolvedValue(null);
-
-		await expect(service.deleteAccount(userId)).rejects.toThrow(
-			new NotFoundException('User not found'),
-		);
-		expect(mockUserRepository.deleteAccount).not.toHaveBeenCalled();
-	});
+	describe('createAppointment', () => {});
+	describe('getAppointments', () => {});
+	describe('changeAppointment', () => {});
+	describe('cancelAppointment', () => {});
 });
