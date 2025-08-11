@@ -1,6 +1,6 @@
 import type { DocumentType, ROLE } from '@/_types';
 
-export interface GetUserDto {
+export interface UserProfileDto {
 	id: string;
 	name: string;
 	email: string;

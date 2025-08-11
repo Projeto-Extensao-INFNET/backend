@@ -7,7 +7,10 @@ import {
 	UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
-import type { AuthenticatedUserRequest, GetUserDto } from '../dto/get-user.dto';
+import type {
+	AuthenticatedUserRequest,
+	UserProfileDto,
+} from '../dto/get-user.dto';
 import { UserService } from '../services/user.service';
 
 @Controller('/accounts')
@@ -19,7 +22,7 @@ export class UserController {
 	@UseGuards(JwtAuthGuard)
 	async getUserProfile(
 		@Request() req: AuthenticatedUserRequest,
-	): Promise<GetUserDto> {
+	): Promise<UserProfileDto> {
 		const userId = req.user.userId;
 
 		return await this.userService.getProfile(userId);
