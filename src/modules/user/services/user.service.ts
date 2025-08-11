@@ -13,8 +13,7 @@ export class UserService {
 			throw new NotFoundException('User not found');
 		}
 
-		// biome-ignore lint/correctness/noUnusedVariables: don't need use this variable
-		const { password, ...userWithoutPassword } = user; // não exibe a senha o listar os dados do usuário
+		const { password: _, ...userWithoutPassword } = user; // não exibe a senha o listar os dados do usuário
 		return userWithoutPassword;
 	}
 	async editProfile() {}
