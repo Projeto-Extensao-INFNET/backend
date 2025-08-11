@@ -153,7 +153,7 @@ describe('AuthService', () => {
 			});
 
 			await expect(service.SignUp(userSignUpData)).rejects.toThrow(
-				new ConflictException('Credenciais já estão em uso'),
+				new ConflictException('Credentials already in use'),
 			);
 		});
 	});
@@ -184,9 +184,7 @@ describe('AuthService', () => {
 
 			await expect(
 				service.SignIn('test_errado@acme.com', 'senha__123'),
-			).rejects.toThrow(
-				new UnauthorizedException('Credenciais inválidas'),
-			);
+			).rejects.toThrow(new UnauthorizedException('Invalid credentials'));
 		});
 
 		it('should throw unauthorized exception when password is incorrect', async () => {
@@ -200,9 +198,7 @@ describe('AuthService', () => {
 
 			await expect(
 				service.SignIn('test@acme.com', 'senha_errada_123'),
-			).rejects.toThrow(
-				new UnauthorizedException('Credenciais inválidas'),
-			);
+			).rejects.toThrow(new UnauthorizedException('Invalid credentials'));
 		});
 		it('should throw bad request exception when not pass data', async () => {
 			const invalidData = {
@@ -216,7 +212,7 @@ describe('AuthService', () => {
 			};
 
 			await expect(service.SignUp(invalidData)).rejects.toThrow(
-				new BadRequestException('Campos obrigatórios não fornecidos'),
+				new BadRequestException('Required fields not provided'),
 			);
 		});
 	});

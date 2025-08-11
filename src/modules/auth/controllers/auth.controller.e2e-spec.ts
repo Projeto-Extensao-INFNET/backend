@@ -72,7 +72,7 @@ describe('AuthController (E2E)', () => {
 			expect(response.statusCode).toBe(409);
 			expect(response.body).toHaveProperty(
 				'message',
-				'Credenciais já estão em uso',
+				'Credentials already in use',
 			);
 		});
 
@@ -98,7 +98,7 @@ describe('AuthController (E2E)', () => {
 			expect(signUpResponse.statusCode).toBe(400);
 			expect(signUpResponse.body).toHaveProperty(
 				'message',
-				'Campos obrigatórios não fornecidos',
+				'Required fields not provided',
 			);
 		});
 	});
@@ -154,7 +154,7 @@ describe('AuthController (E2E)', () => {
 			expect(signinResponse.statusCode).toBe(401);
 			expect(signinResponse.body).toHaveProperty(
 				'message',
-				'Credenciais inválidas',
+				'Invalid credentials',
 			);
 		});
 
@@ -175,7 +175,7 @@ describe('AuthController (E2E)', () => {
 			expect(signinResponse.statusCode).toBe(401);
 			expect(signinResponse.body).toHaveProperty(
 				'message',
-				'Credenciais inválidas',
+				'Invalid credentials',
 			);
 		});
 	});

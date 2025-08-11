@@ -18,7 +18,7 @@ export class AuthService {
 	// Cadastro
 	async SignUp(data: SignUpDto) {
 		if (!data || !data.email || !data.password || !data.name) {
-			throw new BadRequestException('Campos obrigatórios não fornecidos');
+			throw new BadRequestException('Required fields not provided');
 		}
 
 		const existingUser = await this.prismaService.user.findUnique({
@@ -28,7 +28,7 @@ export class AuthService {
 		});
 
 		if (existingUser) {
-			throw new ConflictException('Credenciais já estão em uso');
+			throw new ConflictException('Credentials already in use');
 		}
 
 		const hashedPassword = await hashPassword(data.password);
@@ -59,13 +59,13 @@ export class AuthService {
 		});
 
 		if (!user) {
-			throw new UnauthorizedException('Credenciais inválidas');
+			throw new UnauthorizedException('Invalid credentials');
 		}
 
 		const isPasswordHashed = await comparePassword(password, user.password);
 
 		if (!isPasswordHashed) {
-			throw new UnauthorizedException('Credenciais inválidas');
+			throw new UnauthorizedException('Invalid credentials');
 		}
 
 		const payload = { username: user.email, sub: user.id };
