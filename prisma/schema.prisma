@@ -123,7 +123,8 @@ model ProfessionalAndPatient {
 
 model Schedule {
   id          String   @id @default(uuid())
-  isAvailable Boolean  @default(true)
+  isAvailable Boolean  @default(true) @map("is_available")
+  isConfirmed Boolean  @default(false) @map("is_confirmed")
   schedules   DateTime
 
   professional   Professional @relation(fields: [professionalId], references: [id])
@@ -134,8 +135,18 @@ model Schedule {
   @@map("schedules")
 }
 
+enum QueryStatus {
+  CANCELED
+  COMPLETED
+  SCHEDULED
+}
+
 model UserAgenda {
-  id String @id @default(uuid())
+  id          String      @id @default(uuid())
+  status      QueryStatus @map("query_status")
+  isConfirmed Boolean     @default(false) @map("is_confirmed")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
 
   schedule   Schedule @relation(fields: [scheduleId], references: [id])
   scheduleId String   @map("schedule_id")
