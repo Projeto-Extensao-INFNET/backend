@@ -1,14 +1,6 @@
 /** biome-ignore-all lint/correctness/noUnusedVariables: is not necessary use these variables*/
 // TODO
-// ** CRIAR UM USERs COMO PACIENTE [x]
-// ** CRIAR UM USERs COMO PROFISSIONAL [x]
-// ** CRIAR UM USER COMO ADMIN [x]
-// ** CRIAR ESPECIALIDADES (PSIQUIATRA, PSICOLOGO) [x]
-// ** CRIAR UM PROFISSIONAL COM OS RELACIONAMENTOS CORRETOS [x]
-// ** CRIAR OS TIPOS DE TRATAMENTO (PSIQUIATRIA INFANTIL, CASAIS ETC) [x]
 // ?? CRIAR A TABELA DE CONEXÃO ENTRE PACIENTE E PROFISSIONAL ( TALVEZ REMOVA )
-// ** CRIAR TABELA DE AGENDA DO PROFISSIONAL []
-// ** CRIAR TABELA DE AGENDA DO PACIENTE []
 
 import { faker } from '@faker-js/faker/locale/pt_BR';
 import {
@@ -118,6 +110,57 @@ const seed = async () => {
 				role: 'PATIENT',
 				documentType: 'CPF',
 				document: faker.helpers.replaceSymbols('###.###.###-##'),
+			},
+		});
+	}
+
+	// Cria os horários (a agenda) do Profissional
+	const professionals = await prisma.professional.findMany();
+
+	for (let i = 0; i < 10; i++) {
+		const professional = faker.helpers.arrayElement(professionals);
+		await prisma.schedule.create({
+			data: {
+				schedules: faker.date.future(),
+				isAvailable: true,
+				isConfirmed: false,
+				professionalId: professional.id,
+			},
+		});
+	}
+
+	// cria a agenda de consultas do Paciente
+	const patients = await prisma.user.findMany({
+		where: {
+			role: 'PATIENT',
+		},
+	});
+
+	const schedules = await prisma.schedule.findMany({
+		where: {
+			isAvailable: true,
+		},
+	});
+
+	for (const patient of patients) {
+		const schedule = faker.helpers.arrayElement(schedules);
+
+		await prisma.userAgenda.create({
+			data: {
+				userId: patient.id,
+				scheduleId: schedule.id,
+				status: 'SCHEDULED',
+				isConfirmed: false,
+			},
+		});
+
+		// atualiza o status de disponibilidade daquele horário após agendamento
+		await prisma.schedule.update({
+			where: {
+				id: schedule.id,
+			},
+			data: {
+				isAvailable: false,
 			},
 		});
 	}
