@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker/locale/pt_BR';
 import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
+import { email } from 'zod';
 import { AppModule } from '@/app.module';
 
 describe('User (E2E)', () => {
@@ -60,5 +61,40 @@ describe('User (E2E)', () => {
 		expect(userExists.statusCode).toBe(200);
 		expect(deleteUser.statusCode).toBe(204);
 		expect(isUserDeleted.statusCode).toBe(404);
+	});
+	it('[GET] /accounts/me', async () => {
+		const fakeEmail = faker.internet.email();
+		const fakeDocument = faker.helpers.replaceSymbols('###.###.###-##');
+
+		const SignUpResponse = await request(app.getHttpServer())
+			.post('/auth/signup')
+			.send({
+				name: 'Chaves',
+				email: fakeEmail,
+				password: '12345678',
+				role: 'PATIENT',
+				birthDate: new Date(),
+				documentType: 'CPF',
+				document: fakeDocument,
+			});
+
+		const SignInResponse = await request(app.getHttpServer())
+			.post('/auth/signin')
+			.send({
+				email: fakeEmail,
+				password: '12345678',
+			});
+
+		const token = SignInResponse.body.accessToken;
+
+		const getUser = await request(app.getHttpServer())
+			.get('/accounts/me')
+			.set('Authorization', `Bearer ${token}`);
+
+		expect(SignUpResponse.statusCode).toBe(201);
+		expect(SignInResponse.statusCode).toBe(201);
+		expect(SignInResponse.body).toHaveProperty('accessToken');
+		expect(getUser.statusCode).toBe(200);
+		expect(getUser.body).toHaveProperty('name');
 	});
 });
