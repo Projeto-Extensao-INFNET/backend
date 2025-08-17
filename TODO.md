@@ -26,7 +26,7 @@
 - [x] Se cadastrar
 - [ ] Consultar lista de profissionais
 - [ ] Editar somente seu propio perfil ( do usuário logado)
-- [ ] Excluir somente seu propio usuario logado
+- [x] Excluir somente seu propio usuario logado
 - [ ] Agendar consultas para o seu propio usuario logado
 - [ ] Alterar sua propia consulta para o seu propio usuario logado
 - [ ] Excluir sua propia consulta para o seu propio usuario logado
@@ -103,7 +103,7 @@
 |--------|------|-----------|-----------|--------|
 | `GET` | `/accounts/me` | Ver próprio perfil | Próprio usuário | ✅ **Implementado** | 
 | `PUT` | `/accounts/me` | Editar próprio perfil | Próprio usuário |
-| `DELETE` | `/accounts/me` | Excluir própria conta | Próprio usuário |
+| `DELETE` | `/accounts/me` | Excluir própria conta | Próprio usuário | ✅ **Implementado** | 
 | `POST` | `/appointments` | Agendar consulta | Próprio usuário | 
 | `GET` | `/appointments/me` | Ver próprios agendamentos | Próprio usuário | 
 | `PUT` | `/appointments/:id` | Alterar próprio agendamento | Próprio agendamento | 
