@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/modules/prisma/prisma.service';
 import type { UserEntity } from '../../entities/user.entity';
 import { UserRepository } from '../user.repository';
@@ -17,6 +17,10 @@ export class PrismaUserRepository extends UserRepository {
 			},
 		});
 
+		if (!user) {
+			throw new NotFoundException('Usuário não encontrado');
+		}
+
 		return user as UserEntity;
 	}
 
@@ -26,6 +30,10 @@ export class PrismaUserRepository extends UserRepository {
 				id,
 			},
 		});
+
+		if (!user) {
+			throw new NotFoundException('Usuário não encontrado');
+		}
 
 		return user as UserEntity;
 	}
