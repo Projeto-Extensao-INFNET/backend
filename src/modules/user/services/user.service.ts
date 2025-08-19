@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import type { UserEntity } from '../entities/user.entity';
 import { UserRepository } from '../repositories/user.repository';
 
@@ -9,23 +9,17 @@ export class UserService {
 	async getProfile(userId: string): Promise<Omit<UserEntity, 'password'>> {
 		const user = await this.userRepository.getProfile(userId);
 
-		if (!user) {
-			throw new NotFoundException('User not found');
-		}
-
 		const { password: _, ...userWithoutPassword } = user; // não exibe a senha o listar os dados do usuário
 		return userWithoutPassword;
 	}
-	async editProfile() {}
-	async deleteAccount(id: string): Promise<void> {
-		const userExists = await this.userRepository.findById(id);
 
-		if (!userExists) {
-			throw new NotFoundException('User not found');
-		}
+	async deleteAccount(id: string): Promise<void> {
+		await this.userRepository.findById(id);
 
 		await this.userRepository.deleteAccount(id);
 	}
+
+	async editProfile() {}
 	async createAppointment() {}
 	async getAppointments() {}
 	async changeAppointment() {}
