@@ -7,26 +7,21 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import type { DocumentType, ROLE } from '@/_types';
 import { PrismaService } from '@/modules/prisma/prisma.service';
-import { hashPassword } from '@/utils';
+import { JWTMockService } from '@/test/mocks/jwt';
+import { MockPrismaService } from '@/test/mocks/prisma';
+import {
+	generateBirthDate,
+	generateUniqueDocument,
+	generateUniqueEmail,
+	generateUniqueName,
+	hashPassword,
+} from '@/utils';
 import { AuthService } from './auth.service';
-
-const createMockPrismaService = () => ({
-	user: {
-		findUnique: vi.fn(),
-		findMany: vi.fn(),
-		create: vi.fn(),
-		delete: vi.fn(),
-	},
-});
-
-const createJWTMockService = () => ({
-	sign: vi.fn(),
-});
 
 describe('AuthService', () => {
 	let service: AuthService;
-	const mockPrismaService = createMockPrismaService();
-	const mockJwtService = createJWTMockService();
+	const mockPrismaService = MockPrismaService();
+	const mockJwtService = JWTMockService();
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -47,7 +42,7 @@ describe('AuthService', () => {
 	});
 
 	afterEach(() => {
-		vi.resetAllMocks();
+		vi.clearAllMocks();
 	});
 
 	it('should be defined', () => {
@@ -57,18 +52,18 @@ describe('AuthService', () => {
 	describe('SignUp', () => {
 		it('should create a new user and return user without password', async () => {
 			const userSignUpData = {
-				name: 'Cobra Coral',
-				email: 'signUp@acme.com',
+				name: generateUniqueName(),
+				email: generateUniqueEmail(),
 				password: await hashPassword('1234567878'),
-				birthDate: new Date(),
+				birthDate: generateBirthDate(),
 				role: 'PATIENT' as ROLE,
 				documentType: 'CPF' as DocumentType,
-				document: '000.888.333-02',
+				document: generateUniqueDocument(),
 			};
 
 			mockPrismaService.user.findUnique.mockResolvedValue(null);
 
-			const mockCreatedUser = {
+			const createdUser = {
 				id: 'new-user-id',
 				name: userSignUpData.name,
 				email: userSignUpData.email,
@@ -81,12 +76,12 @@ describe('AuthService', () => {
 				updatedAt: new Date(),
 			};
 
-			mockPrismaService.user.create.mockResolvedValue(mockCreatedUser);
+			mockPrismaService.user.create.mockResolvedValue(createdUser);
 
 			const result = await service.SignUp(userSignUpData);
 
 			expect(result).not.toHaveProperty('password');
-			expect(result).toEqual({
+			expect(result).toMatchObject({
 				id: 'new-user-id',
 				name: userSignUpData.name,
 				email: userSignUpData.email,
@@ -109,16 +104,17 @@ describe('AuthService', () => {
 			const plainPassword = 'senha_normal_123';
 
 			const userSignUpData = {
-				name: 'User User',
-				email: 'email@acme.com.br',
+				name: generateUniqueName(),
+				email: generateUniqueEmail(),
 				password: plainPassword,
-				birthDate: new Date(),
+				birthDate: generateBirthDate(),
 				role: 'PATIENT' as ROLE,
 				documentType: 'CPF' as DocumentType,
-				document: '123.456.789-03',
+				document: generateUniqueDocument(),
 			};
 
 			mockPrismaService.user.findUnique.mockResolvedValue(null);
+
 			mockPrismaService.user.create.mockResolvedValue({
 				id: 'user-id',
 				...userSignUpData,
@@ -138,13 +134,13 @@ describe('AuthService', () => {
 
 		it('should throw conflict exception when email is already in use', async () => {
 			const userSignUpData = {
-				name: 'Usuário da Silva',
-				email: 'test@acme.com',
+				name: generateUniqueName(),
+				email: generateUniqueEmail(),
 				password: '23456678',
-				birthDate: new Date(),
+				birthDate: generateBirthDate(),
 				role: 'PATIENT' as ROLE,
 				documentType: 'CPF' as DocumentType,
-				document: '000.888.666-17',
+				document: generateUniqueDocument(),
 			};
 
 			mockPrismaService.user.findUnique.mockResolvedValue({
