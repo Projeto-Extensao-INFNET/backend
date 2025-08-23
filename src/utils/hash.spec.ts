@@ -1,6 +1,6 @@
-import { comparePassword, generateUUID, hashPassword } from '@/utils';
+import { comparePassword, hashPassword } from './hash';
 
-describe('Utility functions tests', () => {
+describe('Hash Password', () => {
 	it('should hash password correctly', async () => {
 		const password = '12345678';
 
@@ -20,12 +20,5 @@ describe('Utility functions tests', () => {
 		expect(hashedPassword).toBeDefined();
 		expect(isPasswordHashed).toBe(true);
 		expect(isPasswordWrong).toBe(false);
-	});
-	it('should generate a UUID', async () => {
-		const uuid = generateUUID();
-
-		expect(uuid).toBeDefined();
-		expect(typeof uuid).toBe('string');
-		expect(uuid.length).toBe(36);
 	});
 });
