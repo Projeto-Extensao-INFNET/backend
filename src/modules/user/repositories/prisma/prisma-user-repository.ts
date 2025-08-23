@@ -18,7 +18,7 @@ export class PrismaUserRepository extends UserRepository {
 		});
 
 		if (!user) {
-			throw new NotFoundException('Usuário não encontrado');
+			throw new NotFoundException('User not found');
 		}
 
 		return user as UserEntity;
@@ -32,7 +32,7 @@ export class PrismaUserRepository extends UserRepository {
 		});
 
 		if (!user) {
-			throw new NotFoundException('Usuário não encontrado');
+			throw new NotFoundException('User not found');
 		}
 
 		return user as UserEntity;
