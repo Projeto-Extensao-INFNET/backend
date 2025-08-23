@@ -1,17 +1,11 @@
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
+import { MockPrismaService } from '@/test/mocks/prisma';
 import { PrismaService } from './prisma.service';
-
-const createMockPrismaService = () => ({
-	$connect: vi.fn(),
-	$disconnect: vi.fn(),
-	onModuleInit: vi.fn(),
-	onModuleDestroy: vi.fn(),
-});
 
 describe('PrismaService', () => {
 	let service: PrismaService;
-	const mockPrismaService = createMockPrismaService();
+	const mockPrismaService = MockPrismaService();
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
