@@ -1,8 +1,13 @@
 # Regras de Negócio
 
+- [ ] Refatorar a arquitetura do projeto
+- [ ] Refatorar testes (factories, boas práticas do vitest ,melhores mocks etc)
+- [ ] Adicionar paginação
+- [ ] Adicionar Swagger + scalar
+
 ## Requisitos do Sistema
 
-- [ ] Validação dos dados 
+- [x] Validação dos dados 
 - [ ] Deploy em alguma plataforma (Vercel ou Render)
 - [ ] Cache com redis (?)
 - [] Testes unitários, integração e E2E com vitest + supertest
@@ -80,7 +85,7 @@
 ## 📋 API Routes
 
 - [x] Autenticação JWT - ✅ **Auth module implementado**
-- [ ] Proteção de rotas
+- [x] Proteção de rotas
 - [ ] RBAC - Autorização baseada em roles (PATIENT, PROFESSIONAL, ADMIN)
 - [ ] Documentação com SWAGGER
 
