@@ -1,40 +1,47 @@
-import { faker } from '@faker-js/faker/locale/pt_BR';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import type { DocumentType, ROLE } from '@/_types';
-import { InMemoryUserRepository } from '../repositories/in-memory/in-memory-user.repository';
+import { PrismaService } from '@/modules/prisma/prisma.service';
+import { MockPrismaService } from '@/test/mocks/prisma';
+import {
+	generateBirthDate,
+	generateUniqueDocument,
+	generateUniqueEmail,
+	generateUniqueName,
+	generateUUID,
+	nonExistentUserId,
+} from '@/utils';
+import { PrismaUserRepository } from '../repositories/prisma/prisma-user-repository';
 import { UserRepository } from '../repositories/user.repository';
 import { UserService } from './user.service';
 
 describe('UserService', () => {
 	let service: UserService;
-	let inMemoryUserRepository: InMemoryUserRepository; // instancio o repositório em memória de usuários
+	const mockPrismaService = MockPrismaService();
 
-	const nonExistentUserId = 'non-existent-id'; // id para testes que devem retornar erros
-	const userId = 'user-id-123'; // id para testes de sucesso
-
-	const mockUser = {
-		id: userId,
-		name: faker.person.fullName(),
-		email: faker.internet.email(),
-		password: '123455678',
-		birthDate: new Date(),
-		role: 'PATIENT' as ROLE,
-		documentType: 'CPF' as DocumentType,
-		document: faker.helpers.replaceSymbols('###.###.###-##'),
+	const userMock = {
+		id: generateUUID(),
+		name: generateUniqueName(),
+		email: generateUniqueEmail(),
+		password: '12345678',
+		birthDate: generateBirthDate(),
+		role: 'PATIENT',
+		documentType: 'CPF',
+		document: generateUniqueDocument(),
 		createdAt: new Date(),
 		updatedAt: new Date(),
-	}; // mock de um usuário
+	};
 
 	beforeEach(async () => {
-		inMemoryUserRepository = new InMemoryUserRepository(); // injeto o repositório em memória de usuários
-
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				UserService,
 				{
 					provide: UserRepository,
-					useValue: inMemoryUserRepository, // usa a instância como provider
+					useClass: PrismaUserRepository,
+				},
+				{
+					provide: PrismaService,
+					useValue: mockPrismaService,
 				},
 			],
 		}).compile();
@@ -42,8 +49,8 @@ describe('UserService', () => {
 		service = module.get<UserService>(UserService);
 	});
 
-	afterEach(() => {
-		inMemoryUserRepository.items = []; // Limpa o array após cada teste
+	afterEach(async () => {
+		vi.clearAllMocks();
 	});
 
 	it('should be defined', () => {
@@ -52,14 +59,18 @@ describe('UserService', () => {
 
 	describe('getProfile', () => {
 		it('should get user profile', async () => {
-			inMemoryUserRepository.items.push(mockUser);
+			const user = userMock;
 
-			const result = await service.getProfile(userId);
+			mockPrismaService.user.findUnique.mockResolvedValue(userMock);
+
+			const result = await service.getProfile(user.id);
 
 			expect(result).not.toHaveProperty('password');
-			expect(result.id).toBe(userId);
+			expect(result.id).toBe(user.id);
 		});
 		it('it should throw NotFoundException when user not found', async () => {
+			mockPrismaService.user.findUnique.mockResolvedValue(null);
+
 			await expect(service.getProfile(nonExistentUserId)).rejects.toThrow(
 				new NotFoundException('User not found'),
 			);
@@ -67,23 +78,37 @@ describe('UserService', () => {
 	});
 	describe('deleteAccount ', () => {
 		it('should delete user profile', async () => {
-			inMemoryUserRepository.items.push(mockUser);
+			const user = userMock;
 
-			await service.deleteAccount(userId);
+			mockPrismaService.user.delete.mockResolvedValue(user);
 
-			expect(
-				inMemoryUserRepository.items.find((user) => user.id === userId),
-			).toBeUndefined();
+			mockPrismaService.user.findUnique
+				.mockResolvedValueOnce(user) // 1ª chamada: retorna o usuário
+				.mockResolvedValueOnce(null); // 2ª chamada: retorna null
+
+			await service.deleteAccount(user.id);
+
+			const result = await mockPrismaService.user.findUnique({
+				where: {
+					id: user.id,
+				},
+			});
+
+			expect(result).toBeNull();
 		});
 
 		it('it should throw NotFoundException when user not found', async () => {
+			mockPrismaService.user.delete.mockRejectedValue(
+				new NotFoundException('User not found'),
+			);
+
 			await expect(
 				service.deleteAccount(nonExistentUserId),
 			).rejects.toThrow(new NotFoundException('User not found'));
 		});
 	});
-	describe('createAppointment', () => {});
-	describe('getAppointments', () => {});
-	describe('changeAppointment', () => {});
-	describe('cancelAppointment', () => {});
+	// describe('createAppointment', () => {});
+	// describe('getAppointments', () => {});
+	// describe('changeAppointment', () => {});
+	// describe('cancelAppointment', () => {});
 });
