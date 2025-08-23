@@ -78,7 +78,7 @@ model Professional {
   price         Float
   paymentMethod PaymentMethod            @map("payment_method")
   documentType  ProfessionalDocumentType @map("document_type")
-  document      String
+  document      String                   @unique
   gender        Gender
   avatar        String
   phone         String?
