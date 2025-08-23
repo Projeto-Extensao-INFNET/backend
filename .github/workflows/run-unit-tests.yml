@@ -4,9 +4,12 @@ on:
   push:
     branches:
       - main
+      - develop
   pull_request:
     branches:
       - main
+      - develop
+    
 
 jobs:
   run-unit-tests:
@@ -17,7 +20,7 @@ jobs:
       postgresql-test:
         image: bitnami/postgresql:latest
         ports:
-          - 5433:5432
+          - 5432:5432
         volumes:
           - postgres_data_test:/bitnami/postgresql
         env:
