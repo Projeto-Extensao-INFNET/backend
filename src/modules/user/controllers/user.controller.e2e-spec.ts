@@ -3,7 +3,11 @@ import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '@/app.module';
 import { PrismaService } from '@/modules/prisma/prisma.service';
-import { makeAuthenticate, makeUser } from '@/test/factories';
+import {
+	makeAuthenticate,
+	makeUser,
+	makeUserProfessional,
+} from '@/test/factories';
 
 describe('User (E2E)', () => {
 	let app: INestApplication;
@@ -30,6 +34,19 @@ describe('User (E2E)', () => {
 
 		expect(getUser.statusCode).toBe(200);
 		expect(getUser.body).toHaveProperty('name');
+	});
+	it('[POST] /auth/signin - should return 401 when user try to login with wrong role', async () => {
+		const user = await makeUserProfessional(prisma);
+
+		await request(app.getHttpServer()).post('/auth/signup');
+
+		const token = await makeAuthenticate(app, user.email);
+
+		const response = await request(app.getHttpServer())
+			.get('/accounts/me')
+			.set('Authorization', `Bearer ${token}`);
+
+		expect(response.status).toBe(401);
 	});
 	it('[DELETE] /accounts/me', async () => {
 		const user = await makeUser(prisma);
