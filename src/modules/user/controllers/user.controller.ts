@@ -6,6 +6,8 @@ import {
 	Request,
 	UseGuards,
 } from '@nestjs/common';
+import { ROLE } from '@/_types';
+import { Roles } from '@/modules/auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import type {
 	AuthenticatedUserRequest,
@@ -17,6 +19,7 @@ import { UserService } from '../services/user.service';
 export class UserController {
 	constructor(private readonly userService: UserService) {}
 
+	@Roles(ROLE.PATIENT)
 	@Get('me')
 	@HttpCode(200)
 	@UseGuards(JwtAuthGuard)
@@ -28,6 +31,7 @@ export class UserController {
 		return await this.userService.getProfile(userId);
 	}
 
+	@Roles(ROLE.PATIENT)
 	@Delete('me')
 	@UseGuards(JwtAuthGuard)
 	@HttpCode(204)
