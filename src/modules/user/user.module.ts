@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 import { PrismaModule } from '../prisma/prisma.module';
 import { UserController } from './controllers/user.controller';
 import { PrismaUserRepository } from './repositories/prisma/prisma-user-repository';
@@ -6,7 +7,7 @@ import { UserRepository } from './repositories/user.repository';
 import { UserService } from './services/user.service';
 
 @Module({
-	imports: [PrismaModule],
+	imports: [PrismaModule, JwtModule],
 	providers: [
 		UserService,
 		PrismaUserRepository,
