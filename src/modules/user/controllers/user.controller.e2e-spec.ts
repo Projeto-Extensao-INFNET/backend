@@ -20,6 +20,17 @@ describe('User (E2E)', () => {
 		await app.init();
 	});
 
+	it('[GET] /accounts/me', async () => {
+		const user = await makeUser(prisma);
+		const token = await makeAuthenticate(app, user.email);
+
+		const getUser = await request(app.getHttpServer())
+			.get('/accounts/me')
+			.set('Authorization', `Bearer ${token}`);
+
+		expect(getUser.statusCode).toBe(200);
+		expect(getUser.body).toHaveProperty('name');
+	});
 	it('[DELETE] /accounts/me', async () => {
 		const user = await makeUser(prisma);
 		const token = await makeAuthenticate(app, user.email);
@@ -39,16 +50,5 @@ describe('User (E2E)', () => {
 		expect(userExists.statusCode).toBe(200);
 		expect(deleteUser.statusCode).toBe(204);
 		expect(isUserDeleted.statusCode).toBe(404);
-	});
-	it('[GET] /accounts/me', async () => {
-		const user = await makeUser(prisma);
-		const token = await makeAuthenticate(app, user.email);
-
-		const getUser = await request(app.getHttpServer())
-			.get('/accounts/me')
-			.set('Authorization', `Bearer ${token}`);
-
-		expect(getUser.statusCode).toBe(200);
-		expect(getUser.body).toHaveProperty('name');
 	});
 });
