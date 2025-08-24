@@ -10,13 +10,13 @@ POST {{baseUrl}}/auth/signup
 Content-Type: application/json
  
  {
-  "name": "Bombardilo Crocodilo",
-  "email": "bombardilo@acme.com",
+  "name": "Odin",
+  "email": "allfather2@acme.com",
   "password": "12345678",
   "birthDate": "1990-01-01T00:00:00.000Z", 
   "role": "PATIENT",
   "documentType": "CPF",
-  "document": "123.456.789-99"
+  "document": "123.566.329-99"
 }
 
 ###
@@ -26,7 +26,7 @@ POST {{baseUrl}}/auth/signin
 Content-Type: application/json
  
  {
-  "email": "bombardilo@acme.com",
+  "email": "allfather@acme.com",
   "password": "12345678"
 }
 
