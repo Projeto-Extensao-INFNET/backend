@@ -3,14 +3,14 @@
 - [ ] Refatorar a arquitetura do projeto
 - [ ] Refatorar testes (factories, boas práticas do vitest ,melhores mocks etc)
 - [ ] Adicionar paginação
-- [ ] Adicionar Swagger + scalar
+- [x] Adicionar Swagger + scalar
 
 ## Requisitos do Sistema
 
 - [x] Validação dos dados 
-- [ ] Deploy em alguma plataforma (Vercel ou Render)
+- [ ] Deploy em alguma plataforma (Vercel, fly.io ou Render)
 - [ ] Cache com redis (?)
-- [] Testes unitários, integração e E2E com vitest + supertest
+- [ ] Testes unitários, integração e E2E com vitest + supertest
 
 ## Regras Gerais do Sistema
 
