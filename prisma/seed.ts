@@ -23,6 +23,8 @@ const seed = async () => {
 	await prisma.specialty.deleteMany();
 	await prisma.typesOfTreatment.deleteMany();
 
+	console.log('✔ Database reset');
+
 	// Criar usuário admin
 	const userAdmin = await prisma.user.create({
 		data: {
