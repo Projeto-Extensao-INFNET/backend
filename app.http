@@ -45,3 +45,12 @@ Authorization: Bearer {{authToken}}
 # @name delete_user_profile
 DELETE {{baseUrl}}/accounts/me
 Authorization: Bearer {{authToken}}
+
+###
+
+# paciente listar os profissionais
+# @name list_professionals
+GET {{baseUrl}}/accounts/professionals
+Authorization: Bearer {{authToken}}
+
+###
