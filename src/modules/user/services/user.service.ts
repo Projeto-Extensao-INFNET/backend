@@ -19,6 +19,10 @@ export class UserService {
 		await this.userRepository.deleteAccount(id);
 	}
 
+	async listProfessionals() {
+		return await this.userRepository.listProfessionals();
+	}
+
 	async editProfile() {}
 	async createAppointment() {}
 	async getAppointments() {}
