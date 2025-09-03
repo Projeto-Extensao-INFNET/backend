@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import type { Professional } from 'generated/prisma';
 import { PrismaService } from '@/modules/prisma/prisma.service';
 import type { UserEntity } from '../../entities/user.entity';
 import { UserRepository } from '../user.repository';
@@ -44,5 +45,46 @@ export class PrismaUserRepository extends UserRepository {
 				id,
 			},
 		});
+	}
+
+	async listProfessionals(): Promise<Professional[]> {
+		const professionals = await this.prismaService.professional.findMany({
+			select: {
+				id: true,
+				typeOfQuery: true,
+				price: true,
+				paymentMethod: true,
+				document: true,
+				documentType: true,
+				gender: true,
+				avatar: true,
+				phone: true,
+				userId: true,
+				specialtyId: true,
+				typeOfTreatmentId: true,
+				user: {
+					select: {
+						name: true,
+						email: true,
+					},
+				},
+				specialty: {
+					select: {
+						name: true,
+					},
+				},
+				typeOfTreatment: {
+					select: {
+						name: true,
+					},
+				},
+			},
+		});
+
+		return professionals;
+	}
+
+	async editProfile(): Promise<UserEntity> {
+		throw new Error('Implementar');
 	}
 }
