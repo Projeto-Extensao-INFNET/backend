@@ -10,13 +10,13 @@ POST {{baseUrl}}/auth/signup
 Content-Type: application/json
  
  {
-  "name": "Odin",
-  "email": "allfather2@acme.com",
+  "name": "Frey", // sempre alterar para evitar conflitos ao testar
+  "email": "father2@acme.com", // sempre alterar para evitar conflitos ao testar
   "password": "12345678",
   "birthDate": "1990-01-01T00:00:00.000Z", 
   "role": "PATIENT",
   "documentType": "CPF",
-  "document": "123.566.329-99"
+  "document": "153.566.329-99" // sempre alterar para evitar conflitos ao testar
 }
 
 ###
@@ -26,7 +26,7 @@ POST {{baseUrl}}/auth/signin
 Content-Type: application/json
  
  {
-  "email": "allfather@acme.com",
+  "email": "father2@acme.com", // usar o mesmo email do @SignUp
   "password": "12345678"
 }
 
@@ -52,5 +52,18 @@ Authorization: Bearer {{authToken}}
 # @name list_professionals
 GET {{baseUrl}}/accounts/professionals
 Authorization: Bearer {{authToken}}
+
+###
+
+# paciente edita o perfil
+# @name edit_profile
+PATCH {{baseUrl}}/accounts/me
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name":"Patch da silva",
+  "email": "patch@email.com"
+}
 
 ###
