@@ -1,8 +1,10 @@
 import {
+	Body,
 	Controller,
 	Delete,
 	Get,
 	HttpCode,
+	Patch,
 	Request,
 	UseGuards,
 } from '@nestjs/common';
@@ -17,6 +19,7 @@ import {
 import { ROLE } from '@/_types';
 import { Roles } from '@/modules/auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
+import type { EditProfileDto } from '../dto/edit-profile.dto';
 import type {
 	AuthenticatedUserRequest,
 	UserProfileDto,
@@ -101,5 +104,17 @@ export class UserController {
 	@HttpCode(200)
 	async listProfessionals() {
 		return await this.userService.listProfessionals();
+	}
+
+	@Roles(ROLE.PATIENT)
+	@UseGuards(JwtAuthGuard)
+	@Patch('me')
+	@HttpCode(200)
+	async editProfile(
+		@Request() req: AuthenticatedUserRequest,
+		@Body() dto: EditProfileDto,
+	) {
+		const userId = req.user.userId;
+		return await this.userService.editProfile(userId, dto);
 	}
 }
