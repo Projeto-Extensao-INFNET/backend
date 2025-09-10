@@ -68,6 +68,7 @@ describe('UserService', () => {
 			expect(result).not.toHaveProperty('password');
 			expect(result.id).toBe(user.id);
 		});
+
 		it('it should throw NotFoundException when user not found', async () => {
 			mockPrismaService.user.findUnique.mockResolvedValue(null);
 
@@ -76,6 +77,7 @@ describe('UserService', () => {
 			);
 		});
 	});
+
 	describe('deleteAccount ', () => {
 		it('should delete user profile', async () => {
 			const user = userMock;
@@ -107,6 +109,35 @@ describe('UserService', () => {
 			).rejects.toThrow(new NotFoundException('User not found'));
 		});
 	});
+
+	describe('editProfile', () => {
+		it('should edit user profile', async () => {
+			const user = userMock;
+			const dto = { name: 'Novo nome', email: 'novo@email.com' }; // dados que serão usados na edição do perfil
+
+			// primeiro valida se o usuario existe
+			mockPrismaService.user.findUnique.mockResolvedValue(user);
+
+			// simula o retorno do update
+			mockPrismaService.user.update.mockResolvedValue({
+				...user,
+				...dto,
+			});
+
+			// executa o método de editProfile no service
+			const result = await service.editProfile(user.id, dto);
+
+			// verifica se o update foi chamado com os dados corretos (vindos do DTO)
+			expect(mockPrismaService.user.update).toHaveBeenCalledWith({
+				where: { id: user.id },
+				data: dto,
+			});
+			expect(result).not.toHaveProperty('password'); // verifica se a senha do usuário não aparece no retorno
+			expect(result.name).toBe(dto.name); // verifica se o novo campo editado aparece corretamente
+			expect(result.email).toBe(dto.email); // verifica se o novo campo editado aparece corretamente
+		});
+	});
+
 	// describe('createAppointment', () => {});
 	// describe('getAppointments', () => {});
 	// describe('changeAppointment', () => {});
