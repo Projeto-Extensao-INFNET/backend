@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import type { EditProfileDto } from '../dto/edit-profile.dto';
 import type { UserEntity } from '../entities/user.entity';
 import { UserRepository } from '../repositories/user.repository';
 
@@ -23,7 +24,17 @@ export class UserService {
 		return await this.userRepository.listProfessionals();
 	}
 
-	async editProfile() {}
+	async editProfile(
+		id: string,
+		dto: EditProfileDto,
+	): Promise<Omit<UserEntity, 'password'>> {
+		await this.userRepository.findById(id);
+
+		const updatedUser = await this.userRepository.editProfile(id, dto);
+
+		const { password: _, ...userWithoutPassword } = updatedUser;
+		return userWithoutPassword;
+	}
 	async createAppointment() {}
 	async getAppointments() {}
 	async changeAppointment() {}
