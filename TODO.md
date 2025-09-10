@@ -30,7 +30,7 @@
 
 - [x] Se cadastrar
 - [ ] Consultar lista de profissionais
-- [ ] Editar somente seu propio perfil ( do usuário logado)
+- [x] Editar somente seu propio perfil ( do usuário logado)
 - [x] Excluir somente seu propio usuario logado
 - [ ] Agendar consultas para o seu propio usuario logado
 - [ ] Alterar sua propia consulta para o seu propio usuario logado
@@ -86,8 +86,8 @@
 
 - [x] Autenticação JWT - ✅ **Auth module implementado**
 - [x] Proteção de rotas
-- [ ] RBAC - Autorização baseada em roles (PATIENT, PROFESSIONAL, ADMIN)
-- [ ] Documentação com SWAGGER
+- [x] RBAC - Autorização baseada em roles (PATIENT, PROFESSIONAL, ADMIN)
+- [x] Documentação com SWAGGER
 
 ### 🔓 Rotas Públicas (sem autenticação JWT)
 
@@ -106,13 +106,13 @@
 
 | Método | Rota | Descrição | Validação | Status |
 |--------|------|-----------|-----------|--------|
-| `GET` | `/accounts/me` | Ver próprio perfil | Próprio usuário | ✅ **Implementado** | 
-| `PUT` | `/accounts/me` | Editar próprio perfil | Próprio usuário |
-| `DELETE` | `/accounts/me` | Excluir própria conta | Próprio usuário | ✅ **Implementado** | 
-| `POST` | `/appointments` | Agendar consulta | Próprio usuário | 
-| `GET` | `/appointments/me` | Ver próprios agendamentos | Próprio usuário | 
-| `PUT` | `/appointments/:id` | Alterar próprio agendamento | Próprio agendamento | 
-| `DELETE` | `/appointments/:id` | Cancelar próprio agendamento | Próprio agendamento | 
+| `GET` | `/accounts/me` | Ver próprio perfil | Próprio usuário | ✅ **Implementado** |
+| `PATCH` | `/accounts/me` | Editar próprio perfil | Próprio usuário | ✅ **Implementado** |
+| `DELETE` | `/accounts/me` | Excluir própria conta | Próprio usuário | ✅ **Implementado** |
+| `POST` | `/appointments` | Agendar consulta | Próprio usuário |
+| `GET` | `/appointments/me` | Ver próprios agendamentos | Próprio usuário |
+| `PATCH` | `/appointments/:id` | Alterar próprio agendamento | Próprio agendamento |
+| `DELETE` | `/appointments/:id` | Cancelar próprio agendamento | Próprio agendamento |
 | `GET` | `/professionals/:id` | Ver detalhes de profissional | Todos pacientes | ✅ **Implementado** |
 
 #### 👨‍⚕️ PROFISSIONAL - Rotas
