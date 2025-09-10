@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type { Professional } from 'generated/prisma';
 import { PrismaService } from '@/modules/prisma/prisma.service';
+import type { EditProfileDto } from '../../dto/edit-profile.dto';
 import type { UserEntity } from '../../entities/user.entity';
 import { UserRepository } from '../user.repository';
 
@@ -84,7 +85,12 @@ export class PrismaUserRepository extends UserRepository {
 		return professionals;
 	}
 
-	async editProfile(): Promise<UserEntity> {
-		throw new Error('Implementar');
+	async editProfile(id: string, dto: EditProfileDto): Promise<UserEntity> {
+		const user = await this.prismaService.user.update({
+			where: { id },
+			data: dto,
+		});
+
+		return user as UserEntity;
 	}
 }
