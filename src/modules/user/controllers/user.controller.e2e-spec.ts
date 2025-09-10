@@ -68,4 +68,21 @@ describe('User (E2E)', () => {
 		expect(deleteUser.statusCode).toBe(204);
 		expect(isUserDeleted.statusCode).toBe(404);
 	});
+
+	it('[PATCH] /accounts/me', async () => {
+		const user = await makeUser(prisma);
+		const token = await makeAuthenticate(app, user.email);
+
+		const userExists = await request(app.getHttpServer())
+			.get('/accounts/me')
+			.set('Authorization', `Bearer ${token}`);
+
+		const updateUserProfile = await request(app.getHttpServer())
+			.patch('/accounts/me')
+			.set('Authorization', `Bearer ${token}`)
+			.send({ name: 'Novo Nome', email: 'novo@email.com' }); //passa os campos que serão atualizados
+
+		expect(userExists.statusCode).toBe(200);
+		expect(updateUserProfile.statusCode).toBe(200);
+	});
 });
