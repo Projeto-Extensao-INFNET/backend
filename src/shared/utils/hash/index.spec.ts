@@ -1,4 +1,4 @@
-import { comparePassword, hashPassword } from './hash';
+import { comparePassword, hashPassword } from '.';
 
 describe('Hash Password', () => {
 	it('should hash password correctly', async () => {
