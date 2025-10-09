@@ -1,11 +1,11 @@
-import { PrismaService } from '@/modules/prisma/prisma.service';
-import { hashPassword } from '@/utils';
+import { PrismaService } from '@/database/prisma/prisma.service';
+import { hashPassword } from '@/shared/utils';
 import {
 	generateBirthDate,
 	generateUniqueDocument,
 	generateUniqueEmail,
 	generateUniqueName,
-} from '@/utils/generate-data';
+} from '@/shared/utils/generate-data';
 
 // cria um usuário
 export const makeUser = async (prisma: PrismaService) => {
