@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type { Professional } from 'generated/prisma';
-import { PrismaService } from '@/modules/prisma/prisma.service';
-import type { EditProfileDto } from '../../dto/edit-profile.dto';
-import type { UserEntity } from '../../entities/user.entity';
+import { PrismaService } from '@/database/prisma/prisma.service';
+import type { UserEntity } from '../../../../core/entities/user.entity';
+import type { EditProfileDto } from '../../../../infra/http/dto/edit-profile.dto';
 import { UserRepository } from '../user.repository';
 
 // implementação real do UserRepository usando o Prisma para acessar o banco de dados
