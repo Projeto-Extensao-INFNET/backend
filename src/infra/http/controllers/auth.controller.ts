@@ -7,9 +7,9 @@ import {
 	ApiOperation,
 	ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { SignInDto } from './../dto/signIn.dto';
-import { SignUpDto } from '../dto/signUp.dto';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '@/application/services/auth.service';
+import { SignInDto } from '../../../infra/http/dto/signIn.dto';
+import { SignUpDto } from '../../../infra/http/dto/signUp.dto';
 
 @Controller('auth')
 export class AuthController {

@@ -2,14 +2,18 @@ import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '@/app.module';
-import { PrismaService } from '@/modules/prisma/prisma.service';
-import { makeAuthenticate, makeUser } from '@/test/factories';
+import { PrismaService } from '@/database/prisma/prisma.service';
 import {
 	generateBirthDate,
 	generateUniqueDocument,
 	generateUniqueEmail,
 	generateUniqueName,
-} from '@/utils/';
+} from '@/shared/utils';
+import {
+	makeAuthenticate,
+	makeUser,
+	makeUserProfessional,
+} from '@/test/factories';
 
 describe('AuthController (E2E)', () => {
 	let app: INestApplication;
@@ -55,6 +59,7 @@ describe('AuthController (E2E)', () => {
 			expect(response.body).toHaveProperty('email', user.email);
 			expect(response.body).not.toHaveProperty('password');
 		});
+
 		describe('SignIn', () => {
 			it('[POST] /auth/signin - should return access token with valid credentials', async () => {
 				const user = await makeUser(prisma);
@@ -63,7 +68,22 @@ describe('AuthController (E2E)', () => {
 				expect(token).toBeDefined();
 				expect(typeof token).toBe('string');
 			});
+
+			it('[POST] /auth/signin - should return 401 when user try to login with wrong role', async () => {
+				const user = await makeUserProfessional(prisma);
+
+				await request(app.getHttpServer()).post('/auth/signup');
+
+				const token = await makeAuthenticate(app, user.email);
+
+				const response = await request(app.getHttpServer())
+					.get('/accounts/me')
+					.set('Authorization', `Bearer ${token}`);
+
+				expect(response.status).toBe(401);
+			});
 		});
+
 		it('Complete flow: signup then signin', async () => {
 			const user = {
 				name: generateUniqueName(),
