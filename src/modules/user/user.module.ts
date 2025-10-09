@@ -1,13 +1,11 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { PrismaModule } from '../prisma/prisma.module';
-import { UserController } from './controllers/user.controller';
+import { UserService } from '@/application/services/user.service';
 import { PrismaUserRepository } from './repositories/prisma/prisma-user-repository';
 import { UserRepository } from './repositories/user.repository';
-import { UserService } from './services/user.service';
 
 @Module({
-	imports: [PrismaModule, JwtModule],
+	imports: [JwtModule],
 	providers: [
 		UserService,
 		PrismaUserRepository,
@@ -16,6 +14,6 @@ import { UserService } from './services/user.service';
 			useExisting: PrismaUserRepository, // implementa os métodos reais
 		},
 	],
-	controllers: [UserController],
+	exports: [UserRepository, UserService],
 })
 export class UserModule {}
