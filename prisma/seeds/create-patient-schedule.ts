@@ -37,7 +37,7 @@ export const CreatePatientSchedule = async () => {
 				isAvailable: false,
 			},
 		});
-    
+
 		await prisma.$disconnect();
 	}
 };
