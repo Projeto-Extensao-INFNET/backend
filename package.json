@@ -2,9 +2,12 @@
 	"name": "backend_projeto_extensao",
 	"version": "0.0.1",
 	"description": "",
-	"author": "",
+	"author": "Nathan Rodrigues Vieira",
 	"private": true,
 	"license": "UNLICENSED",
+	"engines": {
+		"node": ">=22.15.1"
+	},
 	"scripts": {
 		"build": "nest build",
 		"start": "nest start",
@@ -35,7 +38,6 @@
 		"@nestjs/passport": "^11.0.5",
 		"@nestjs/platform-express": "^11.1.5",
 		"@prisma/client": "^6.13.0",
-		"@scalar/nestjs-api-reference": "^0.5.13",
 		"bcryptjs": "^3.0.2",
 		"class-transformer": "^0.5.1",
 		"class-validator": "^0.14.2",
