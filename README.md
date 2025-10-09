@@ -18,7 +18,6 @@ O projeto utiliza diferentes arquivos `.env` para separar as configurações de 
 
 - `.env`: ambiente de desenvolvimento local (porta, banco, CORS, etc).
 - `.env.test`: ambiente de testes unitários/integrados (banco e porta isolados para testes).
-- `.env.e2e`: ambiente de testes end-to-end (banco e porta isolados para e2e).
 - `.env.production`: ambiente de produção (configurações seguras para deploy).
 
 Esses arquivos permitem rodar a aplicação em diferentes contextos sem alterar o código, apenas mudando as variáveis de ambiente.
@@ -40,7 +39,7 @@ Outros arquivos importantes:
    ```
 
 2. **Configure as variáveis de ambiente:**
-   - Copie `.env.example` para `.env` e ajuste conforme necessário.
+   - Copie `.env.example` ou `.env.test.example` para `.env` ou `.env.test` e ajuste conforme necessário.
 
 3. **Suba o banco de dados com Docker:**
 
@@ -66,26 +65,21 @@ Outros arquivos importantes:
    ```sh
    pnpm start:dev
    ```
-
+  
 ## Scripts úteis
 
 - `pnpm start:dev` — Inicia o servidor em modo desenvolvimento
+- `pnpm start:build` — Inicia o servidor em modo de produção
 - `pnpm test` — Executa os testes automatizados
 - `pnpm test:watch` — Executa os testes automatizados em modo watch
 - `pnpm test:coverage` — Mostra a cobertura dos testes automatizados
+- `pnpm test:e2e` — Executa os testes e2e
+- `pnpm test:coverage:e2e` — Mostra a cobertura dos testes e2e
 - `pnpm lint` — Roda o linter
 - `pnpm commit` — Roda o commitzen para commits semânticos
 - `pnpm prisma:migrate` — Executa as migrations do banco
 - `pnpm prisma:generate` — Gera o client do Prisma
 - `pnpm prisma:seed` — Popula o banco de dados
-
-## Testes
-
-Os testes utilizam o Vitest. Para rodar:
-
-```sh
-pnpm test
-```
 
 ## Docker
 
