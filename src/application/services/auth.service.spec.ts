@@ -6,16 +6,16 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import type { DocumentType, ROLE } from '@/_types';
-import { PrismaService } from '@/modules/prisma/prisma.service';
-import { JWTMockService } from '@/test/mocks/jwt';
-import { MockPrismaService } from '@/test/mocks/prisma';
+import { PrismaService } from '@/database/prisma/prisma.service';
 import {
 	generateBirthDate,
 	generateUniqueDocument,
 	generateUniqueEmail,
 	generateUniqueName,
 	hashPassword,
-} from '@/utils';
+} from '@/shared/utils';
+import { JWTMockService } from '@/test/mocks/jwt';
+import { MockPrismaService } from '@/test/mocks/prisma';
 import { AuthService } from './auth.service';
 
 describe('AuthService', () => {

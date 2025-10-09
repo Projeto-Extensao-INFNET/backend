@@ -5,9 +5,9 @@ import {
 	UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '@/modules/prisma/prisma.service';
-import { comparePassword, hashPassword } from '@/utils';
-import type { SignUpDto } from '../dto/signUp.dto';
+import { PrismaService } from '@/database/prisma/prisma.service';
+import type { SignUpDto } from '@/infra/http/dto/signUp.dto';
+import { comparePassword, hashPassword } from '@/shared/utils';
 
 @Injectable()
 export class AuthService {

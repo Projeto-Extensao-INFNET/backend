@@ -1,7 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '@/modules/prisma/prisma.service';
-import { MockPrismaService } from '@/test/mocks/prisma';
+import { PrismaService } from '@/database/prisma/prisma.service';
+import { PrismaUserRepository } from '@/modules/user/repositories/prisma/prisma-user-repository';
+import { UserRepository } from '@/modules/user/repositories/user.repository';
 import {
 	generateBirthDate,
 	generateUniqueDocument,
@@ -9,9 +10,8 @@ import {
 	generateUniqueName,
 	generateUUID,
 	nonExistentUserId,
-} from '@/utils';
-import { PrismaUserRepository } from '../repositories/prisma/prisma-user-repository';
-import { UserRepository } from '../repositories/user.repository';
+} from '@/shared/utils';
+import { MockPrismaService } from '@/test/mocks/prisma';
 import { UserService } from './user.service';
 
 describe('UserService', () => {

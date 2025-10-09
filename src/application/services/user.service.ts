@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import type { EditProfileDto } from '../dto/edit-profile.dto';
-import type { UserEntity } from '../entities/user.entity';
-import { UserRepository } from '../repositories/user.repository';
+import type { UserEntity } from '@/core/entities/user.entity';
+import type { EditProfileDto } from '@/infra/http/dto/edit-profile.dto';
+import { UserRepository } from '@/modules/user/repositories/user.repository';
 
 @Injectable()
 export class UserService {
@@ -18,10 +18,6 @@ export class UserService {
 		await this.userRepository.findById(id);
 
 		await this.userRepository.deleteAccount(id);
-	}
-
-	async listProfessionals() {
-		return await this.userRepository.listProfessionals();
 	}
 
 	async editProfile(
