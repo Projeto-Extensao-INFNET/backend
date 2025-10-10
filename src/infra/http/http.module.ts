@@ -1,4 +1,6 @@
-import { Module } from '@nestjs/common';
+/*
+CENTRALIZA CONTROLLERS HTTP E IMPORTA MÓDULOS QUE CONTÉM PROVIDERS
+*/
 
 /**
  * CONTROLLERS
@@ -10,6 +12,7 @@ import { GetProfessionalsController } from '@controllers/get-professionals.contr
 import { GetUserController } from '@controllers/get-user.controller';
 import { SpecialtyController } from '@controllers/specialty.controller';
 import { TreatmentTypeController } from '@controllers/treatment-type.controller';
+import { Module } from '@nestjs/common';
 
 /**
  *  MODULES
