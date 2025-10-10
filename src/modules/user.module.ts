@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { UserService } from '@/application/services/user.service';
-import { PrismaUserRepository } from './repositories/prisma/prisma-user-repository';
-import { UserRepository } from './repositories/user.repository';
+import { PrismaUserRepository } from '@/database/repositories/prisma/prisma-user-repository';
+import { UserRepository } from '@/database/repositories/user.repository';
 
 @Module({
 	imports: [JwtModule],
