@@ -13,9 +13,14 @@
 		"sourceMap": true,
 		"strict": true,
 		"outDir": "./dist",
+		"rootDir": "./",
 		"baseUrl": "./",
 		"paths": {
-			"@/*": ["./src/*"]
+			"@/*": ["./src/*"],
+			"@controllers/*": ["./src/infra/http/controllers/*"],
+			"@services/*": ["./src/application/services/*"],
+			"@modules/*": ["src/modules/*"],
+			"@dtos/*": ["./src/infra/http/dto/*"]
 		},
 		"types": ["vitest/globals"],
 		"incremental": true,
