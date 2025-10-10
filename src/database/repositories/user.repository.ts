@@ -1,6 +1,6 @@
 import type { Professional } from 'generated/prisma';
-import type { UserEntity } from '../../../core/entities/user.entity';
-import type { EditProfileDto } from '../../../infra/http/dto/edit-profile.dto';
+import type { UserEntity } from '../../core/entities/user.entity';
+import type { EditProfileDto } from '../../infra/http/dto/edit-profile.dto';
 
 // Cria um repositório abstrato que poderá ser usado por vários repositórios reais
 export abstract class UserRepository {
