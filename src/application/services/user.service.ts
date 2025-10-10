@@ -1,7 +1,7 @@
+import type { EditProfileDto } from '@dtos/edit-profile.dto';
 import { Injectable } from '@nestjs/common';
 import type { UserEntity } from '@/core/entities/user.entity';
-import type { EditProfileDto } from '@/infra/http/dto/edit-profile.dto';
-import { UserRepository } from '@/modules/user/repositories/user.repository';
+import { UserRepository } from '@/database/repositories/user.repository';
 
 @Injectable()
 export class UserService {

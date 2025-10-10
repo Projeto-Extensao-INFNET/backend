@@ -1,3 +1,4 @@
+import type { SignUpDto } from '@dtos/signUp.dto';
 import {
 	BadRequestException,
 	ConflictException,
@@ -6,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@/database/prisma/prisma.service';
-import type { SignUpDto } from '@/infra/http/dto/signUp.dto';
 import { comparePassword, hashPassword } from '@/shared/utils';
 
 @Injectable()

@@ -1,3 +1,5 @@
+import type { EditProfileDto } from '@dtos/edit-profile.dto';
+import type { AuthenticatedUserRequest } from '@dtos/get-user.dto';
 import {
 	Body,
 	Controller,
@@ -6,12 +8,10 @@ import {
 	Request,
 	UseGuards,
 } from '@nestjs/common';
+import { UserService } from '@services/user.service';
 import { ROLE } from '@/_types';
-import { UserService } from '@/application/services/user.service';
-import { Roles } from '@/modules/auth/decorators/roles.decorator';
-import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
-import type { EditProfileDto } from '../dto/edit-profile.dto';
-import type { AuthenticatedUserRequest } from '../dto/get-user.dto';
+import { Roles } from '@/shared/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../../shared/guards/jwt-auth.guard';
 
 @Controller('/accounts')
 export class EditUserProfileController {

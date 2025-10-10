@@ -1,8 +1,9 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { UserService } from '@services/user.service';
 import { PrismaService } from '@/database/prisma/prisma.service';
-import { PrismaUserRepository } from '@/modules/user/repositories/prisma/prisma-user-repository';
-import { UserRepository } from '@/modules/user/repositories/user.repository';
+import { PrismaUserRepository } from '@/database/repositories/prisma/prisma-user-repository';
+import { UserRepository } from '@/database/repositories/user.repository';
 import {
 	generateBirthDate,
 	generateUniqueDocument,
@@ -12,7 +13,6 @@ import {
 	nonExistentUserId,
 } from '@/shared/utils';
 import { MockPrismaService } from '@/test/mocks/prisma';
-import { UserService } from './user.service';
 
 describe('UserService', () => {
 	let service: UserService;

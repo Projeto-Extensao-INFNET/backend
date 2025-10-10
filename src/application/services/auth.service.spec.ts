@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+import { AuthService } from '@services/auth.service';
 import type { DocumentType, ROLE } from '@/_types';
 import { PrismaService } from '@/database/prisma/prisma.service';
 import {
@@ -16,7 +17,6 @@ import {
 } from '@/shared/utils';
 import { JWTMockService } from '@/test/mocks/jwt';
 import { MockPrismaService } from '@/test/mocks/prisma';
-import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
 	let service: AuthService;

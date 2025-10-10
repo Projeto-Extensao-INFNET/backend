@@ -1,25 +1,24 @@
 import { Module } from '@nestjs/common';
 
 /**
- *  MODULES
- */
-import { AuthModule } from '@/modules/auth/auth.module';
-import { ProfessionalsModule } from '@/modules/professionals/professionals.module';
-import { SpecialtyModule } from '@/modules/specialty/specialty.module';
-import { TreatmentTypeModule } from '@/modules/treatment-type/treatment-type.module';
-import { UserModule } from '@/modules/user/user.module';
-
-/**
  * CONTROLLERS
  */
-import { AuthController } from './controllers/auth.controller';
-import { DeleteUserController } from './controllers/delete-user.controller';
-import { EditUserProfileController } from './controllers/edit-user-profile.controller';
-import { GetProfessionalsController } from './controllers/get-professionals.controller';
-import { GetUserController } from './controllers/get-user.controller';
-import { SpecialtyController } from './controllers/specialty.controller';
-import { TreatmentTypeController } from './controllers/treatment-type.controller';
+import { AuthController } from '@controllers/auth.controller';
+import { DeleteUserController } from '@controllers/delete-user.controller';
+import { EditUserProfileController } from '@controllers/edit-user-profile.controller';
+import { GetProfessionalsController } from '@controllers/get-professionals.controller';
+import { GetUserController } from '@controllers/get-user.controller';
+import { SpecialtyController } from '@controllers/specialty.controller';
+import { TreatmentTypeController } from '@controllers/treatment-type.controller';
 
+/**
+ *  MODULES
+ */
+import { AuthModule } from '@/modules/auth.module';
+import { ProfessionalsModule } from '@/modules/professionals.module';
+import { SpecialtyModule } from '@/modules/specialty.module';
+import { TreatmentTypeModule } from '@/modules/treatment-type.module';
+import { UserModule } from '@/modules/user.module';
 @Module({
 	imports: [
 		AuthModule,

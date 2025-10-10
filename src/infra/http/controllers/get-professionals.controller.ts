@@ -1,7 +1,7 @@
 import { Controller, Get, HttpCode } from '@nestjs/common';
+import { ProfessionalsService } from '@services/professionals.service';
 import { ROLE } from '@/_types';
-import { ProfessionalsService } from '@/application/services/professionals.service';
-import { Roles } from '@/modules/auth/decorators/roles.decorator';
+import { Roles } from '@/shared/decorators/roles.decorator';
 
 @Controller('/accounts')
 export class GetProfessionalsController {

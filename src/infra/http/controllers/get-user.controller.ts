@@ -1,3 +1,7 @@
+import type {
+	AuthenticatedUserRequest,
+	UserProfileDto,
+} from '@dtos/get-user.dto';
 import { Controller, Get, HttpCode, Request, UseGuards } from '@nestjs/common';
 import {
 	ApiBearerAuth,
@@ -6,14 +10,10 @@ import {
 	ApiResponse,
 	ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { UserService } from '@services/user.service';
 import { ROLE } from '@/_types';
-import { UserService } from '@/application/services/user.service';
-import { Roles } from '@/modules/auth/decorators/roles.decorator';
-import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
-import type {
-	AuthenticatedUserRequest,
-	UserProfileDto,
-} from '../dto/get-user.dto';
+import { Roles } from '@/shared/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../../shared/guards/jwt-auth.guard';
 
 @Controller('/accounts')
 export class GetUserController {
