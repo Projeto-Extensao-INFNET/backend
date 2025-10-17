@@ -9,14 +9,14 @@
 POST {{baseUrl}}/auth/signup
 Content-Type: application/json
  
- {
-  "name": "Frey", // sempre alterar para evitar conflitos ao testar
-  "email": "father2@acme.com", // sempre alterar para evitar conflitos ao testar
+{
+  "name": "Freya",
+  "email": "father2@acme.com",
   "password": "12345678",
-  "birthDate": "1990-01-01T00:00:00.000Z", 
+  "birthDate": "1990-01-01T00:00:00.000Z",
   "role": "PATIENT",
   "documentType": "CPF",
-  "document": "153.566.329-99" // sempre alterar para evitar conflitos ao testar
+  "document": "153.566.329-99"
 }
 
 ###
@@ -25,8 +25,8 @@ Content-Type: application/json
 POST {{baseUrl}}/auth/signin
 Content-Type: application/json
  
- {
-  "email": "father2@acme.com", // usar o mesmo email do @SignUp
+{
+  "email": "father2@acme.com",
   "password": "12345678"
 }
 
@@ -62,7 +62,7 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "name":"Patch da silva",
+  "name": "Patch da silva",
   "email": "patch@email.com"
 }
 
