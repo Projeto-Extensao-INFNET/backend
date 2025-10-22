@@ -1,10 +1,36 @@
-node_modules
-dist
-coverage
-.git
-.vscode
-.husky
-test
-generated
+# compiled output
+/dist
+/node_modules
+
+# Tests
+/coverage
+/coverage-e2e
+
+# git
+.git/
+.gitignore
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+
+.husky/
+
+# prisma
+generated/
+
 *.log
-.env*
+
+# dotenv environment variable files
+.env
+.env.test
+.env.production
+
+# markdown files
+README.md
+TODO.md
+
+# linters
+biome.json
+commitlint.config.js
+.lintstagedrc.json
