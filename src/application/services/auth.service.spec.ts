@@ -6,7 +6,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from '@services/auth.service';
-import type { DocumentType, ROLE } from '@/_types';
+import type { DocumentType, ROLE } from '@/_ypes';
 import { PrismaService } from '@/database/prisma/prisma.service';
 import {
 	generateBirthDate,
