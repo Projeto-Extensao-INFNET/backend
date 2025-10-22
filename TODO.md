@@ -4,6 +4,8 @@
 - [ ] Refatorar testes (factories, boas práticas do vitest ,melhores mocks etc)
 - [ ] Adicionar paginação
 - [x] Adicionar Swagger + scalar
+- [x] Usar o Dockerfile(talvez refatorar o de deploy ou criar um de dev) no docker-compose para rodar o app direto no docker
+- [ ] criar docker-compose para produção
 
 ## Requisitos do Sistema
 
