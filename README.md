@@ -11,6 +11,7 @@ Este repositório contém o backend do Projeto **FUTURO NOME DO PROJETO**, desen
 - **Vitest** — Testes automatizados
 - **Docker** — Containers para ambientes e banco de dados
 - **BiomeJs** — Linter e Formatter do projeto
+- **Husky + lint-staged + Commitlint** — Garantem padrões de código e mensagens de commit
   
 ## Sobre os arquivos de configuração e ambientes
 
@@ -24,43 +25,59 @@ Esses arquivos permitem rodar a aplicação em diferentes contextos sem alterar 
 
 Outros arquivos importantes:
 
-- `docker-compose.yml` e `docker-compose.prod.yml`: orquestram containers para desenvolvimento, testes e produção, garantindo ambientes isolados e reprodutíveis.
-- `Dockerfile`: define como a imagem do backend é construída para produção.
+- `docker-compose.dev.yml` e `docker-compose.prod.yml`: orquestram containers para desenvolvimento e produção, garantindo ambientes isolados e reprodutíveis.
+- `Dockerfile.dev` e `Dockerfile.prod`: definem como as imagens são construídas para desenvolvimento e produção.
 - `prisma/`: contém o schema do banco, seeds e migrations, usados pelo Prisma ORM.
 - `.husky/`: hooks de git para automação de tarefas antes de commits/push.
 
 ## Como rodar localmente
 
+### Com Docker (recomendado)
+
 1. **Clone o repositório:**
 
    ```sh
    git clone <url-do-repositório>
-   cd backend_projeto_extensao
+   cd backend
    ```
 
 2. **Configure as variáveis de ambiente:**
-   - Copie `.env.example` ou `.env.test.example` para `.env` ou `.env.test` e ajuste conforme necessário.
+   - Copie `.env.example` e/ou `.env.test.example` para `.env` e/ou `.env.test` e ajuste conforme necessário.
 
-3. **Suba o banco de dados com Docker:**
+3. **Suba o banco de dados com Docker (ambiente de desenvolvimento):**
 
    ```sh
-   pnpm docker:up
+   pnpm docker:dev
    ```
 
-4. **Instale as dependências:**
+Após o `docker:dev`, a imagem é construída, as dependências são instaladas (no build), o Prisma Client é gerado e a aplicação inicia automaticamente.
+
+Observações para Docker:
+
+- Por padrão, o `docker-compose.dev.yml` executa `pnpm exec prisma generate && pnpm start:dev`.
+- Se precisar aplicar migrations ou seeds, execute dentro do container:
+
+  ```sh
+  docker compose -f docker-compose.dev.yml exec app pnpm prisma:migrate
+  docker compose -f docker-compose.dev.yml exec app pnpm prisma:seed
+  ```
+
+### Sem Docker (alternativo)
+
+1. **Instale as dependências:**
 
    ```sh
    pnpm install
    ```
 
-5. **Rode as migrations e gere o client Prisma:**
+2. **Rode as migrations e gere o client Prisma:**
 
    ```sh
    pnpm prisma:migrate
    pnpm prisma:generate
    ```
 
-6. **Inicie a aplicação:**
+3. **Inicie a aplicação:**
 
    ```sh
    pnpm start:dev
@@ -69,7 +86,8 @@ Outros arquivos importantes:
 ## Scripts úteis
 
 - `pnpm start:dev` — Inicia o servidor em modo desenvolvimento
-- `pnpm start:build` — Inicia o servidor em modo de produção
+- `pnpm build` — Compila a aplicação para produção (pasta `dist/`)
+- `pnpm start:prod` — Inicia o servidor em modo de produção (usa `dist/main`)
 - `pnpm test` — Executa os testes automatizados
 - `pnpm test:watch` — Executa os testes automatizados em modo watch
 - `pnpm test:coverage` — Mostra a cobertura dos testes automatizados
@@ -80,10 +98,29 @@ Outros arquivos importantes:
 - `pnpm prisma:migrate` — Executa as migrations do banco
 - `pnpm prisma:generate` — Gera o client do Prisma
 - `pnpm prisma:seed` — Popula o banco de dados
+- `pnpm docker:dev` — Sobe os containers para desenvolvimento
+- `pnpm docker:stop:dev` — Para os containers de desenvolvimento
+- `pnpm docker:prod` — Sobe os containers para produção (detached)
+- `pnpm docker:stop:prod` — Para os containers de produção
+
+## Hooks de Git (Husky) e padrões
+
+O projeto usa Husky, lint-staged e Commitlint para garantir qualidade e padronização:
+
+- `pre-commit`: executa o `lint-staged` sobre arquivos staged e roda `pnpm test:coverage` quando arquivos `src/**/*.ts` forem commitados
+- `commit-msg`: valida a mensagem de commit com Commitlint (convencional)
+- `pre-push`: executa `pnpm test:coverage` e `pnpm test:coverage:e2e`
+
+Observações:
+
+- É necessário ter Node (>= 22.15.1) e pnpm instalados
 
 ## Docker
 
-O projeto possui arquivos para facilitar o uso de containers tanto em desenvolvimento quanto produção. Veja os arquivos `docker-compose.yml` e `docker-compose.prod.yml`.
+O projeto possui arquivos para facilitar o uso de containers tanto em desenvolvimento quanto produção:
+
+- Desenvolvimento: `docker-compose.dev.yml` (script `pnpm docker:dev`)
+- Produção: `docker-compose.prod.yml` (script `pnpm docker:prod`)
 
 ## Contribuição
 
