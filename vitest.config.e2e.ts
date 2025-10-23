@@ -10,6 +10,7 @@ export default defineConfig({
 		root: './',
 		environment: 'node',
 		hookTimeout: 60000,
+		fileParallelism: false,
 		coverage: {
 			reportsDirectory: './coverage-e2e',
 			provider: 'v8',
