@@ -8,6 +8,7 @@ export default defineConfig({
 		globals: true,
 		root: './',
 		environment: 'node',
+		setupFiles: [resolve(__dirname, 'vitest.setup.ts')],
 		include: ['**/*.spec.ts'],
 		coverage: {
 			reportsDirectory: './coverage',
