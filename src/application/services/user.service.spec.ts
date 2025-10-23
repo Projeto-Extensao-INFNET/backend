@@ -49,10 +49,6 @@ describe('UserService', () => {
 		service = module.get<UserService>(UserService);
 	});
 
-	afterEach(async () => {
-		vi.clearAllMocks();
-	});
-
 	it('should be defined', () => {
 		expect(service).toBeDefined();
 	});
