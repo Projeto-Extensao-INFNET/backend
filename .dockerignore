@@ -4,7 +4,6 @@
 
 # Tests
 coverage/
-coverage-e2e/
 
 # git
 .git/
