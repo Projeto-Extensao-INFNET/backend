@@ -1,7 +1,3 @@
 {
-	"src/**/*.ts": [
-		"biome lint --write",
-		"biome format --write",
-		"pnpm test:coverage"
-	]
+  "src/**/*.ts": ["prettier --write", "eslint --fix", "pnpm test:coverage"]
 }
