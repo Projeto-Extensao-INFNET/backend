@@ -1,43 +1,51 @@
-/*
-CENTRALIZA CONTROLLERS HTTP E IMPORTA MÓDULOS QUE CONTÉM PROVIDERS
-*/
-
 /**
  * CONTROLLERS
  */
-import { AuthController } from '@controllers/auth.controller';
-import { DeleteUserController } from '@controllers/delete-user.controller';
-import { EditUserProfileController } from '@controllers/edit-user-profile.controller';
-import { GetProfessionalsController } from '@controllers/get-professionals.controller';
-import { GetUserController } from '@controllers/get-user.controller';
-import { SpecialtyController } from '@controllers/specialty.controller';
-import { TreatmentTypeController } from '@controllers/treatment-type.controller';
-import { Module } from '@nestjs/common';
+import { DeleteUserController } from '@Controllers/user/delete-user.controller';
+import { EditUserProfileController } from '@Controllers/user/edit-user-profile.controller';
+import { GetProfessionalsController } from '@Controllers/professionals/get-professionals.controller';
+import { GetUserController } from '@Controllers/user/get-user.controller';
+import { SpecialtyController } from '@Controllers/specialty/specialty.controller';
+import { TreatmentTypeController } from '@Controllers/treatment-type/treatment-type.controller';
 
 /**
  *  MODULES
  */
-import { AuthModule } from '@/modules/auth.module';
-import { ProfessionalsModule } from '@/modules/professionals.module';
-import { SpecialtyModule } from '@/modules/specialty.module';
-import { TreatmentTypeModule } from '@/modules/treatment-type.module';
-import { UserModule } from '@/modules/user.module';
+import { Module } from '@nestjs/common';
+
+/**
+ * SERVICES
+ */
+import { ProfessionalsService } from '@Services/professionals/professionals.service';
+import { SpecialtyService } from '@Services/specialty/specialty.service';
+import { TreatmentTypeService } from '@Services/treatment-type/treatment-type.service';
+import { UserService } from '@Services/user/user.service';
+
+/**
+ *  REPOSITORIES
+ */
+import { PrismaUserRepository } from '../repositories/prisma/prisma-user-repository';
+import { UserRepository } from '../repositories/user.repository';
+
 @Module({
-	imports: [
-		AuthModule,
-		ProfessionalsModule,
-		UserModule,
-		SpecialtyModule,
-		TreatmentTypeModule,
-	],
-	controllers: [
-		AuthController,
-		DeleteUserController,
-		EditUserProfileController,
-		GetUserController,
-		GetProfessionalsController,
-		SpecialtyController,
-		TreatmentTypeController,
-	],
+  providers: [
+    ProfessionalsService,
+    SpecialtyService,
+    TreatmentTypeService,
+    UserService,
+
+    {
+      provide: UserRepository,
+      useClass: PrismaUserRepository,
+    },
+  ],
+  controllers: [
+    DeleteUserController,
+    EditUserProfileController,
+    GetUserController,
+    GetProfessionalsController,
+    SpecialtyController,
+    TreatmentTypeController,
+  ],
 })
 export class HttpModule {}
