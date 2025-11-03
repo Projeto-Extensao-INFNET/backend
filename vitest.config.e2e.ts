@@ -12,7 +12,7 @@ export default defineConfig({
 		hookTimeout: 60000,
 		fileParallelism: false,
 		coverage: {
-			reportsDirectory: './coverage-e2e',
+			reportsDirectory: './coverage',
 			provider: 'v8',
 			reporter: ['text', 'html', 'lcov', 'cobertura'],
 			include: ['src/**/*.ts'],
