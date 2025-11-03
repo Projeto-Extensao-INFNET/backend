@@ -53,4 +53,4 @@ jobs:
             echo "Waiting for DB..."
             sleep 1
           done
-      - run: pnpm test:coverage
+      - run: pnpm test
