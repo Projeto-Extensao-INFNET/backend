@@ -6,4 +6,4 @@ export const generateUniqueName = () => faker.person.fullName();
 export const generateBirthDate = () => faker.date.birthdate();
 export const generateUniqueEmail = () => faker.internet.email();
 export const generateUniqueDocument = () =>
-	faker.helpers.replaceSymbols('##.###.###-##');
+  faker.helpers.replaceSymbols('##.###.###-##');
