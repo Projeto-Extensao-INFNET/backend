@@ -6,7 +6,7 @@ import { AppModule } from '@/app.module';
 import { PrismaService } from '@/infra/database/prisma.service';
 import { makeAuthenticate, makeUser } from '@/test/factories';
 
-describe('User (E2E)', () => {
+describe('Edit User Profile (E2E)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
 

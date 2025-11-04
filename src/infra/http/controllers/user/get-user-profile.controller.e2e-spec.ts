@@ -5,7 +5,7 @@ import { AppModule } from '@/app.module';
 import { PrismaService } from '@/infra/database/prisma.service';
 import { makeAuthenticate, makeUser } from '@/test/factories';
 
-describe('Delete User (E2E)', () => {
+describe('Get User Profile (E2E)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
 
@@ -20,24 +20,15 @@ describe('Delete User (E2E)', () => {
     await app.init();
   });
 
-  it('[DELETE] /accounts/me', async () => {
+  it('[GET] /accounts/me', async () => {
     const user = await makeUser(prisma);
     const token = await makeAuthenticate(app, user.email);
 
-    const userExists = await request(app.getHttpServer())
+    const getUser = await request(app.getHttpServer())
       .get('/accounts/me')
       .set('Authorization', `Bearer ${token}`);
 
-    const deleteUser = await request(app.getHttpServer())
-      .delete('/accounts/me')
-      .set('Authorization', `Bearer ${token}`);
-
-    const isUserDeleted = await request(app.getHttpServer())
-      .get('/accounts/me')
-      .set('Authorization', `Bearer ${token}`);
-
-    expect(userExists.statusCode).toBe(200);
-    expect(deleteUser.statusCode).toBe(204);
-    expect(isUserDeleted.statusCode).toBe(404);
+    expect(getUser.statusCode).toBe(200);
+    expect(getUser.body).toHaveProperty('name');
   });
 });
