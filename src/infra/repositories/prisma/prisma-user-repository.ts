@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type { Professional } from 'generated/prisma';
 import { PrismaService } from '@/infra/database/prisma.service';
-import type { UserEntity } from '../../../core/entities/user.entity';
-import type { EditProfileDto } from '../../../core/shared/dto/user/edit-profile.dto';
+import { UserEntity } from '@/core/entities/user.entity';
+import { EditProfileDto } from '@dtos/user/edit-profile.dto';
 import { UserRepository } from '../user.repository';
 
 // implementação real do UserRepository usando o Prisma para acessar o banco de dados
@@ -40,7 +40,7 @@ export class PrismaUserRepository extends UserRepository {
     return user as UserEntity;
   }
 
-  async deleteAccount(id: string): Promise<void> {
+  async deleteProfile(id: string): Promise<void> {
     await this.prismaService.user.delete({
       where: {
         id,
