@@ -4,41 +4,41 @@ import tsConfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-	test: {
-		include: ['**/*.e2e-spec.ts'],
-		globals: true,
-		root: './',
-		environment: 'node',
-		hookTimeout: 60000,
-		fileParallelism: false,
-		coverage: {
-			reportsDirectory: './coverage',
-			provider: 'v8',
-			reporter: ['text', 'html', 'lcov', 'cobertura'],
-			include: ['src/**/*.ts'],
-			exclude: [
-				'**/types/**',
-				'**/*.d.ts',
-				'**/mocks/**',
-				'src/main.ts',
-				'**/*.module.ts',
-				'**/*.dto.ts',
-				'**/*.entity.ts',
-				'**/*.decorator.ts',
-				'**/*.guard.ts',
-				'**/*.spec.ts',
-			],
-		},
-	},
-	plugins: [
-		tsConfigPaths(),
-		swc.vite({
-			module: { type: 'es6' },
-		}),
-	],
-	resolve: {
-		alias: {
-			src: resolve(__dirname, './src'),
-		},
-	},
+  test: {
+    include: ['**/*.e2e-spec.ts'],
+    globals: true,
+    root: './',
+    environment: 'node',
+    hookTimeout: 60000,
+    fileParallelism: false,
+    coverage: {
+      reportsDirectory: './coverage',
+      provider: 'v8',
+      reporter: ['text', 'html', 'lcov', 'cobertura'],
+      include: ['src/**/*.ts'],
+      exclude: [
+        '**/types/**',
+        '**/*.d.ts',
+        '**/mocks/**',
+        'src/main.ts',
+        '**/*.module.ts',
+        '**/*.dto.ts',
+        '**/*.entity.ts',
+        '**/*.decorator.ts',
+        '**/*.guard.ts',
+        '**/*.spec.ts',
+      ],
+    },
+  },
+  plugins: [
+    tsConfigPaths(),
+    swc.vite({
+      module: { type: 'es6' },
+    }),
+  ],
+  resolve: {
+    alias: {
+      src: resolve(__dirname, './src'),
+    },
+  },
 });
