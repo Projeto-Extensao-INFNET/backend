@@ -8,17 +8,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ROLE: tipos de usuário do sistema — define permissões e comportamentos (paciente, profissional, admin).
 enum ROLE {
   PATIENT
   PROFESSIONAL
   ADMIN
 }
 
+// DocumentType: tipo de documento usado no cadastro do usuário (CPF, RG).
 enum DocumentType {
   CPF
   RG
 }
 
+/**
+ * User: representa usuários do sistema (pacientes, profissionais e admins).
+ * Contém credenciais e dados pessoais. Quando o usuário é PROFESSIONAL, o campo `professional` referencia o perfil profissional associado.
+ */
 model User {
   id           String       @id @default(uuid())
   name         String
@@ -31,24 +37,26 @@ model User {
   createdAt    DateTime     @default(now()) @map("created_at")
   updatedAt    DateTime     @updatedAt @map("updated_at")
 
-  professional           Professional?
-  ProfessionalAndPatient ProfessionalAndPatient[]
+  professional Professional?
 
   UserAgenda UserAgenda[]
 
   @@map("users")
 }
 
+// TypeOfQuery: formato que o profissional atende (remoto ou presencial).
 enum TypeOfQuery {
   ONLINE_VIDEO_CALL
   IN_PERSON
 }
 
+// PaymentMethod: formas de pagamento aceitas pelo profissional.
 enum PaymentMethod {
   PIX
   CREDIT_CARD
 }
 
+// Gender: opções de gênero para o perfil do profissional/usuário.
 enum Gender {
   MALE
   FEMALE
@@ -56,6 +64,7 @@ enum Gender {
   NON_BINARY
 }
 
+// Specialty: especialidades médicas/terapêuticas. Relaciona-se com `Professional` (1:N).
 model Specialty {
   id        String   @id @default(uuid())
   name      String
@@ -67,11 +76,16 @@ model Specialty {
   @@map("specialty")
 }
 
+// ProfessionalDocumentType: tipo de registro profissional (CRM, CRP etc.).
 enum ProfessionalDocumentType {
   CRM
   CRP
 }
 
+/**
+ * Professional: perfil adicional para usuários que atendem pacientes.
+ * Contém informações públicas (price, typeOfQuery, document, phone) e relacionamentos com `User` (1:1) e `Schedule` (1:N).
+ */
 model Professional {
   id            String                   @id @default(uuid())
   typeOfQuery   TypeOfQuery              @map("type_of_query")
@@ -92,12 +106,12 @@ model Professional {
   typeOfTreatment   TypesOfTreatment @relation(fields: [typeOfTreatmentId], references: [id])
   typeOfTreatmentId String           @map("type_of_treatment")
 
-  ProfessionalAndPatient ProfessionalAndPatient[]
-  Schedule               Schedule[]
+  Schedule Schedule[]
 
   @@map("professionals")
 }
 
+// TypesOfTreatment: catálogo de tipos de tratamento oferecidos; vinculado a `Professional`.
 model TypesOfTreatment {
   id        String   @id @default(uuid())
   name      String
@@ -109,47 +123,52 @@ model TypesOfTreatment {
   @@map("types_of_treatment")
 }
 
-model ProfessionalAndPatient {
-  id String @id @default(uuid())
-
-  professional   Professional @relation(fields: [professionalId], references: [id])
-  professionalId String       @map("professional_id")
-
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @map("user_id")
-
-  @@map("professional_and_patient")
-}
-
+/**
+ * Schedule: representa um slot/intervalo de tempo criado para um `Professional`.
+ * `startAt` e `endAt` para marcar o período; `isAvailable` indica se o slot está livre.
+ * Cada Schedule pode ter no máximo uma reserva (UserAgenda) em atendimentos 1:1.
+ */
 model Schedule {
-  id          String   @id @default(uuid())
-  isAvailable Boolean  @default(true) @map("is_available")
-  isConfirmed Boolean  @default(false) @map("is_confirmed")
-  schedules   DateTime
+  id          String    @id @default(uuid())
+  isConfirmed Boolean   @default(false) @map("is_confirmed")
+  isAvailable Boolean   @default(true) @map("is_available")
+  location    String?
+  startAt     DateTime? @map("start_at")
+  endAt       DateTime? @map("end_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime?  @updatedAt @map("updated_at")
 
   professional   Professional @relation(fields: [professionalId], references: [id])
   professionalId String       @map("professional_id")
 
-  UserAgenda UserAgenda[]
+  UserAgenda UserAgenda?
 
+  @@unique([professionalId, startAt])
   @@map("schedules")
 }
 
+// QueryStatus: estados possíveis de uma reserva/consulta.
 enum QueryStatus {
   CANCELED
   COMPLETED
   SCHEDULED
 }
 
+/**
+ * UserAgenda: reserva/consulta feita por um `User` para um `Schedule`.
+ * Contém `status` (SCHEDULED/COMPLETED/CANCELED), timestamps e flags de confirmação.
+ */
+
 model UserAgenda {
   id          String      @id @default(uuid())
   status      QueryStatus @map("query_status")
-  isConfirmed Boolean     @default(false) @map("is_confirmed")
+  isCompleted Boolean     @default(false) @map("is_completed")
   createdAt   DateTime    @default(now()) @map("created_at")
   updatedAt   DateTime    @updatedAt @map("updated_at")
+  canceledAt  DateTime?   @map("canceled_at")
 
   schedule   Schedule @relation(fields: [scheduleId], references: [id])
-  scheduleId String   @map("schedule_id")
+  scheduleId String   @unique @map("schedule_id")
 
   user   User   @relation(fields: [userId], references: [id])
   userId String @map("user_id")
