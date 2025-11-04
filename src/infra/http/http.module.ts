@@ -1,12 +1,16 @@
 /**
  * CONTROLLERS
  */
-import { DeleteUserController } from '@Controllers/user/delete-user.controller';
+import { DeleteUserProfileController } from '@Controllers/user/delete-user-profile.controller';
 import { EditUserProfileController } from '@Controllers/user/edit-user-profile.controller';
 import { GetProfessionalsController } from '@Controllers/professionals/get-professionals.controller';
-import { GetUserController } from '@Controllers/user/get-user.controller';
+import { GetUserProfileController } from '@Controllers/user/get-user-profile.controller';
 import { SpecialtyController } from '@Controllers/specialty/specialty.controller';
 import { TreatmentTypeController } from '@Controllers/treatment-type/treatment-type.controller';
+import { UpdateAppointmentsController } from '@Controllers/appointments/update-appointments.controller';
+import { GetAppointmentsController } from '@Controllers/appointments/get-appointments.controller';
+import { CreateAppointmentsController } from '@Controllers/appointments/create-appointments.controller';
+import { CancelAppointmentsController } from '@Controllers/appointments/cancel-appointments.controller';
 
 /**
  *  MODULES
@@ -19,7 +23,13 @@ import { Module } from '@nestjs/common';
 import { ProfessionalsService } from '@Services/professionals/professionals.service';
 import { SpecialtyService } from '@Services/specialty/specialty.service';
 import { TreatmentTypeService } from '@Services/treatment-type/treatment-type.service';
-import { UserService } from '@Services/user/user.service';
+import { DeleteUserProfileService } from '@/domain/services/user/delete-user-profile.service';
+import { EditUserProfileService } from '@/domain/services/user/edit-user-profile.service';
+import { GetUserProfileService } from '@/domain/services/user/get-user-profile.service';
+import { GetAppointmentsService } from '@/domain/services/appointments/get-appointments.service';
+import { CreateAppointmentsService } from '@/domain/services/appointments/create-appointments.service';
+import { UpdateAppointmentsService } from '@/domain/services/appointments/update-appointments.service';
+import { CancelAppointmentsService } from '@Services/appointments/cancel-appointments.service';
 
 /**
  *  REPOSITORIES
@@ -32,7 +42,13 @@ import { UserRepository } from '../repositories/user.repository';
     ProfessionalsService,
     SpecialtyService,
     TreatmentTypeService,
-    UserService,
+    GetUserProfileService,
+    DeleteUserProfileService,
+    EditUserProfileService,
+    GetAppointmentsService,
+    CancelAppointmentsService,
+    CreateAppointmentsService,
+    UpdateAppointmentsService,
 
     {
       provide: UserRepository,
@@ -40,12 +56,16 @@ import { UserRepository } from '../repositories/user.repository';
     },
   ],
   controllers: [
-    DeleteUserController,
+    GetUserProfileController,
     EditUserProfileController,
-    GetUserController,
+    DeleteUserProfileController,
     GetProfessionalsController,
     SpecialtyController,
     TreatmentTypeController,
+    GetAppointmentsController,
+    CreateAppointmentsController,
+    UpdateAppointmentsController,
+    CancelAppointmentsController,
   ],
 })
 export class HttpModule {}
