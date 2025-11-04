@@ -1,9 +1,9 @@
 import { PrismaClient } from '../generated/prisma';
 import { CreateAdminUser } from './seeds/create-adm-user';
-import { CreatePatientSchedule } from './seeds/create-patient-schedule';
+import { CreateUserAgenda } from './seeds/create-user-agenda';
 import { CreatePatientUser } from './seeds/create-patient-user';
 import { CreateProfessionalSchedule } from './seeds/create-professional-schedule';
-import { CreateUserProfessional } from './seeds/create-professional-user';
+import { CreateProfessionalUser } from './seeds/create-professional-user';
 import { CreateSpecialties } from './seeds/create-specialties';
 import { CreateTypesOfTreatment } from './seeds/create-types-of-treatment';
 
@@ -22,10 +22,10 @@ const seed = async () => {
   await CreateAdminUser();
   await CreateSpecialties();
   await CreateTypesOfTreatment();
-  await CreateUserProfessional();
+  await CreateProfessionalUser();
   await CreatePatientUser();
   await CreateProfessionalSchedule();
-  await CreatePatientSchedule();
+  await CreateUserAgenda();
 };
 
 seed()
