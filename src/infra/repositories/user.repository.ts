@@ -6,7 +6,7 @@ import type { EditProfileDto } from '../../core/shared/dto/user/edit-profile.dto
 export abstract class UserRepository {
   abstract getProfile(userId: string): Promise<UserEntity>;
   abstract findById(id: string): Promise<UserEntity>;
-  abstract deleteAccount(id: string): Promise<void>;
+  abstract deleteProfile(id: string): Promise<void>;
   abstract editProfile(id: string, dto: EditProfileDto): Promise<UserEntity>;
-  abstract listProfessionals(): Promise<Professional[]>;
+  abstract listProfessionals(): Promise<Professional[]>; // vai pro repo de professionals
 }
