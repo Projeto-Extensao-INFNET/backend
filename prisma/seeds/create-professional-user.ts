@@ -1,14 +1,14 @@
-import { faker } from "@faker-js/faker/locale/pt_BR";
+import { faker } from '@faker-js/faker/locale/pt_BR';
 import {
   Gender,
   PaymentMethod,
   PrismaClient,
   ProfessionalDocumentType,
   TypeOfQuery,
-} from "../../generated/prisma";
-import { hashPassword } from "../../src/core/shared/utils";
+} from '../../generated/prisma';
+import { hashPassword } from '../../src/core/shared/utils';
 
-export const CreateUserProfessional = async () => {
+export const CreateProfessionalUser = async () => {
   const prisma = new PrismaClient();
 
   const specialties = await prisma.specialty.findMany();
@@ -19,11 +19,11 @@ export const CreateUserProfessional = async () => {
       data: {
         name: faker.person.fullName(),
         email: faker.internet.email(),
-        password: await hashPassword("12345678"),
+        password: await hashPassword('12345678'),
         birthDate: faker.date.birthdate(),
-        role: "PROFESSIONAL",
-        documentType: "CPF",
-        document: faker.helpers.replaceSymbols("###.###.###-##"),
+        role: 'PROFESSIONAL',
+        documentType: 'CPF',
+        document: faker.helpers.replaceSymbols('###.###.###-##'),
       },
     });
 
@@ -43,7 +43,7 @@ export const CreateUserProfessional = async () => {
           ProfessionalDocumentType.CRM,
           ProfessionalDocumentType.CRP,
         ]),
-        document: faker.helpers.replaceSymbols("####/##"),
+        document: faker.helpers.replaceSymbols('####/##'),
         gender: faker.helpers.arrayElement([
           Gender.MALE,
           Gender.FEMALE,
