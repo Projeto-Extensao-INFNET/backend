@@ -12,12 +12,12 @@ import type {
   UserProfileDto,
 } from '@/core/shared/dto/user/get-user.dto';
 import { ROLE } from '@/core/shared/types';
-import { UserService } from '@Services/user/user.service';
+import { GetUserProfileService } from '@/domain/services/user/get-user-profile.service';
 import { JwtAuthGuard } from '../../../auth/auth.guard';
 
 @Controller('/accounts')
-export class GetUserController {
-  constructor(private readonly userService: UserService) {}
+export class GetUserProfileController {
+  constructor(private readonly getUserProfileService: GetUserProfileService) {}
 
   @Roles(ROLE.PATIENT)
   @Get('me')
@@ -58,7 +58,7 @@ export class GetUserController {
   ): Promise<UserProfileDto> {
     const userId = req.user.userId;
 
-    const user = await this.userService.getProfile(userId);
+    const user = await this.getUserProfileService.getUserProfile(userId);
 
     const userProfile: UserProfileDto = {
       id: user.id,

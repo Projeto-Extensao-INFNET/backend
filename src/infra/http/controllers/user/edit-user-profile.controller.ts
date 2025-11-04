@@ -10,12 +10,14 @@ import { Roles } from '@/core/shared/decorators/roles.decorator';
 import type { EditProfileDto } from '@/core/shared/dto/user/edit-profile.dto';
 import type { AuthenticatedUserRequest } from '@/core/shared/dto/user/get-user.dto';
 import { ROLE } from '@/core/shared/types';
-import { UserService } from '@Services/user/user.service';
+import { EditUserProfileService } from '@Services/user/edit-user-profile.service';
 import { JwtAuthGuard } from '@/infra/auth/auth.guard';
 
 @Controller('/accounts')
 export class EditUserProfileController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly editUserProfileService: EditUserProfileService,
+  ) {}
 
   @Roles(ROLE.PATIENT)
   @UseGuards(JwtAuthGuard)
@@ -26,6 +28,6 @@ export class EditUserProfileController {
     @Body() dto: EditProfileDto,
   ) {
     const userId = req.user.userId;
-    return await this.userService.editProfile(userId, dto);
+    return await this.editUserProfileService.editProfile(userId, dto);
   }
 }

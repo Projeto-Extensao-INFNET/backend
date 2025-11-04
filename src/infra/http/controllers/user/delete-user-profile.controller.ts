@@ -15,12 +15,14 @@ import {
 import { Roles } from '@/core/shared/decorators/roles.decorator';
 import type { AuthenticatedUserRequest } from '@/core/shared/dto/user/get-user.dto';
 import { ROLE } from '@/core/shared/types';
-import { UserService } from '@Services/user/user.service';
+import { DeleteUserProfileService } from '@Services/user/delete-user-profile.service';
 import { JwtAuthGuard } from '../../../auth/auth.guard';
 
 @Controller('/accounts')
-export class DeleteUserController {
-  constructor(private readonly userService: UserService) {}
+export class DeleteUserProfileController {
+  constructor(
+    private readonly deleteUserProfileService: DeleteUserProfileService,
+  ) {}
 
   @Roles(ROLE.PATIENT)
   @Delete('me')
@@ -47,6 +49,6 @@ export class DeleteUserController {
     @Request() req: AuthenticatedUserRequest,
   ): Promise<void> {
     const userId = req.user.userId;
-    await this.userService.deleteAccount(userId);
+    await this.deleteUserProfileService.deleteUserProfile(userId);
   }
 }
