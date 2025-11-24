@@ -3,7 +3,7 @@
  */
 import { DeleteUserProfileController } from '@Controllers/user/delete-user-profile.controller';
 import { EditUserProfileController } from '@Controllers/user/edit-user-profile.controller';
-import { GetProfessionalsController } from '@Controllers/professionals/get-professionals.controller';
+import { ListProfessionalsController } from '@/infra/http/controllers/professionals/list-professionals.controller';
 import { GetUserProfileController } from '@Controllers/user/get-user-profile.controller';
 import { SpecialtyController } from '@Controllers/specialty/specialty.controller';
 import { TreatmentTypeController } from '@Controllers/treatment-type/treatment-type.controller';
@@ -20,7 +20,7 @@ import { Module } from '@nestjs/common';
 /**
  * SERVICES
  */
-import { ProfessionalsService } from '@Services/professionals/professionals.service';
+import { ListProfessionalsService } from '@/domain/services/professionals/list-professionals.service';
 import { SpecialtyService } from '@Services/specialty/specialty.service';
 import { TreatmentTypeService } from '@Services/treatment-type/treatment-type.service';
 import { DeleteUserProfileService } from '@/domain/services/user/delete-user-profile.service';
@@ -39,7 +39,7 @@ import { UserRepository } from '../repositories/user.repository';
 
 @Module({
   providers: [
-    ProfessionalsService,
+    ListProfessionalsService,
     SpecialtyService,
     TreatmentTypeService,
     GetUserProfileService,
@@ -59,7 +59,7 @@ import { UserRepository } from '../repositories/user.repository';
     GetUserProfileController,
     EditUserProfileController,
     DeleteUserProfileController,
-    GetProfessionalsController,
+    ListProfessionalsController,
     SpecialtyController,
     TreatmentTypeController,
     GetAppointmentsController,
