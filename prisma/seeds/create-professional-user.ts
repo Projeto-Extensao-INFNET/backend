@@ -7,9 +7,12 @@ import {
   TypeOfQuery,
 } from '../../generated/prisma';
 import { hashPassword } from '../../src/core/shared/utils';
+import { env } from '../../src/core/config/env';
+import { PrismaPg } from '@prisma/adapter-pg';
 
 export const CreateProfessionalUser = async () => {
-  const prisma = new PrismaClient();
+  const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
+  const prisma = new PrismaClient({ adapter });
 
   const specialties = await prisma.specialty.findMany();
   const typesOfTreatment = await prisma.typesOfTreatment.findMany();
