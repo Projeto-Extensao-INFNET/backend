@@ -5,7 +5,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 // ROLE: tipos de usuário do sistema — define permissões e comportamentos (paciente, profissional, admin).
@@ -136,7 +135,7 @@ model Schedule {
   startAt     DateTime? @map("start_at")
   endAt       DateTime? @map("end_at")
   createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime?  @updatedAt @map("updated_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
 
   professional   Professional @relation(fields: [professionalId], references: [id])
   professionalId String       @map("professional_id")
