@@ -23,18 +23,3 @@ export const makeUser = async (prisma: PrismaService) => {
 
   return result;
 };
-export const makeUserProfessional = async (prisma: PrismaService) => {
-  const result = await prisma.user.create({
-    data: {
-      name: generateUniqueName(),
-      email: generateUniqueEmail(),
-      password: await hashPassword('12345678'),
-      birthDate: generateBirthDate(),
-      role: 'PROFESSIONAL',
-      documentType: 'CPF',
-      document: generateUniqueDocument(),
-    },
-  });
-
-  return result;
-};
