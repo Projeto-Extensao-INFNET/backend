@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { PrismaClient } from '../generated/prisma';
 import { CreateAdminUser } from './seeds/create-adm-user';
 import { CreateUserAgenda } from './seeds/create-user-agenda';
@@ -6,8 +7,11 @@ import { CreateProfessionalSchedule } from './seeds/create-professional-schedule
 import { CreateProfessionalUser } from './seeds/create-professional-user';
 import { CreateSpecialties } from './seeds/create-specialties';
 import { CreateTypesOfTreatment } from './seeds/create-types-of-treatment';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { env } from '../src/core/config/env';
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
+const prisma = new PrismaClient({ adapter });
 
 const seed = async () => {
   await prisma.userAgenda.deleteMany();

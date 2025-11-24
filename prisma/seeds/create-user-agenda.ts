@@ -1,8 +1,11 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
 import { PrismaClient } from '../../generated/prisma';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { env } from '../../src/core/config/env';
 
 export const CreateUserAgenda = async () => {
-  const prisma = new PrismaClient();
+  const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
+  const prisma = new PrismaClient({ adapter });
 
   // busca os usuários do tipo paciente
   const patients = await prisma.user.findMany({

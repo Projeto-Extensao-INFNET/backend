@@ -9,12 +9,13 @@ services:
     depends_on:
       postgresql:
         condition: service_healthy
+    env_file: .env
     environment:
       NODE_ENV: development
       DATABASE_URL: "postgresql://${POSTGRESQL_USERNAME}:${POSTGRESQL_PASSWORD}@postgresql:${POSTGRESQL_PORT}/${POSTGRESQL_DATABASE}?schema=public"
     ports:
       - "3333:3333"
-    command: ["sh", "-c", "pnpm exec prisma generate && pnpm start:dev"]
+    command: ["sh", "-c", "pnpm prisma:generate && pnpm start:dev"]
     volumes:
       - .:/app
 

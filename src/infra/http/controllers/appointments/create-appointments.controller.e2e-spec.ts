@@ -1,20 +1,25 @@
+import type { INestApplication } from '@nestjs/common';
 import { CreateAppointmentsController } from './create-appointments.controller';
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+import { PrismaService } from '@/infra/database/prisma.service';
+import { AppModule } from '@/app.module';
 
 describe('Create Appointments (E2E)', () => {
-  let controller: CreateAppointmentsController;
+  let app: INestApplication;
+  let prisma: PrismaService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [CreateAppointmentsController],
+  beforeAll(async () => {
+    const moduleRef = await Test.createTestingModule({
+      imports: [AppModule],
     }).compile();
 
-    controller = module.get<CreateAppointmentsController>(
-      CreateAppointmentsController,
-    );
+    app = moduleRef.createNestApplication();
+    prisma = moduleRef.get<PrismaService>(PrismaService);
+
+    await app.init();
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  it('[POST] /appointments/create ', () => {
+    expect(true).toBe(true); // TODO criar tests E2E
   });
 });

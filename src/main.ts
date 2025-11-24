@@ -13,7 +13,11 @@ async function bootstrap() {
    * CORS
    */
   const corsOrigin = configService.get('CORS_ORIGIN', { infer: true });
-  app.enableCors({ origin: corsOrigin ?? '*' });
+  app.enableCors({
+    origin: corsOrigin ?? '*',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
 
   /**
    * SWAGGER

@@ -3,15 +3,15 @@ import { PrismaService } from '@/infra/database/prisma.service';
 import { PrismaUserRepository } from '@/infra/repositories/prisma/prisma-user-repository';
 import { UserRepository } from '@/infra/repositories/user.repository';
 import { MockPrismaService } from '@/test/mocks/prisma';
-import { ProfessionalsService } from './professionals.service';
+import { ListProfessionalsService } from './list-professionals.service';
 
 describe('ProfessionalService', () => {
-  let service: ProfessionalsService;
+  let service: ListProfessionalsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ProfessionalsService,
+        ListProfessionalsService,
         {
           provide: UserRepository,
           useClass: PrismaUserRepository,
@@ -23,7 +23,7 @@ describe('ProfessionalService', () => {
       ],
     }).compile();
 
-    service = module.get<ProfessionalsService>(ProfessionalsService);
+    service = module.get<ListProfessionalsService>(ListProfessionalsService);
   });
 
   it('should be defined', () => {
