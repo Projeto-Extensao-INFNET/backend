@@ -1,7 +1,8 @@
 # Regras de Negócio
 
-- [ ] Refatorar a arquitetura do projeto
-- [ ] Refatorar testes (factories, boas práticas do vitest ,melhores mocks etc)
+- [x] Refatorar a arquitetura do projeto
+- [x] Refatorar testes (factories, boas práticas do vitest ,melhores mocks etc)
+- [x] Quebrar services em arquivos separados (arquivos de teste também)
 - [ ] Adicionar paginação
 - [x] Adicionar Swagger + scalar
 - [x] Usar o Dockerfile(talvez refatorar o de deploy ou criar um de dev) no docker-compose para rodar o app direto no docker
@@ -9,10 +10,10 @@
 
 ## Requisitos do Sistema
 
-- [x] Validação dos dados 
-- [ ] Deploy em alguma plataforma (Vercel, fly.io ou Render)
+- [x] Validação dos dados
+- [ ] Deploy em alguma plataforma (Vercel, fly.io, AWS ou Render)
 - [ ] Cache com redis (?)
-- [ ] Testes unitários, integração e E2E com vitest + supertest
+- [x] Testes unitários, integração e E2E com vitest + supertest
 
 ## Regras Gerais do Sistema
 
@@ -31,7 +32,7 @@
 #### ✅ Pode
 
 - [x] Se cadastrar
-- [ ] Consultar lista de profissionais
+- [x] Consultar lista de profissionais
 - [x] Editar somente seu propio perfil ( do usuário logado)
 - [x] Excluir somente seu propio usuario logado
 - [ ] Agendar consultas para o seu propio usuario logado
@@ -50,8 +51,8 @@
 
 #### ✅ Pode
 
-- [ ] Se cadastrar
-- [ ] Visualizar pacientes que estão agendados com ele  
+- [x] Se cadastrar
+- [x] Visualizar pacientes que estão agendados com ele  
 - [ ] Criar agenda com horários disponíveis
 - [ ] Fazer upload de uma foto de perfil
 - [ ] Editar somente seu propio perfil ( do usuário logado)
