@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - develop
   pull_request:
     branches:
       - main
+      - develop
 
 jobs:
     run-e2e-tests:
@@ -46,4 +48,4 @@ jobs:
             echo "Waiting for DB..."
             sleep 1
           done
-      - run: pnpm test:coverage:e2e
+      - run: pnpm test:e2e

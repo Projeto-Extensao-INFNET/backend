@@ -1,83 +1,44 @@
-/** biome-ignore-all lint/correctness/noUnusedVariables: is not necessary use these variables*/
-// TODO
-// ** CRIAR UM USERs COMO PACIENTE [x]
-// ** CRIAR UM USERs COMO PROFISSIONAL [x]
-// ** CRIAR UM USER COMO ADMIN [x]
-// ** CRIAR ESPECIALIDADES (PSIQUIATRA, PSICOLOGO) [x]
-// ** CRIAR UM PROFISSIONAL COM OS RELACIONAMENTOS CORRETOS []
-// ** CRIAR OS TIPOS DE TRATAMENTO (PSIQUIATRIA INFANTIL, CASAIS ETC) []
-// ?? CRIAR A TABELA DE CONEXÃO ENTRE PACIENTE E PROFISSIONAL ( TALVEZ REMOVA )
-// ** CRIAR TABELA DE AGENDA DO PROFISSIONAL []
-// ** CRIAR TABELA DE AGENDA DO PACIENTE []
+import 'dotenv/config';
+import { PrismaClient } from '../generated/prisma';
+import { CreateAdminUser } from './seeds/create-adm-user';
+import { CreateUserAgenda } from './seeds/create-user-agenda';
+import { CreatePatientUser } from './seeds/create-patient-user';
+import { CreateProfessionalSchedule } from './seeds/create-professional-schedule';
+import { CreateProfessionalUser } from './seeds/create-professional-user';
+import { CreateSpecialties } from './seeds/create-specialties';
+import { CreateTypesOfTreatment } from './seeds/create-types-of-treatment';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { env } from '../src/core/config/env';
 
-import { faker } from '@faker-js/faker/locale/pt_BR';
-// ?? devo criar um arquivo entity para cada entidade do banco de dados para ter menos dependência do Prisma?
-// ?? ou apenas criar interfaces e types?
-import { PrismaClient, type Specialty } from '../generated/prisma';
-import { hashPassword } from '../src/utils';
-
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
+const prisma = new PrismaClient({ adapter });
 
 const seed = async () => {
-	await prisma.user.deleteMany();
-	await prisma.specialty.deleteMany();
+  await prisma.userAgenda.deleteMany();
+  await prisma.schedule.deleteMany();
+  await prisma.professional.deleteMany();
+  await prisma.user.deleteMany();
+  await prisma.specialty.deleteMany();
+  await prisma.typesOfTreatment.deleteMany();
 
-	const userAdmin = await prisma.user.create({
-		data: {
-			name: faker.person.fullName(),
-			email: faker.internet.email(),
-			password: await hashPassword('12345678'),
-			birthDate: faker.date.birthdate(),
-			role: 'ADMIN',
-			documentType: 'RG',
-			document: faker.helpers.replaceSymbols('##.###.###-#'),
-		},
-	});
+  console.log('✔ Database reset');
 
-	for (let i = 0; i < 10; i++) {
-		const userProfessional = await prisma.user.create({
-			data: {
-				name: faker.person.fullName(),
-				email: faker.internet.email(),
-				password: await hashPassword('12345678'),
-				birthDate: faker.date.birthdate(),
-				role: 'PROFESSIONAL',
-				documentType: 'CPF',
-				document: faker.helpers.replaceSymbols('###.###.###-##'),
-			},
-		});
-	}
-	for (let i = 0; i < 10; i++) {
-		const userPatient = await prisma.user.create({
-			data: {
-				name: faker.person.fullName(),
-				email: faker.internet.email(),
-				password: await hashPassword('12345678'),
-				birthDate: faker.date.birthdate(),
-				role: 'PATIENT',
-				documentType: 'CPF',
-				document: faker.helpers.replaceSymbols('###.###.###-##'),
-			},
-		});
-	}
-
-	const specialtyList: Specialty[] = [];
-
-	await prisma.specialty.createMany({
-		data: [{ name: 'Psiquiatria' }, { name: 'Psicologia' }],
-	});
-
-	const specialties = await prisma.specialty.findMany();
-	specialtyList.push(...specialties);
+  await CreateAdminUser();
+  await CreateSpecialties();
+  await CreateTypesOfTreatment();
+  await CreateProfessionalUser();
+  await CreatePatientUser();
+  await CreateProfessionalSchedule();
+  await CreateUserAgenda();
 };
 
 seed()
-	.then(() => {
-		console.log('database seeded 🌱');
-	})
-	.catch((error) => {
-		console.error('error on seed database:', error);
-	})
-	.finally(async () => {
-		await prisma.$disconnect();
-	});
+  .then(() => {
+    console.log('database seeded 🌱');
+  })
+  .catch((error) => {
+    console.error('error on seed database:', error);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
