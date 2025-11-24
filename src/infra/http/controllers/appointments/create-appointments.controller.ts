@@ -1,8 +1,16 @@
-import { Controller, Post } from '@nestjs/common';
+import type { CreateAppointmentDto } from '@/core/shared/dto/appointments/create-appointment.dto';
+import { CreateAppointmentsService } from '@/domain/services/appointments/create-appointments.service';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 
-// preciso criar um agendamento unindo os profissionais disponíveis (tabela schedules) com a agenda dos pacientes (tabela user_agenda)
 @Controller('/appointments')
 export class CreateAppointmentsController {
-  @Post()
-  async createAppointments() {}
+  constructor(
+    private readonly createAppointmentService: CreateAppointmentsService,
+  ) {}
+
+  @Post('create')
+  @HttpCode(201)
+  async createAppointments(@Body() body: CreateAppointmentDto) {
+    return this.createAppointmentService.createAppointments(body);
+  }
 }
