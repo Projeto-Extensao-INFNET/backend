@@ -17,7 +17,7 @@
 
 ## Regras Gerais do Sistema
 
-- [ ] Agendamentos só podem ser feitos em horários disponíveis
+- [x] Agendamentos só podem ser feitos em horários disponíveis
 - [ ] Pacientes só podem agendar com profissionais que tenham especialidade/tipo compatível
 - [ ] Documentos CPF/RG e CRM/CRP devem ser únicos no sistema
 - [x] Emails devem ser únicos no sistema
@@ -35,7 +35,7 @@
 - [x] Consultar lista de profissionais
 - [x] Editar somente seu propio perfil ( do usuário logado)
 - [x] Excluir somente seu propio usuario logado
-- [ ] Agendar consultas para o seu propio usuario logado
+- [x] Agendar consultas para o seu propio usuario logado
 - [ ] Alterar sua propia consulta para o seu propio usuario logado
 - [ ] Excluir sua propia consulta para o seu propio usuario logado
 - [ ] Pode marcar consultas com base em horários e categorias de atendimento
