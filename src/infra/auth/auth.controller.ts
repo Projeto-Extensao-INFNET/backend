@@ -7,9 +7,9 @@ import {
   ApiOperation,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { SignInDto } from '@/core/shared/dto/auth/signIn.dto';
-import { SignUpDto } from '@/core/shared/dto/auth/signUp.dto';
 import { AuthService } from '@/infra/auth/auth.service';
+import { type SignUpDto } from '@/core/shared/dto/auth/signUp.dto';
+import { type SignInDto } from '@/core/shared/dto/auth/signIn.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -22,7 +22,6 @@ export class AuthController {
     description: 'usuário informa os dados de cadastro',
   })
   @ApiBody({
-    type: SignUpDto,
     description: 'Dados necessários para cadastro',
     examples: {
       paciente: {
@@ -82,7 +81,6 @@ export class AuthController {
     description: 'Usuário loga com os dados validados via token JWT',
   })
   @ApiBody({
-    type: SignInDto,
     description: 'Dados necessários para login',
     examples: {
       paciente: {
@@ -125,6 +123,6 @@ export class AuthController {
     },
   })
   signIn(@Body() signInDto: SignInDto) {
-    return this.authService.SignIn(signInDto.email, signInDto.password);
+    return this.authService.SignIn(signInDto);
   }
 }

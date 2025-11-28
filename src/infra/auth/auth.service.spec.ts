@@ -162,7 +162,10 @@ describe('AuthService', () => {
 
       mockJwtService.sign.mockReturnValue('fake-jwt-token');
 
-      const result = await service.SignIn('test@acme.com', '12345667');
+      const result = await service.SignIn({
+        email: 'test@acme.com',
+        password: '12345667',
+      });
 
       expect(result).toEqual({ accessToken: 'fake-jwt-token' });
       expect(mockJwtService.sign).toHaveBeenCalledWith({
@@ -175,7 +178,10 @@ describe('AuthService', () => {
       mockPrismaService.user.findUnique.mockResolvedValue(null);
 
       await expect(
-        service.SignIn('test_errado@acme.com', 'senha__123'),
+        service.SignIn({
+          email: 'test_errado@acme.com',
+          password: 'senha__123',
+        }),
       ).rejects.toThrow(new UnauthorizedException('Invalid credentials'));
     });
 
@@ -189,7 +195,10 @@ describe('AuthService', () => {
       });
 
       await expect(
-        service.SignIn('test@acme.com', 'senha_errada_123'),
+        service.SignIn({
+          email: 'test_errado@acme.com',
+          password: 'senha_123',
+        }),
       ).rejects.toThrow(new UnauthorizedException('Invalid credentials'));
     });
     it('should throw bad request exception when not pass data', async () => {

@@ -1,9 +1,8 @@
-import { IsString } from 'class-validator';
+import { z } from 'zod';
 
-export class CreateAppointmentDto {
-  @IsString()
-  scheduleId?: string;
+export const createAppointmentDto = z.object({
+  scheduleId: z.string(),
+  userId: z.string(),
+});
 
-  @IsString()
-  userId?: string;
-}
+export type CreateAppointmentDto = z.infer<typeof createAppointmentDto>;
