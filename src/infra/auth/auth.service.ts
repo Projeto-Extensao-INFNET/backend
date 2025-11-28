@@ -5,9 +5,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import type { SignUpDto } from '@/core/shared/dto/auth/signUp.dto';
 import { comparePassword, hashPassword } from '@/core/shared/utils';
 import { PrismaService } from '@/infra/database/prisma.service';
+import type { SignUpDto } from '@/core/shared/dto/auth/signUp.dto';
+import type { SignInDto } from '@/core/shared/dto/auth/signIn.dto';
 
 @Injectable()
 export class AuthService {
@@ -51,10 +52,10 @@ export class AuthService {
   }
 
   // Login
-  async SignIn(email: string, password: string) {
+  async SignIn(data: SignInDto) {
     const user = await this.prismaService.user.findUnique({
       where: {
-        email,
+        email: data.email,
       },
     });
 
@@ -62,7 +63,10 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const isPasswordHashed = await comparePassword(password, user.password);
+    const isPasswordHashed = await comparePassword(
+      data.password,
+      user.password,
+    );
 
     if (!isPasswordHashed) {
       throw new UnauthorizedException('Invalid credentials');
