@@ -8,6 +8,10 @@
 - [x] Usar o Dockerfile(talvez refatorar o de deploy ou criar um de dev) no docker-compose para rodar o app direto no docker
 - [ ] criar docker-compose para produção
 
+## Opcional
+
+- [] Criar repositórios e entidades para cada caso de uso?
+
 ## Requisitos do Sistema
 
 - [x] Validação dos dados
