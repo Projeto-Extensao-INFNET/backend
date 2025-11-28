@@ -1,20 +1,23 @@
-import type { DocumentType, ROLE } from '@/core/shared/types';
+import z from 'zod';
 
-export interface UserProfileDto {
-  id: string;
-  name: string;
-  email: string;
-  birthDate: Date;
-  role: ROLE;
-  documentType: DocumentType;
-  document: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+export const userProfileDto = z.object({
+  id: z.uuid(),
+  name: z.string(),
+  email: z.email(),
+  birthDate: z.date(),
+  role: z.enum(['PATIENT', 'PROFESSIONAL', 'ADMIN']),
+  documentType: z.enum(['CPF', 'RG']),
+  document: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
 
-export interface AuthenticatedUserRequest {
-  user: {
-    userId: string;
-    username: string;
-  };
-}
+export const authenticatedUserRequest = z.object({
+  user: z.object({
+    userId: z.uuid(),
+    username: z.string(),
+  }),
+});
+
+export type UserProfileDto = z.infer<typeof userProfileDto>;
+export type AuthenticatedUserRequest = z.infer<typeof authenticatedUserRequest>;

@@ -1,45 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsDateString,
-  IsEmail,
-  IsNotEmpty,
-  IsString,
-  MinLength,
-} from 'class-validator';
-import type { DocumentType, ROLE } from '@/core/shared/types';
+import { z } from 'zod';
 
-export class SignUpDto {
-  @ApiProperty({ example: 'Exemplo Paciente' })
-  @IsString()
-  @IsNotEmpty()
-  name!: string;
+export const signUpDto = z.object({
+  name: z.string().nonempty(),
+  email: z.email().nonempty(),
+  password: z.string().min(8).nonempty(),
+  birthDate: z.date(),
+  role: z.enum(['PATIENT', 'PROFESSIONAL', 'ADMIN']),
+  documentType: z.enum(['CPF', 'RG']),
+  document: z.string().nonempty(),
+});
 
-  @ApiProperty({ example: 'paciente@acme.com' })
-  @IsEmail()
-  @IsNotEmpty()
-  email!: string;
-
-  @ApiProperty({ example: '12345678', minLength: 8 })
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(8)
-  password!: string;
-
-  @ApiProperty({ example: '1990-01-01T00:00:00.000Z', type: String })
-  @IsDateString()
-  birthDate!: Date;
-
-  @ApiProperty({
-    example: 'PATIENT',
-    enum: ['PATIENT', 'PROFESSIONAL', 'ADMIN'],
-  })
-  role!: ROLE;
-
-  @ApiProperty({ example: 'CPF', enum: ['CPF', 'RG'] })
-  documentType!: DocumentType;
-
-  @ApiProperty({ example: '123.456.789-00' })
-  @IsString()
-  @IsNotEmpty()
-  document!: string;
-}
+export type SignUpDto = z.infer<typeof signUpDto>;

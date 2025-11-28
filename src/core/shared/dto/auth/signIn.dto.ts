@@ -1,9 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { z } from 'zod';
 
-export class SignInDto {
-  @ApiProperty()
-  email!: string;
+export const signInDto = z.object({
+  email: z.email().nonempty(),
+  password: z.string().nonempty(),
+});
 
-  @ApiProperty()
-  password!: string;
-}
+export type SignInDto = z.infer<typeof signInDto>;
