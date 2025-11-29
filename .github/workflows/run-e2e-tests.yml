@@ -11,36 +11,55 @@ on:
       - develop
 
 jobs:
-    run-e2e-tests:
-      name: Run E2E Tests
-      runs-on: ubuntu-latest
+  run-e2e-tests:
+    name: Run E2E Tests
+    runs-on: ubuntu-latest
 
-      services:
-        postgresql-e2e:
-          image: bitnami/postgresql:latest
-          ports:
-            - 5432:5432
-          env:
-              POSTGRESQL_USERNAME: ${{ secrets.POSTGRESQL_USERNAME_TEST_E2E }}
-              POSTGRESQL_PASSWORD: ${{ secrets.POSTGRESQL_PASSWORD_TEST_E2E }}
-              POSTGRESQL_DATABASE: ${{ secrets.POSTGRESQL_DATABASE_TEST_E2E }}
-       
-      env:
-        DATABASE_URL: postgresql://${{ secrets.POSTGRESQL_USERNAME_TEST_E2E }}:${{ secrets.POSTGRESQL_PASSWORD_TEST_E2E }}@localhost:5432/${{ secrets.POSTGRESQL_DATABASE_TEST_E2E }}
-        CORS_ORIGIN: http://localhost:5173
-   
+    # define o serviço do postgreSQL
+    services:
+      postgresql-e2e:
+        image: bitnami/postgresql:latest
+        ports:
+          - 5432:5432
+        env:
+          # credenciais do banco em segredo no github
+          POSTGRESQL_USERNAME: ${{ secrets.POSTGRESQL_USERNAME_TEST_E2E }}
+          POSTGRESQL_PASSWORD: ${{ secrets.POSTGRESQL_PASSWORD_TEST_E2E }}
+          POSTGRESQL_DATABASE: ${{ secrets.POSTGRESQL_DATABASE_TEST_E2E }}
 
-      steps:
+    steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
         with:
           version: 10.12.1
+
+        # instala o node 22
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'pnpm'
+          node-version: "22"
+          cache: "pnpm"
+
+        # instala dependencias
       - run: pnpm install --frozen-lockfile
+
+      # cria .env.test antes de gerar o PrismaClient
+      - name: Create .env.test
+        run: |
+          echo "POSTGRESQL_USERNAME=${{ secrets.POSTGRESQL_USERNAME_TEST_E2E }}" > .env.test
+          echo "POSTGRESQL_PASSWORD=${{ secrets.POSTGRESQL_PASSWORD_TEST_E2E }}" >> .env.test
+          echo "POSTGRESQL_HOST=localhost" >> .env.test
+          echo "POSTGRESQL_PORT=5432" >> .env.test
+          echo "POSTGRESQL_DATABASE=${{ secrets.POSTGRESQL_DATABASE_TEST_E2E }}" >> .env.test
+          echo "DATABASE_URL=postgresql://${{ secrets.POSTGRESQL_USERNAME_TEST_E2E }}:${{ secrets.POSTGRESQL_PASSWORD_TEST_E2E }}@localhost:5432/${{ secrets.POSTGRESQL_DATABASE_TEST_E2E }}?schema=public" >> .env.test
+          echo "NODE_ENV=test" >> .env.test
+          echo "PORT=3333" >> .env.test
+          echo "CORS_ORIGIN=http://localhost:5173" >> .env.test
+          echo "JWT_SECRET=test-jwt-secret-key-min-32-chars-long!!!" >> .env.test
+
+      # gera o PrismaClient
       - run: pnpm prisma:generate
+
+      # aguarda até 30s para o postgreSQL estar pronto
       - name: Wait For E2E Database
         run: |
           for i in {1..30}; do
