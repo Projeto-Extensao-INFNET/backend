@@ -59,7 +59,7 @@ jobs:
           echo "JWT_SECRET=test-jwt-secret-key-min-32-chars-long!!!" >> .env.test
 
       # gera o PrismaClient (carregando .env.test com dotenv)
-      - run: dotenv -e .env.test -- pnpm prisma:generate
+      - run: npx dotenv -e .env.test -- pnpm prisma:generate
 
       # aguarda até 30s para o postgreSQL estar pronto
       - name: Wait For Test Database
