@@ -2,12 +2,11 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { setupSwagger } from './core/config/docs';
-import type { Env } from './core/config/env';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {});
 
-  const configService = app.get<ConfigService<Env, true>>(ConfigService);
+  const configService = app.get(ConfigService);
 
   /**
    * CORS
