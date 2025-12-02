@@ -4,7 +4,7 @@ import request from 'supertest';
 import { AppModule } from '@/app.module';
 import {
   generateBirthDate,
-  generateUniqueDocument,
+  generateUniqueCPF,
   generateUniqueEmail,
   generateUniqueName,
 } from '@/core/shared/utils';
@@ -14,6 +14,7 @@ import {
   makeUser,
   makeUserProfessional,
 } from '@/test/factories';
+import { DOCUMENT_TYPE, ROLE } from '@/core/shared/types';
 
 describe('AuthController (E2E)', () => {
   let app: INestApplication;
@@ -44,10 +45,10 @@ describe('AuthController (E2E)', () => {
         name: generateUniqueName(),
         email: generateUniqueEmail(),
         password: '12345678',
-        role: 'PATIENT',
+        role: ROLE.PATIENT,
         birthDate: generateBirthDate(),
-        documentType: 'CPF',
-        document: generateUniqueDocument(),
+        documentType: DOCUMENT_TYPE.CPF,
+        document: generateUniqueCPF(),
       };
 
       const response = await request(app.getHttpServer())
@@ -89,10 +90,10 @@ describe('AuthController (E2E)', () => {
         name: generateUniqueName(),
         email: generateUniqueEmail(),
         password: '12345678',
-        role: 'PATIENT',
+        role: ROLE.PATIENT,
         birthDate: generateBirthDate(),
-        documentType: 'CPF',
-        document: generateUniqueDocument(),
+        documentType: DOCUMENT_TYPE.CPF,
+        document: generateUniqueCPF(),
       };
 
       const signUpResponse = await request(app.getHttpServer())

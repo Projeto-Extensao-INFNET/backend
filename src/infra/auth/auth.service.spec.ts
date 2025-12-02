@@ -5,10 +5,10 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import type { DocumentType, ROLE } from '@/core/shared/types';
+import { DOCUMENT_TYPE, ROLE } from '@/core/shared/types';
 import {
   generateBirthDate,
-  generateUniqueDocument,
+  generateUniqueCPF,
   generateUniqueEmail,
   generateUniqueName,
   hashPassword,
@@ -52,9 +52,9 @@ describe('AuthService', () => {
         email: generateUniqueEmail(),
         password: await hashPassword('1234567878'),
         birthDate: generateBirthDate(),
-        role: 'PATIENT' as ROLE,
-        documentType: 'CPF' as DocumentType,
-        document: generateUniqueDocument(),
+        role: ROLE.PATIENT,
+        documentType: DOCUMENT_TYPE.CPF,
+        document: generateUniqueCPF(),
       };
 
       mockPrismaService.user.findUnique.mockResolvedValue(null);
@@ -104,9 +104,9 @@ describe('AuthService', () => {
         email: generateUniqueEmail(),
         password: plainPassword,
         birthDate: generateBirthDate(),
-        role: 'PATIENT' as ROLE,
-        documentType: 'CPF' as DocumentType,
-        document: generateUniqueDocument(),
+        role: ROLE.PATIENT,
+        documentType: DOCUMENT_TYPE.CPF,
+        document: generateUniqueCPF(),
       };
 
       mockPrismaService.user.findUnique.mockResolvedValue(null);
@@ -134,9 +134,9 @@ describe('AuthService', () => {
         email: generateUniqueEmail(),
         password: '23456678',
         birthDate: generateBirthDate(),
-        role: 'PATIENT' as ROLE,
-        documentType: 'CPF' as DocumentType,
-        document: generateUniqueDocument(),
+        role: ROLE.PATIENT,
+        documentType: DOCUMENT_TYPE.CPF,
+        document: generateUniqueCPF(),
       };
 
       mockPrismaService.user.findUnique.mockResolvedValue({
@@ -207,8 +207,8 @@ describe('AuthService', () => {
         email: '',
         password: '',
         birthDate: new Date(),
-        role: 'PATIENT' as ROLE,
-        documentType: 'CPF' as DocumentType,
+        role: ROLE.PATIENT,
+        documentType: DOCUMENT_TYPE.CPF,
         document: '123.456.789-44',
       };
 
