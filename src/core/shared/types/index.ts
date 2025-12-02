@@ -7,6 +7,9 @@ export enum ROLE {
 export enum DOCUMENT_TYPE {
   CPF = 'CPF',
   RG = 'RG',
+}
+
+export enum PROFESSIONAL_DOCUMENT_TYPE {
   CRM = 'CRM',
   CRP = 'CRP',
 }
