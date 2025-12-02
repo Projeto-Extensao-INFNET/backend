@@ -56,9 +56,4 @@ describe('GetUserProfileService', () => {
       );
     });
   });
-
-  // describe('createAppointment', () => {});
-  // describe('getAppointments', () => {});
-  // describe('changeAppointment', () => {});
-  // describe('cancelAppointment', () => {});
 });
