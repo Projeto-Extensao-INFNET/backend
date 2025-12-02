@@ -1,11 +1,11 @@
 import { CreateAppointmentDto } from '@/core/shared/dto/appointments/create-appointment.dto';
+import { QUERY_STATUS } from '@/core/shared/types';
 import { PrismaService } from '@/infra/database/prisma.service';
 import {
   ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class CreateAppointmentsService {
@@ -47,7 +47,7 @@ export class CreateAppointmentsService {
      */
     await this.prismaService.userAgenda.create({
       data: {
-        status: 'SCHEDULED',
+        status: QUERY_STATUS.SCHEDULED,
         user: {
           connect: { id: data.userId },
         },
