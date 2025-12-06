@@ -4,9 +4,8 @@ import {
   type OnModuleDestroy,
   type OnModuleInit,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from 'generated/prisma';
-import { env, Env } from '@/core/config/env';
+import { env } from '@/core/config/env';
 import { PrismaPg } from '@prisma/adapter-pg';
 
 const connectionString = env.DATABASE_URL;
@@ -16,7 +15,7 @@ export class PrismaService
   extends PrismaClient
   implements OnModuleInit, OnModuleDestroy
 {
-  constructor(@Inject(ConfigService) configService: ConfigService<Env, true>) {
+  constructor() {
     const adapter = new PrismaPg({
       connectionString,
     });
@@ -24,9 +23,7 @@ export class PrismaService
     super({
       adapter,
       log:
-        configService.get('NODE_ENV', { infer: true }) === 'development'
-          ? ['query', 'error', 'warn']
-          : ['error'],
+        env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
     });
   }
   onModuleInit() {
