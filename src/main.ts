@@ -1,17 +1,15 @@
-import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { setupSwagger } from './core/config/docs';
+import { env } from './core/config/env';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {});
 
-  const configService = app.get(ConfigService);
-
   /**
    * CORS
    */
-  const corsOrigin = configService.get('CORS_ORIGIN', { infer: true });
+  const corsOrigin = env.CORS_ORIGIN;
   app.enableCors({
     origin: corsOrigin ?? '*',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -26,7 +24,7 @@ async function bootstrap() {
   /**
    * HTTP SERVER
    */
-  const port = configService.get('PORT', { infer: true });
+  const port = env.PORT;
   await app.listen(port ?? 3333);
 }
 bootstrap();
