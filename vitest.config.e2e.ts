@@ -16,18 +16,6 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html', 'lcov', 'cobertura'],
       include: ['src/**/*.ts'],
-      exclude: [
-        '**/types/**',
-        '**/*.d.ts',
-        '**/mocks/**',
-        'src/main.ts',
-        '**/*.module.ts',
-        '**/*.dto.ts',
-        '**/*.entity.ts',
-        '**/*.decorator.ts',
-        '**/*.guard.ts',
-        '**/*.spec.ts',
-      ],
     },
   },
   plugins: [
