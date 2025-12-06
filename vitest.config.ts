@@ -19,6 +19,7 @@ export default defineConfig({
         '**/types/**',
         '**/*.d.ts',
         '**/mocks/**',
+        '**/factories/**',
         'src/main.ts',
         '**/*.module.ts',
         '**/*.dto.ts',
