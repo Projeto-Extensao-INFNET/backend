@@ -5,7 +5,7 @@ import {
   PROFESSIONAL_DOCUMENT_TYPE,
   ROLE,
   TYPE_OF_QUERY,
-} from '@/core/shared/types';
+} from '@/core/types';
 import {
   generateBirthDate,
   generateUniqueCPF,

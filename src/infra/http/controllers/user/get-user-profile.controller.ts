@@ -10,8 +10,8 @@ import { Roles } from '@/core/shared/decorators/roles.decorator';
 import type {
   AuthenticatedUserRequest,
   UserProfileDto,
-} from '@/core/shared/dto/user/get-user.dto';
-import { ROLE } from '@/core/shared/types';
+} from '@/core/dto/user/get-user.dto';
+import { ROLE } from '@/core/types';
 import { GetUserProfileService } from '@/domain/services/user/get-user-profile.service';
 import { JwtAuthGuard } from '../../../auth/auth.guard';
 

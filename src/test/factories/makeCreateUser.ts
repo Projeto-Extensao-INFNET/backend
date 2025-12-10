@@ -1,4 +1,4 @@
-import { DOCUMENT_TYPE, ROLE } from '@/core/shared/types';
+import { DOCUMENT_TYPE, ROLE } from '@/core/types';
 import { hashPassword } from '@/core/shared/utils';
 import {
   generateBirthDate,

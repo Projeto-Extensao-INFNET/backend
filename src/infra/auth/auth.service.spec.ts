@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { DOCUMENT_TYPE, ROLE } from '@/core/shared/types';
+import { DOCUMENT_TYPE, ROLE } from '@/core/types';
 import {
   generateBirthDate,
   generateUniqueCPF,

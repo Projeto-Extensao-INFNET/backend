@@ -1,5 +1,5 @@
-import { DOCUMENT_TYPE } from '@/core/shared/types/index';
-import { ROLE } from '@/core/shared/types';
+import { DOCUMENT_TYPE } from '@/core/types/index';
+import { ROLE } from '@/core/types';
 
 import {
   generateBirthDate,

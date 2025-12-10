@@ -1,6 +1,6 @@
 import { Controller, Get, HttpCode } from '@nestjs/common';
 import { Roles } from '@/core/shared/decorators/roles.decorator';
-import { ROLE } from '@/core/shared/types';
+import { ROLE } from '@/core/types';
 import { ListProfessionalsService } from '@/domain/services/professionals/list-professionals.service';
 
 @Controller('/accounts')

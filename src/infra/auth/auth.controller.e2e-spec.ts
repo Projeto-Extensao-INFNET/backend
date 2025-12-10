@@ -14,7 +14,7 @@ import {
   makeUser,
   makeUserProfessional,
 } from '@/test/factories';
-import { DOCUMENT_TYPE, ROLE } from '@/core/shared/types';
+import { DOCUMENT_TYPE, ROLE } from '@/core/types';
 
 describe('AuthController (E2E)', () => {
   let app: INestApplication;

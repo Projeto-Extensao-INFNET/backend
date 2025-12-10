@@ -7,8 +7,8 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { comparePassword, hashPassword } from '@/core/shared/utils';
 import { PrismaService } from '@/infra/database/prisma.service';
-import type { SignUpDto } from '@/core/shared/dto/auth/signUp.dto';
-import type { SignInDto } from '@/core/shared/dto/auth/signIn.dto';
+import type { SignUpDto } from '@/core/dto/auth/signUp.dto';
+import type { SignInDto } from '@/core/dto/auth/signIn.dto';
 
 @Injectable()
 export class AuthService {
