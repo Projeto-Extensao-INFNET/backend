@@ -6,16 +6,13 @@ import type { GetUserProfileDto } from '@/core/dto/user/get-user.dto';
 export class GetUserProfileService {
   constructor(private readonly repo: IUserRepository) {}
 
-  async getUserProfile(
-    userId: string,
-  ): Promise<Omit<GetUserProfileDto, 'password'>> {
+  async getUserProfile(userId: string): Promise<GetUserProfileDto> {
     const user = await this.repo.getProfile(userId);
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    const { password: _, ...userWithoutPassword } = user; // não exibe a senha o listar os dados do usuário
-    return userWithoutPassword;
+    return user;
   }
 }
