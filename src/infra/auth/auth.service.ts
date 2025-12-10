@@ -18,10 +18,12 @@ export class AuthService {
   ) {}
   // Cadastro
   async SignUp(data: SignUpDto) {
-    if (!data || !data.email || !data.password || !data.name) {
+    // valida campos obrigatórios
+    if (!data.name || !data.email || !data.password) {
       throw new BadRequestException('Required fields not provided');
     }
 
+    // Verifica se email já existe
     const existingUser = await this.prismaService.user.findUnique({
       where: {
         email: data.email,
@@ -29,6 +31,16 @@ export class AuthService {
     });
 
     if (existingUser) {
+      throw new ConflictException('Credentials already in use');
+    }
+
+    const existingDocument = await this.prismaService.user.findUnique({
+      where: {
+        document: data.document,
+      },
+    });
+
+    if (existingDocument) {
       throw new ConflictException('Credentials already in use');
     }
 
