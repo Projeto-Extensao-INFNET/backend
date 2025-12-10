@@ -4,7 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from '@/infra/auth/jwt.strategy';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { env } from '@/core/config/env';
+import { env } from '@/config/env';
 
 @Global()
 @Module({

@@ -1,4 +1,4 @@
-import type { DOCUMENT_TYPE, ROLE } from '@/core/shared/types';
+import type { DOCUMENT_TYPE, ROLE } from '@/core/types';
 
 export interface UserEntity {
   id: string;
