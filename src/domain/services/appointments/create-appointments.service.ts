@@ -1,5 +1,5 @@
 import { CreateAppointmentDto } from '@/core/dto/appointments/create-appointment.dto';
-import { QUERY_STATUS } from '@/core/types';
+import type { QUERY_STATUS } from '@/core/types';
 import { PrismaService } from '@/infra/database/prisma.service';
 import {
   ConflictException,
@@ -47,7 +47,7 @@ export class CreateAppointmentsService {
      */
     await this.prismaService.userAgenda.create({
       data: {
-        status: QUERY_STATUS.SCHEDULED,
+        status: 'SCHEDULED' as QUERY_STATUS,
         user: {
           connect: { id: data.userId },
         },
