@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { UserRepository } from '@/core/repositories/user.repository';
+import { IUserRepository } from '@/core/repositories/user.repository';
 
 @Injectable()
 export class DeleteUserProfileService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly repo: IUserRepository) {}
 
   async deleteUserProfile(id: string): Promise<void> {
-    await this.userRepository.findById(id);
+    await this.repo.findById(id);
 
-    await this.userRepository.deleteProfile(id);
+    await this.repo.deleteProfile(id);
   }
 }

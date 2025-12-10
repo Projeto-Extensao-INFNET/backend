@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { UserRepository } from '@/core/repositories/user.repository';
+import { IUserRepository } from '@/core/repositories/user.repository';
 
 @Injectable()
 export class ListProfessionalsService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly repo: IUserRepository) {}
 
   async listProfessionals() {
-    return await this.userRepository.listProfessionals();
+    return await this.repo.listProfessionals();
   }
 }
