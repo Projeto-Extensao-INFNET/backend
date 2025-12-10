@@ -3,19 +3,17 @@ import type { Professional } from 'generated/prisma';
 import { PrismaService } from '@/infra/database/prisma.service';
 import { UserEntity } from '@/core/entities/user.entity';
 import { EditProfileDto } from '@/core/dto/user/edit-profile.dto';
-import { UserRepository } from '../../core/repositories/user.repository';
+import { IUserRepository } from '../../core/repositories/user.repository';
 
-// implementação real do UserRepository usando o Prisma para acessar o banco de dados
+// implementação real do IUserRepository usando o Prisma para acessar o banco de dados
 @Injectable()
-export class PrismaUserRepository extends UserRepository {
-  constructor(private readonly prismaService: PrismaService) {
-    super();
-  }
+export class PrismaUserRepository implements IUserRepository {
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async getProfile(userId: string): Promise<UserEntity> {
+  async findById(id: string): Promise<UserEntity | null> {
     const user = await this.prismaService.user.findUnique({
       where: {
-        id: userId,
+        id,
       },
     });
 
@@ -26,10 +24,10 @@ export class PrismaUserRepository extends UserRepository {
     return user as UserEntity;
   }
 
-  async findById(id: string): Promise<UserEntity> {
+  async getProfile(userId: string): Promise<UserEntity | null> {
     const user = await this.prismaService.user.findUnique({
       where: {
-        id,
+        id: userId,
       },
     });
 
@@ -46,6 +44,15 @@ export class PrismaUserRepository extends UserRepository {
         id,
       },
     });
+  }
+
+  async editProfile(id: string, dto: EditProfileDto): Promise<UserEntity> {
+    const user = await this.prismaService.user.update({
+      where: { id },
+      data: dto,
+    });
+
+    return user as UserEntity;
   }
 
   // vai pro prisma-professional-repository
@@ -84,14 +91,5 @@ export class PrismaUserRepository extends UserRepository {
     });
 
     return professionals;
-  }
-
-  async editProfile(id: string, dto: EditProfileDto): Promise<UserEntity> {
-    const user = await this.prismaService.user.update({
-      where: { id },
-      data: dto,
-    });
-
-    return user as UserEntity;
   }
 }
