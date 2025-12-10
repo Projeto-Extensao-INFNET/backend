@@ -15,7 +15,12 @@ services:
       DATABASE_URL: "postgresql://${POSTGRESQL_USERNAME}:${POSTGRESQL_PASSWORD}@postgresql:${POSTGRESQL_PORT}/${POSTGRESQL_DATABASE}?schema=public"
     ports:
       - "3333:3333"
-    command: ["sh", "-c", "pnpm prisma:generate && pnpm start:dev"]
+    command:
+      [
+        "sh",
+        "-c",
+        "pnpm prisma:generate && pnpm prisma:migrate && pnpm start:dev",
+      ]
     volumes:
       - .:/app
 
