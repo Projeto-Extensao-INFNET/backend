@@ -1,4 +1,4 @@
-import type { PrismaClient } from 'generated/prisma';
+import type { PrismaClient } from '../../generated/prisma/client';
 
 export const CreateTypesOfTreatment = async (prisma: PrismaClient) => {
   await prisma.typesOfTreatment.createMany({

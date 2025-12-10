@@ -1,4 +1,4 @@
-import type { Professional } from 'generated/prisma';
+import type { Professional } from '../../../generated/prisma/client';
 import type { UserEntity } from '../../core/entities/user.entity';
 import type { EditProfileDto } from '@dtos/user/edit-profile.dto';
 import type { GetUserProfileDto } from '../dto/user/get-user.dto';

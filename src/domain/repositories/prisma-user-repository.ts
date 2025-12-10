@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { Professional } from 'generated/prisma';
+import type { Professional } from '../../../generated/prisma/client';
 import { PrismaService } from '@/infra/database/prisma.service';
 import { UserEntity } from '@/core/entities/user.entity';
 import { EditProfileDto } from '@/core/dto/user/edit-profile.dto';
