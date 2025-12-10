@@ -1,4 +1,4 @@
-import { env } from '@/core/config/env';
+import { env } from '@/config/env';
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';

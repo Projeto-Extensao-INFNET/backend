@@ -3,7 +3,6 @@ import z from 'zod';
 /**
  * VALIDAÇÃO DAS VARIÁVEIS DE AMBIENTE COM ZOD
  */
-
 export const envSchema = z
   .object({
     POSTGRESQL_USERNAME: z.string(),
@@ -23,8 +22,9 @@ export const envSchema = z
     DATABASE_URL: `postgresql://${data.POSTGRESQL_USERNAME}:${data.POSTGRESQL_PASSWORD}@${data.POSTGRESQL_HOST}:${data.POSTGRESQL_PORT}/${data.POSTGRESQL_DATABASE}?schema=public`,
   }));
 
-export type Env = z.infer<typeof envSchema>;
-
+/**
+ * VALIDA O process.env COM Zod
+ */
 const _env = envSchema.safeParse({
   POSTGRESQL_USERNAME: process.env.POSTGRESQL_USERNAME,
   POSTGRESQL_PASSWORD: process.env.POSTGRESQL_PASSWORD,

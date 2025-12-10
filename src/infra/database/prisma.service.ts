@@ -5,7 +5,7 @@ import {
   type OnModuleInit,
 } from '@nestjs/common';
 import { PrismaClient } from 'generated/prisma';
-import { env } from '@/core/config/env';
+import { env } from '@/config/env';
 import { PrismaPg } from '@prisma/adapter-pg';
 
 const connectionString = env.DATABASE_URL;
