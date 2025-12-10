@@ -21,7 +21,7 @@ export class PrismaUserRepository implements IUserRepository {
       throw new NotFoundException('User not found');
     }
 
-    return user as UserEntity;
+    return user;
   }
 
   async getProfile(userId: string): Promise<UserEntity | null> {
@@ -35,7 +35,7 @@ export class PrismaUserRepository implements IUserRepository {
       throw new NotFoundException('User not found');
     }
 
-    return user as UserEntity;
+    return user;
   }
 
   async deleteProfile(id: string): Promise<void> {
@@ -52,7 +52,7 @@ export class PrismaUserRepository implements IUserRepository {
       data: dto,
     });
 
-    return user as UserEntity;
+    return user;
   }
 
   // vai pro prisma-professional-repository
