@@ -4,7 +4,7 @@ import { nonExistentUserId } from '@/core/shared/utils';
 import { GetUserProfileService } from '@/domain/services/user/get-user-profile.service';
 import { PrismaService } from '@/infra/database/prisma.service';
 import { PrismaUserRepository } from '@/domain/repositories/prisma-user-repository';
-import { UserRepository } from '@/core/repositories/user.repository';
+import { IUserRepository } from '@/core/repositories/user.repository';
 import { MockPrismaService } from '@/test/mocks/prisma';
 import { CreateMockUser } from '@/test/mocks/create-mock-user/create-mock-user';
 
@@ -19,7 +19,7 @@ describe('GetUserProfileService', () => {
       providers: [
         GetUserProfileService,
         {
-          provide: UserRepository,
+          provide: IUserRepository,
           useClass: PrismaUserRepository,
         },
         {
