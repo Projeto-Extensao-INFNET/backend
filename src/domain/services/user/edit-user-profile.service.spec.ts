@@ -1,8 +1,8 @@
 import { CreateMockUser } from '@/test/mocks/create-mock-user/create-mock-user';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { EditUserProfileService } from './edit-user-profile.service';
-import { UserRepository } from '@/infra/repositories/user.repository';
-import { PrismaUserRepository } from '@/infra/repositories/prisma/prisma-user-repository';
+import { UserRepository } from '@/core/repositories/user.repository';
+import { PrismaUserRepository } from '@/domain/repositories/prisma-user-repository';
 import { PrismaService } from '@/infra/database/prisma.service';
 import { MockPrismaService } from '@/test/mocks/prisma';
 

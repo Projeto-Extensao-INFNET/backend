@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '@/infra/database/prisma.service';
-import { PrismaUserRepository } from '@/infra/repositories/prisma/prisma-user-repository';
-import { UserRepository } from '@/infra/repositories/user.repository';
+import { PrismaUserRepository } from '@/domain/repositories/prisma-user-repository';
+import { UserRepository } from '@/core/repositories/user.repository';
 import { MockPrismaService } from '@/test/mocks/prisma';
 import { ListProfessionalsService } from './list-professionals.service';
 

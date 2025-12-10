@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import type { Professional } from 'generated/prisma';
 import { PrismaService } from '@/infra/database/prisma.service';
 import { UserEntity } from '@/core/entities/user.entity';
-import { EditProfileDto } from '@dtos/user/edit-profile.dto';
-import { UserRepository } from '../user.repository';
+import { EditProfileDto } from '@/core/dto/user/edit-profile.dto';
+import { UserRepository } from '../../core/repositories/user.repository';
 
 // implementação real do UserRepository usando o Prisma para acessar o banco de dados
 @Injectable()
@@ -48,6 +48,7 @@ export class PrismaUserRepository extends UserRepository {
     });
   }
 
+  // vai pro prisma-professional-repository
   async listProfessionals(): Promise<Professional[]> {
     const professionals = await this.prismaService.professional.findMany({
       select: {

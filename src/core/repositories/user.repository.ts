@@ -1,8 +1,8 @@
 import type { Professional } from 'generated/prisma';
-import type { UserEntity } from '../../core/entities/user.entity';
-import type { EditProfileDto } from '../../core/shared/dto/user/edit-profile.dto';
+import type { UserEntity } from '../entities/user.entity';
+import type { EditProfileDto } from '../dto/user/edit-profile.dto';
 
-// Cria um repositório abstrato que poderá ser usado por vários repositórios reais
+// Cria um contrato que poderá ser usado por vários repositórios reais
 export abstract class UserRepository {
   abstract getProfile(userId: string): Promise<UserEntity>;
   abstract findById(id: string): Promise<UserEntity>;

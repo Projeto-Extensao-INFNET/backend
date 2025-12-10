@@ -1,6 +1,6 @@
 import { UserEntity } from '@/core/entities/user.entity';
-import { EditProfileDto } from '@dtos/user/edit-profile.dto';
-import { UserRepository } from '@/infra/repositories/user.repository';
+import { EditProfileDto } from '@/core/dto/user/edit-profile.dto';
+import { UserRepository } from '@/core/repositories/user.repository';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
