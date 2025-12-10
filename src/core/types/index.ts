@@ -1,38 +1,13 @@
-// Tipos dos enums do schema do Prisma
-export enum ROLE {
-  PATIENT = 'PATIENT',
-  PROFESSIONAL = 'PROFESSIONAL',
-  ADMIN = 'ADMIN',
-}
-export enum DOCUMENT_TYPE {
-  CPF = 'CPF',
-  RG = 'RG',
-}
+export type ROLE = 'PATIENT' | 'PROFESSIONAL' | 'ADMIN';
 
-export enum PROFESSIONAL_DOCUMENT_TYPE {
-  CRM = 'CRM',
-  CRP = 'CRP',
-}
+export type DOCUMENT_TYPE = 'CPF' | 'RG';
 
-export enum TYPE_OF_QUERY {
-  ONLINE_VIDEO_CALL = 'ONLINE_VIDEO_CALL',
-  IN_PERSON = 'IN_PERSON',
-}
+export type PROFESSIONAL_DOCUMENT_TYPE = 'CRM' | 'CRP';
 
-export enum PAYMENT_METHOD {
-  PIX = 'PIX',
-  CREDIT_CARD = 'CREDIT_CARD',
-}
+export type TYPE_OF_QUERY = 'ONLINE_VIDEO_CALL' | 'IN_PERSON';
 
-export enum GENDER {
-  MALE = 'MALE',
-  FEMALE = 'FEMALE',
-  TRANSGENDER = 'TRANSGENDER',
-  NON_BINARY = 'NON_BINARY',
-}
+export type PAYMENT_METHOD = 'PIX' | 'CREDIT_CARD';
 
-export enum QUERY_STATUS {
-  CANCELED = 'CANCELED',
-  COMPLETED = 'COMPLETED',
-  SCHEDULED = 'SCHEDULED',
-}
+export type GENDER = 'MALE' | 'FEMALE' | 'TRANSGENDER' | 'NON_BINARY';
+
+export type QUERY_STATUS = 'CANCELED' | 'COMPLETED' | 'SCHEDULED';
