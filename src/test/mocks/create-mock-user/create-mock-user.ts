@@ -1,5 +1,4 @@
-import { DOCUMENT_TYPE } from '@/core/types/index';
-import { ROLE } from '@/core/types';
+import type { DOCUMENT_TYPE, ROLE } from '@/core/types/index';
 
 import {
   generateBirthDate,
@@ -15,8 +14,8 @@ export const CreateMockUser = {
   email: generateUniqueEmail(),
   password: '12345678',
   birthDate: generateBirthDate(),
-  role: ROLE.PATIENT,
-  documentType: DOCUMENT_TYPE.CPF,
+  role: 'PATIENT' as ROLE,
+  documentType: 'CPF' as DOCUMENT_TYPE,
   document: generateUniqueCPF(),
   createdAt: new Date(),
   updatedAt: new Date(),

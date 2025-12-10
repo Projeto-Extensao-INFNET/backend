@@ -1,4 +1,4 @@
-import { DOCUMENT_TYPE, ROLE } from '@/core/types';
+import type { DOCUMENT_TYPE, ROLE } from '@/core/types';
 import { hashPassword } from '@/core/shared/utils';
 import {
   generateBirthDate,
@@ -16,8 +16,8 @@ export const makeUser = async (prisma: PrismaService) => {
       email: generateUniqueEmail(),
       password: await hashPassword('12345678'),
       birthDate: generateBirthDate(),
-      role: ROLE.PATIENT,
-      documentType: DOCUMENT_TYPE.CPF,
+      role: 'PATIENT' as ROLE,
+      documentType: 'CPF' as DOCUMENT_TYPE,
       document: generateUniqueCPF(),
     },
   });

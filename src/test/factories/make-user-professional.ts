@@ -1,4 +1,4 @@
-import {
+import type {
   DOCUMENT_TYPE,
   GENDER,
   PAYMENT_METHOD,
@@ -24,8 +24,8 @@ export const makeUserProfessional = async (prisma: PrismaService) => {
       email: generateUniqueEmail(),
       password: await hashPassword('12345678'),
       birthDate: generateBirthDate(),
-      role: ROLE.PROFESSIONAL,
-      documentType: DOCUMENT_TYPE.CPF,
+      role: 'PROFESSIONAL' as ROLE,
+      documentType: 'CPF' as DOCUMENT_TYPE,
       document: generateUniqueCPF(),
     },
   });
@@ -52,11 +52,11 @@ export const makeProfessional = async (prisma: PrismaService) => {
     data: {
       userId: user.id,
       document: generateUniqueCRM(),
-      documentType: PROFESSIONAL_DOCUMENT_TYPE.CRM,
-      typeOfQuery: TYPE_OF_QUERY.ONLINE_VIDEO_CALL,
+      documentType: 'CRM' as PROFESSIONAL_DOCUMENT_TYPE,
+      typeOfQuery: 'ONLINE_VIDEO_CALL' as TYPE_OF_QUERY,
       price: 100,
-      paymentMethod: PAYMENT_METHOD.CREDIT_CARD,
-      gender: GENDER.MALE,
+      paymentMethod: 'CREDIT_CARD' as PAYMENT_METHOD,
+      gender: 'MALE' as GENDER,
       avatar: 'https://example.com/avatar.jpg',
       specialtyId: specialty.id,
       typeOfTreatmentId: typeOfTreatment.id,

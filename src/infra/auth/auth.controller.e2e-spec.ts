@@ -14,7 +14,7 @@ import {
   makeUser,
   makeUserProfessional,
 } from '@/test/factories';
-import { DOCUMENT_TYPE, ROLE } from '@/core/types';
+import type { DOCUMENT_TYPE, ROLE } from '@/core/types';
 
 describe('AuthController (E2E)', () => {
   let app: INestApplication;
@@ -45,9 +45,9 @@ describe('AuthController (E2E)', () => {
         name: generateUniqueName(),
         email: generateUniqueEmail(),
         password: '12345678',
-        role: ROLE.PATIENT,
+        role: 'PATIENT' as ROLE,
+        documentType: 'CPF' as DOCUMENT_TYPE,
         birthDate: generateBirthDate(),
-        documentType: DOCUMENT_TYPE.CPF,
         document: generateUniqueCPF(),
       };
 
@@ -90,9 +90,9 @@ describe('AuthController (E2E)', () => {
         name: generateUniqueName(),
         email: generateUniqueEmail(),
         password: '12345678',
-        role: ROLE.PATIENT,
+        role: 'PATIENT' as ROLE,
+        documentType: 'CPF' as DOCUMENT_TYPE,
         birthDate: generateBirthDate(),
-        documentType: DOCUMENT_TYPE.CPF,
         document: generateUniqueCPF(),
       };
 

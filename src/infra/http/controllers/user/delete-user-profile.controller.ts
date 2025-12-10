@@ -14,7 +14,7 @@ import {
 } from '@nestjs/swagger';
 import { Roles } from '@/core/shared/decorators/roles.decorator';
 import type { AuthenticatedUserRequest } from '@/core/dto/user/get-user.dto';
-import { ROLE } from '@/core/types';
+import type { ROLE } from '@/core/types';
 import { DeleteUserProfileService } from '@Services/user/delete-user-profile.service';
 import { JwtAuthGuard } from '../../../auth/auth.guard';
 
@@ -24,7 +24,7 @@ export class DeleteUserProfileController {
     private readonly deleteUserProfileService: DeleteUserProfileService,
   ) {}
 
-  @Roles(ROLE.PATIENT)
+  @Roles('PATIENT' as ROLE)
   @Delete('me')
   @UseGuards(JwtAuthGuard)
   @HttpCode(204)

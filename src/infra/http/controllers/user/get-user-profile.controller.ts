@@ -9,9 +9,9 @@ import {
 import { Roles } from '@/core/shared/decorators/roles.decorator';
 import type {
   AuthenticatedUserRequest,
-  UserProfileDto,
+  GetUserProfileDto,
 } from '@/core/dto/user/get-user.dto';
-import { ROLE } from '@/core/types';
+import type { ROLE } from '@/core/types';
 import { GetUserProfileService } from '@/domain/services/user/get-user-profile.service';
 import { JwtAuthGuard } from '../../../auth/auth.guard';
 
@@ -19,7 +19,7 @@ import { JwtAuthGuard } from '../../../auth/auth.guard';
 export class GetUserProfileController {
   constructor(private readonly getUserProfileService: GetUserProfileService) {}
 
-  @Roles(ROLE.PATIENT)
+  @Roles('PATIENT' as ROLE)
   @Get('me')
   @HttpCode(200)
   @ApiBearerAuth()
@@ -55,12 +55,12 @@ export class GetUserProfileController {
   @UseGuards(JwtAuthGuard)
   async getUserProfile(
     @Request() req: AuthenticatedUserRequest,
-  ): Promise<UserProfileDto> {
+  ): Promise<GetUserProfileDto> {
     const userId = req.user.userId;
 
     const user = await this.getUserProfileService.getUserProfile(userId);
 
-    const userProfile: UserProfileDto = {
+    const userProfile: GetUserProfileDto = {
       id: user.id,
       name: user.name,
       email: user.email,

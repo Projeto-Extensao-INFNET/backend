@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { DOCUMENT_TYPE, ROLE } from '@/core/types';
+import type { DOCUMENT_TYPE, ROLE } from '@/core/types';
 import {
   generateBirthDate,
   generateUniqueCPF,
@@ -52,8 +52,8 @@ describe('AuthService', () => {
         email: generateUniqueEmail(),
         password: await hashPassword('1234567878'),
         birthDate: generateBirthDate(),
-        role: ROLE.PATIENT,
-        documentType: DOCUMENT_TYPE.CPF,
+        role: 'PATIENT' as ROLE,
+        documentType: ' CPF' as DOCUMENT_TYPE,
         document: generateUniqueCPF(),
       };
 
@@ -104,8 +104,8 @@ describe('AuthService', () => {
         email: generateUniqueEmail(),
         password: plainPassword,
         birthDate: generateBirthDate(),
-        role: ROLE.PATIENT,
-        documentType: DOCUMENT_TYPE.CPF,
+        role: 'PATIENT' as ROLE,
+        documentType: ' CPF' as DOCUMENT_TYPE,
         document: generateUniqueCPF(),
       };
 
@@ -134,8 +134,8 @@ describe('AuthService', () => {
         email: generateUniqueEmail(),
         password: '23456678',
         birthDate: generateBirthDate(),
-        role: ROLE.PATIENT,
-        documentType: DOCUMENT_TYPE.CPF,
+        role: 'PATIENT' as ROLE,
+        documentType: ' CPF' as DOCUMENT_TYPE,
         document: generateUniqueCPF(),
       };
 
@@ -207,8 +207,8 @@ describe('AuthService', () => {
         email: '',
         password: '',
         birthDate: new Date(),
-        role: ROLE.PATIENT,
-        documentType: DOCUMENT_TYPE.CPF,
+        role: 'PATIENT' as ROLE,
+        documentType: ' CPF' as DOCUMENT_TYPE,
         document: '123.456.789-44',
       };
 
