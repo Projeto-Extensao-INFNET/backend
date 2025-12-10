@@ -1,0 +1,71 @@
+@baseUrl = http://localhost:3333
+@token = {{SignIn.response.body.accessToken}}
+
+#=====================
+#========AUTH=========
+#=====================
+# @name SignUp
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+
+{
+  "name": "João Fino 3",
+  "email": "fino_3@example.com",
+  "password": "12345678",
+  "birthDate": "1995-03-20",
+  "role": "PATIENT",
+  "documentType": "CPF",
+  "document": "987.654.321-09"
+}
+
+###
+
+# @name SignIn
+POST {{baseUrl}}/auth/signin
+Content-Type: application/json
+
+{
+  "email":"fino_3@example.com",
+  "password":"12345678"
+}
+
+###
+
+#=====================
+#========USER=========
+#=====================
+
+# @name user_profile
+GET {{baseUrl}}/accounts/me
+Authorization:  Bearer {{token}}
+Content-Type: application/json
+
+###
+
+# @name edit_profile
+PATCH {{baseUrl}}/accounts/me
+Authorization:  Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "João Fino da Silva",
+  "email": "fino_silva@example.com"
+}
+
+###
+
+# @name delete_profile
+DELETE  {{baseUrl}}/accounts/me
+Authorization:  Bearer {{token}}
+Content-Type: application/json
+
+###
+
+#=====================
+#===APPOINTMENTS======
+#=====================
+
+# @name user_appointments
+GET {{baseUrl}}/appointments
+Authorization:  Bearer {{token}}
+
