@@ -17,6 +17,7 @@ import { AuthService } from '@/infra/auth/auth.service';
 import { PrismaService } from '@/infra/database/prisma.service';
 import { JWTMockService } from '@/test/mocks/jwt';
 import { MockPrismaService } from '@/test/mocks/prisma';
+import { CreateMockUser } from '@/test/mocks/create-mock-user/create-mock-user';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -46,24 +47,19 @@ describe('AuthService', () => {
   });
 
   describe('SignUp', () => {
-    it('should create a new user and return user without password', async () => {
-      const userSignUpData = {
-        name: generateUniqueName(),
-        email: generateUniqueEmail(),
-        password: await hashPassword('1234567878'),
-        birthDate: generateBirthDate(),
-        role: 'PATIENT' as ROLE,
-        documentType: ' CPF' as DOCUMENT_TYPE,
-        document: generateUniqueCPF(),
-      };
+    it('should create a new user', async () => {
+      // dados para criar um novo usuario
+      const userSignUpData = CreateMockUser;
 
+      // verifica se credenciais (email) já estão em uso
       mockPrismaService.user.findUnique.mockResolvedValue(null);
 
-      const createdUser = {
+      // simula dados que serão enviados pro Prisma
+      const created_user = {
         id: 'new-user-id',
         name: userSignUpData.name,
         email: userSignUpData.email,
-        password: 'hashed_password',
+        password: hashPassword(userSignUpData.password),
         role: userSignUpData.role,
         document: userSignUpData.document,
         documentType: userSignUpData.documentType,
@@ -72,11 +68,16 @@ describe('AuthService', () => {
         updatedAt: new Date(),
       };
 
-      mockPrismaService.user.create.mockResolvedValue(createdUser);
+      // cria um usuario no Prisma com os dados mockados
+      mockPrismaService.user.create.mockResolvedValue(created_user);
 
+      // chama o serviço real com os dados de signUp mockados
       const result = await service.SignUp(userSignUpData);
 
+      // verifica que a senha não foi retornada
       expect(result).not.toHaveProperty('password');
+
+      // verifica se os dados estão corretos
       expect(result).toMatchObject({
         id: 'new-user-id',
         name: userSignUpData.name,
@@ -88,11 +89,15 @@ describe('AuthService', () => {
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
       });
+
+      // verifica se email já existe antes de criar
       expect(mockPrismaService.user.findUnique).toHaveBeenCalledWith({
         where: {
           email: userSignUpData.email,
         },
       });
+
+      // verifica se o usuario foi criado apenas 1 vez
       expect(mockPrismaService.user.create).toHaveBeenCalledTimes(1);
     });
 
@@ -105,7 +110,7 @@ describe('AuthService', () => {
         password: plainPassword,
         birthDate: generateBirthDate(),
         role: 'PATIENT' as ROLE,
-        documentType: ' CPF' as DOCUMENT_TYPE,
+        documentType: 'CPF' as DOCUMENT_TYPE,
         document: generateUniqueCPF(),
       };
 
@@ -146,6 +151,24 @@ describe('AuthService', () => {
 
       await expect(service.SignUp(userSignUpData)).rejects.toThrow(
         new ConflictException('Credentials already in use'),
+      );
+    });
+
+    it('should throw bad request exception when not pass data', async () => {
+      const invalidData = {
+        name: '',
+        email: '',
+        password: '',
+        birthDate: new Date(),
+        role: 'PATIENT' as ROLE,
+        documentType: ' CPF' as DOCUMENT_TYPE,
+        document: generateUniqueCPF(),
+      };
+
+      mockPrismaService.user.findUnique.mockResolvedValue(null);
+
+      await expect(service.SignUp(invalidData)).rejects.toThrow(
+        new BadRequestException('Required fields not provided'),
       );
     });
   });
@@ -200,21 +223,6 @@ describe('AuthService', () => {
           password: 'senha_123',
         }),
       ).rejects.toThrow(new UnauthorizedException('Invalid credentials'));
-    });
-    it('should throw bad request exception when not pass data', async () => {
-      const invalidData = {
-        name: '',
-        email: '',
-        password: '',
-        birthDate: new Date(),
-        role: 'PATIENT' as ROLE,
-        documentType: ' CPF' as DOCUMENT_TYPE,
-        document: '123.456.789-44',
-      };
-
-      await expect(service.SignUp(invalidData)).rejects.toThrow(
-        new BadRequestException('Required fields not provided'),
-      );
     });
   });
 });
