@@ -1,5 +1,5 @@
-import { CreateAppointmentDto } from '@/core/shared/dto/appointments/create-appointment.dto';
-import { QUERY_STATUS } from '@/core/shared/types';
+import { CreateAppointmentDto } from '@/core/dto/appointments/create-appointment.dto';
+import { QUERY_STATUS } from '@/core/types';
 import { PrismaService } from '@/infra/database/prisma.service';
 import {
   ConflictException,
