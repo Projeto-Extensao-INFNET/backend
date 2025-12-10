@@ -1,13 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import { UserEntity } from '@/core/entities/user.entity';
-import { UserRepository } from '@/core/repositories/user.repository';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { IUserRepository } from '@/core/repositories/user.repository';
+import type { GetUserProfileDto } from '@/core/dto/user/get-user.dto';
 
 @Injectable()
 export class GetUserProfileService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly repo: IUserRepository) {}
 
-  async getUserProfile(userId: string): Promise<Omit<UserEntity, 'password'>> {
-    const user = await this.userRepository.getProfile(userId);
+  async getUserProfile(
+    userId: string,
+  ): Promise<Omit<GetUserProfileDto, 'password'>> {
+    const user = await this.repo.getProfile(userId);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
     const { password: _, ...userWithoutPassword } = user; // não exibe a senha o listar os dados do usuário
     return userWithoutPassword;
