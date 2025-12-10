@@ -1,9 +1,10 @@
 import z from 'zod';
 
-export const userProfileDto = z.object({
+export const getUserProfileDto = z.object({
   id: z.uuid(),
   name: z.string(),
   email: z.email(),
+  password: z.string(),
   birthDate: z.date(),
   role: z.enum(['PATIENT', 'PROFESSIONAL', 'ADMIN']),
   documentType: z.enum(['CPF', 'RG']),
@@ -19,5 +20,5 @@ export const authenticatedUserRequest = z.object({
   }),
 });
 
-export type UserProfileDto = z.infer<typeof userProfileDto>;
+export type GetUserProfileDto = z.infer<typeof getUserProfileDto>;
 export type AuthenticatedUserRequest = z.infer<typeof authenticatedUserRequest>;
