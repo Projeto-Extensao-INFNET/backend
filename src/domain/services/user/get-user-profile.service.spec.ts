@@ -6,13 +6,13 @@ import { PrismaService } from '@/infra/database/prisma.service';
 import { PrismaUserRepository } from '@/domain/repositories/prisma-user-repository';
 import { IUserRepository } from '@/core/repositories/user.repository';
 import { MockPrismaService } from '@/test/mocks/prisma';
-import { CreateMockUser } from '@/test/mocks/create-mock-user/create-mock-user';
+import { CreateMockUserWithoutPassword } from '@/test/mocks/create-mock-user/create-mock-user';
 
 describe('GetUserProfileService', () => {
   let service: GetUserProfileService;
   const mockPrismaService = MockPrismaService();
 
-  const userMock = CreateMockUser;
+  const userMock = CreateMockUserWithoutPassword;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
