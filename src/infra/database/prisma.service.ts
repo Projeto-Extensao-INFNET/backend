@@ -1,6 +1,6 @@
 import {
-  Inject,
   Injectable,
+  Logger,
   type OnModuleDestroy,
   type OnModuleInit,
 } from '@nestjs/common';
@@ -26,8 +26,14 @@ export class PrismaService
         env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
     });
   }
-  onModuleInit() {
-    return this.$connect();
+  async onModuleInit() {
+    try {
+      Logger.log('Database connection OK!');
+    } catch (error) {
+      Logger.error(`Database connection failed ${error}`);
+    } finally {
+      return this.$connect();
+    }
   }
   onModuleDestroy() {
     return this.$disconnect();
