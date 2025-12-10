@@ -1,12 +1,6 @@
-import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '../../generated/prisma';
-import { env } from '../../src/core/config/env';
+import type { PrismaClient } from 'generated/prisma';
 
-
-export const CreateTypesOfTreatment = async () => {
-  const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
-  const prisma = new PrismaClient({ adapter });
-
+export const CreateTypesOfTreatment = async (prisma: PrismaClient) => {
   await prisma.typesOfTreatment.createMany({
     data: [
       { name: 'Psiquiatria Infantil' },

@@ -23,13 +23,13 @@ const seed = async () => {
 
   console.log('✔ Database reset');
 
-  await CreateAdminUser();
-  await CreateSpecialties();
-  await CreateTypesOfTreatment();
-  await CreateProfessionalUser();
-  await CreatePatientUser();
-  await CreateProfessionalSchedule();
-  await CreateUserAgenda();
+  await CreateAdminUser(prisma);
+  await CreateSpecialties(prisma);
+  await CreateTypesOfTreatment(prisma);
+  await CreateProfessionalUser(prisma);
+  await CreatePatientUser(prisma);
+  await CreateProfessionalSchedule(prisma);
+  await CreateUserAgenda(prisma);
 };
 
 seed()
