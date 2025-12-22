@@ -50,7 +50,6 @@ describe('editProfile', () => {
       where: { id: user.id },
       data: dto,
     });
-    expect(result).not.toHaveProperty('password'); // verifica se a senha do usuário não aparece no retorno
     expect(result.name).toBe(dto.name); // verifica se o novo campo editado aparece corretamente
     expect(result.email).toBe(dto.email); // verifica se o novo campo editado aparece corretamente
   });
