@@ -9,9 +9,9 @@ async function bootstrap() {
   /**
    * CORS
    */
-  const corsOrigin = env.CORS_ORIGIN;
+
   app.enableCors({
-    origin: corsOrigin ?? '*',
+    origin: env.CORS_ORIGIN ?? '*',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
@@ -24,7 +24,7 @@ async function bootstrap() {
   /**
    * HTTP SERVER
    */
-  const port = env.PORT;
-  await app.listen(port ?? 3333);
+
+  await app.listen(env.PORT);
 }
 bootstrap();
