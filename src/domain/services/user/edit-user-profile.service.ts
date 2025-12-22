@@ -1,7 +1,6 @@
 import { EditProfileDto } from '@/core/dto/user/edit-profile.dto';
 import { IUserRepository } from '@/core/repositories/user.repository';
 import { Injectable } from '@nestjs/common';
-import type { GetUserProfileDto } from '@/core/dto/user/get-user.dto';
 
 @Injectable()
 export class EditUserProfileService {
