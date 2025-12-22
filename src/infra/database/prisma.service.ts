@@ -26,16 +26,24 @@ export class PrismaService
   }
   async onModuleInit() {
     try {
+      await this.$connect();
       Logger.log('========================');
       Logger.log('Database connection OK!');
       Logger.log('========================');
-    } catch (error) {
-      Logger.error(`Database connection failed ${error}`);
-    } finally {
-      return this.$connect();
+    } catch (err) {
+      Logger.error(`Database connection failed ${err}`);
+      throw err;
     }
   }
-  onModuleDestroy() {
-    return this.$disconnect();
+
+  async onModuleDestroy() {
+    try {
+      await this.$disconnect();
+      Logger.log('========================');
+      Logger.log('Database disconnected!');
+      Logger.log('========================');
+    } catch (err) {
+      Logger.error(`Error disconnecting database: ${err}`);
+    }
   }
 }
