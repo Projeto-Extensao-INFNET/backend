@@ -16,13 +16,7 @@ export const envSchema = z.object({
 /**
  * VALIDA O process.env COM Zod
  */
-const _env = envSchema.safeParse({
-  DATABASE_URL: process.env.DATABASE_URL,
-  PORT: process.env.PORT,
-  NODE_ENV: process.env.NODE_ENV,
-  CORS_ORIGIN: process.env.CORS_ORIGIN,
-  JWT_SECRET: process.env.JWT_SECRET,
-});
+const _env = envSchema.safeParse(process.env);
 
 if (_env.success === false) {
   if (process.env.NODE_ENV === 'development') {
