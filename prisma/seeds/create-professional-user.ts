@@ -5,7 +5,7 @@ import {
   PrismaClient,
   ProfessionalDocumentType,
   TypeOfQuery,
-} from '../../generated/prisma/client';
+} from '../.././src/infra/database/generated/client';
 import { hashPassword } from '../../src/core/shared/utils';
 
 export const CreateProfessionalUser = async (prisma: PrismaClient) => {

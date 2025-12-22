@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
-import { PrismaClient } from '../../generated/prisma/client';
+import { PrismaClient } from '../.././src/infra/database/generated/client';
 
 export const CreateProfessionalSchedule = async (prisma: PrismaClient) => {
   const professionals = await prisma.professional.findMany();

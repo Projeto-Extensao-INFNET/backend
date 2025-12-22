@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { PrismaClient } from '.././generated/prisma/client';
+import { PrismaClient } from '../src/infra/database/generated/client';
 import { CreateAdminUser } from './seeds/create-adm-user';
 import { CreateUserAgenda } from './seeds/create-user-agenda';
 import { CreatePatientUser } from './seeds/create-patient-user';
