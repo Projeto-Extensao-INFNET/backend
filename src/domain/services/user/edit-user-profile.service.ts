@@ -7,15 +7,11 @@ import type { GetUserProfileDto } from '@/core/dto/user/get-user.dto';
 export class EditUserProfileService {
   constructor(private readonly repo: IUserRepository) {}
 
-  async editProfile(
-    id: string,
-    dto: EditProfileDto,
-  ): Promise<Omit<GetUserProfileDto, 'password'>> {
+  async editProfile(id: string, dto: EditProfileDto): Promise<EditProfileDto> {
     await this.repo.findById(id);
 
     const updatedUser = await this.repo.editProfile(id, dto);
 
-    const { password: _, ...userWithoutPassword } = updatedUser;
-    return userWithoutPassword;
+    return updatedUser;
   }
 }
