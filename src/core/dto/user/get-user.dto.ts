@@ -18,6 +18,7 @@ export const getUserWithPasswordDto = getUserProfileDto.extend({
   password: z.string(),
 });
 
+// DTO para retornar usuário autenticado
 export const authenticatedUserRequest = z.object({
   user: z.object({
     userId: z.uuid(),
