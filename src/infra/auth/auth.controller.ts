@@ -8,9 +8,8 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthService } from '@/infra/auth/auth.service';
-import { signUpDto, type SignUpDto } from '@/core/dto/auth/signUp.dto';
-import { signInDto, type SignInDto } from '@/core/dto/auth/signIn.dto';
-import { ZodValidationPipe } from '@/core/shared/pipes/zod-validation.pipe';
+import { type SignUpDto } from '@/shared/dto/auth/signUp.dto';
+import { type SignInDto } from '@/shared/dto/auth/signIn.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -71,7 +70,7 @@ export class AuthController {
       },
     },
   })
-  signUp(@Body(new ZodValidationPipe(signUpDto)) body: SignUpDto) {
+  signUp(@Body() body: SignUpDto) {
     return this.authService.SignUp(body);
   }
 
@@ -123,7 +122,7 @@ export class AuthController {
       },
     },
   })
-  signIn(@Body(new ZodValidationPipe(signInDto)) body: SignInDto) {
+  signIn(@Body() body: SignInDto) {
     return this.authService.SignIn(body);
   }
 }
