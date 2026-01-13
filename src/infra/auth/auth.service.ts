@@ -9,6 +9,11 @@ import { comparePassword, hashPassword } from '@/utils';
 import { PrismaService } from '@/infra/database/prisma.service';
 import type { SignUpDto } from '@/shared/dto/auth/signUp.dto';
 import type { SignInDto } from '@/shared/dto/auth/signIn.dto';
+import {
+  ERROR_CREDENTIALS_IN_USE,
+  ERROR_INVALID_CREDENTIALS,
+  ERROR_REQUIRED_FIELDS,
+} from '@/shared/errors';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +25,7 @@ export class AuthService {
   async SignUp(data: SignUpDto) {
     // valida campos obrigatórios
     if (!data || !data.name || !data.email || !data.password) {
-      throw new BadRequestException('Required fields not provided');
+      throw new BadRequestException(ERROR_REQUIRED_FIELDS);
     }
 
     // Verifica se email já existe
@@ -31,7 +36,7 @@ export class AuthService {
     });
 
     if (existingUser) {
-      throw new ConflictException('Credentials already in use');
+      throw new ConflictException(ERROR_CREDENTIALS_IN_USE);
     }
 
     // Verifica se documento já existe
@@ -42,7 +47,7 @@ export class AuthService {
     });
 
     if (existingDocument) {
-      throw new ConflictException('Credentials already in use');
+      throw new ConflictException(ERROR_CREDENTIALS_IN_USE);
     }
 
     const hashedPassword = await hashPassword(data.password);
@@ -87,7 +92,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException(ERROR_INVALID_CREDENTIALS);
     }
 
     const isPasswordHashed = await comparePassword(
@@ -96,7 +101,7 @@ export class AuthService {
     );
 
     if (!isPasswordHashed) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException(ERROR_INVALID_CREDENTIALS);
     }
 
     const payload = { username: user.email, sub: user.id, role: user.role };
