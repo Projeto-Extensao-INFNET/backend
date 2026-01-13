@@ -5,14 +5,14 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import type { DOCUMENT_TYPE, ROLE } from '@/core/types';
+import type { DOCUMENT_TYPE, ROLE } from '@/shared/types';
 import {
   generateBirthDate,
   generateUniqueCPF,
   generateUniqueEmail,
   generateUniqueName,
   hashPassword,
-} from '@/core/shared/utils';
+} from '@/utils';
 import { AuthService } from '@/infra/auth/auth.service';
 import { PrismaService } from '@/infra/database/prisma.service';
 import { JWTMockService } from '@/test/mocks/jwt';
@@ -59,7 +59,6 @@ describe('AuthService', () => {
         id: 'new-user-id',
         name: userSignUpData.name,
         email: userSignUpData.email,
-        password: hashPassword(userSignUpData.password),
         role: userSignUpData.role,
         document: userSignUpData.document,
         documentType: userSignUpData.documentType,
@@ -126,11 +125,13 @@ describe('AuthService', () => {
 
       await service.SignUp(userSignUpData);
 
-      expect(mockPrismaService.user.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({
-          password: expect.not.stringMatching(plainPassword),
+      expect(mockPrismaService.user.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            password: expect.not.stringMatching(plainPassword),
+          }),
         }),
-      });
+      );
     });
 
     it('should throw conflict exception when email is already in use', async () => {
