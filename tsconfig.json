@@ -19,7 +19,7 @@
       "@/*": ["./src/*"],
       "@Controllers/*": ["./src/infra/http/controllers/*"],
       "@Services/*": ["src/domain/services/*"],
-      "@dtos/*": ["src/core/dto/*"]
+      "@dtos/*": ["src/shared/dto/*"]
     },
     "types": ["vitest/globals"],
     "incremental": true,
