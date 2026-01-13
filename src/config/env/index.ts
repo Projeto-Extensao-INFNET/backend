@@ -1,5 +1,6 @@
 import z from 'zod';
 import { loadEnvFile } from 'node:process';
+import { PORT } from '../../shared/constants/index';
 
 // Carrega o arquivo .env
 loadEnvFile('.env');
@@ -8,7 +9,7 @@ loadEnvFile('.env');
 
 export const envSchema = z.object({
   DATABASE_URL: z.url().startsWith('postgresql://'),
-  PORT: z.coerce.number().optional().default(3333),
+  PORT: z.coerce.number().optional().default(PORT),
   NODE_ENV: z
     .enum(['development', 'test', 'production'])
     .default('development'),
