@@ -12,9 +12,9 @@ import {
   ApiOperation,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Roles } from '@/core/shared/decorators/roles.decorator';
-import type { AuthenticatedUserRequest } from '@/core/dto/user/get-user.dto';
-import type { ROLE } from '@/core/types';
+import { Roles } from '@/shared/decorators/roles.decorator';
+import type { AuthenticatedUserRequest } from '@/shared/dto/user/get-user.dto';
+import type { ROLE } from '@/shared/types';
 import { DeleteUserProfileService } from '@Services/user/delete-user-profile.service';
 import { JwtAuthGuard } from '../../../auth/auth.guard';
 

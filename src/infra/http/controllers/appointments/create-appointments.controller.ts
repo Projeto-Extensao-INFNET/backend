@@ -1,6 +1,6 @@
-import { Roles } from '@/core/shared/decorators/roles.decorator';
-import type { CreateAppointmentDto } from '@/core/dto/appointments/create-appointment.dto';
-import type { ROLE } from '@/core/types';
+import { Roles } from '@/shared/decorators/roles.decorator';
+import type { CreateAppointmentDto } from '@/shared/dto/appointments/create-appointment.dto';
+import type { ROLE } from '@/shared/types';
 import { CreateAppointmentsService } from '@/domain/services/appointments/create-appointments.service';
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 
