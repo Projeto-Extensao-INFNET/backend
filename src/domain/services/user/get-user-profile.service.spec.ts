@@ -1,10 +1,12 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { nonExistentUserId } from '@/core/shared/utils';
+import { nonExistentUserId } from '@/utils';
 import { GetUserProfileService } from '@/domain/services/user/get-user-profile.service';
 import { PrismaService } from '@/infra/database/prisma.service';
-import { PrismaUserRepository } from '@/domain/repositories/prisma-user-repository';
-import { IUserRepository } from '@/core/repositories/user.repository';
+import {
+  IUserRepository,
+  PrismaUserRepository,
+} from '@/core/repositories/prisma-user-repository';
 import { MockPrismaService } from '@/test/mocks/prisma';
 import { CreateMockUserWithoutPassword } from '@/test/mocks/create-mock-user/create-mock-user';
 
