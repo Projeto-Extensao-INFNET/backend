@@ -4,6 +4,7 @@ import { PrismaService } from '@/infra/database/prisma.service';
 import { UserEntity } from '@/core/entities/user.entity';
 import { EditProfileDto } from '@/shared/dto/user/edit-profile.dto';
 import type { GetUserProfileDto } from '@/shared/dto/user/get-user.dto';
+import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
 
 // Cria um contrato que poderá ser usado por vários repositórios reais
 export abstract class IUserRepository {
@@ -42,7 +43,7 @@ export class PrismaUserRepository implements IUserRepository {
     });
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException(ERROR_USER_NOT_FOUND);
     }
 
     return user;
@@ -56,7 +57,7 @@ export class PrismaUserRepository implements IUserRepository {
     });
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException(ERROR_USER_NOT_FOUND);
     }
 
     return user;
