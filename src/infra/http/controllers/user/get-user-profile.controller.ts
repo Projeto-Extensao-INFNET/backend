@@ -1,11 +1,4 @@
 import { Controller, Get, HttpCode, Request, UseGuards } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiNotFoundResponse,
-  ApiOperation,
-  ApiResponse,
-  ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
 import { Roles } from '@/shared/decorators/roles.decorator';
 import type {
   AuthenticatedUserRequest,
@@ -22,36 +15,6 @@ export class GetUserProfileController {
   @Roles('PATIENT' as ROLE)
   @Get('me')
   @HttpCode(200)
-  @ApiBearerAuth()
-  @ApiOperation({
-    summary: 'Busca o perfil do usuário',
-    description: 'Retorna os dados do perfil do usuário logado',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Perfil do usuário retornado com sucesso',
-    schema: {
-      example: {
-        id: 'uuid-gerado',
-        name: 'Exemplo Paciente',
-        email: 'paciente@acme.com',
-        role: 'PATIENT',
-        birthDate: '1990-01-01T00:00:00.000Z',
-        documentType: 'CPF',
-        document: '123.456.789-00',
-        createdAt: '2025-08-24T15:00:00.000Z',
-        updatedAt: '2025-08-24T15:00:00.000Z',
-      },
-    },
-  })
-  @ApiNotFoundResponse({
-    description: 'Usuário não encontrado',
-    schema: { example: { statusCode: 404, message: 'User not found' } },
-  })
-  @ApiUnauthorizedResponse({
-    description: 'Usuário não autenticado ou sem permissão',
-    schema: { example: { statusCode: 401, message: 'Unauthorized' } },
-  })
   @UseGuards(JwtAuthGuard)
   async getUserProfile(
     @Request() req: AuthenticatedUserRequest,
