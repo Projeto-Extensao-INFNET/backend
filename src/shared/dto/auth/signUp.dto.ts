@@ -1,9 +1,10 @@
+import { MIN_PASSWORD_LENGTH } from '@/shared/constants';
 import { z } from 'zod';
 
 export const signUpDto = z.object({
   name: z.string().nonempty(),
   email: z.email().nonempty(),
-  password: z.string().min(8).nonempty(),
+  password: z.string().min(MIN_PASSWORD_LENGTH).nonempty(),
   birthDate: z.coerce.date(),
   role: z.enum(['PATIENT', 'PROFESSIONAL', 'ADMIN']),
   documentType: z.enum(['CPF', 'RG']),
