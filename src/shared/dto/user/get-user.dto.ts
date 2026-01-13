@@ -13,11 +13,6 @@ export const getUserProfileDto = z.object({
   updatedAt: z.date(),
 });
 
-//  DTO para retornar usuário (COM senha)
-export const getUserWithPasswordDto = getUserProfileDto.extend({
-  password: z.string(),
-});
-
 // DTO para retornar usuário autenticado
 export const authenticatedUserRequest = z.object({
   user: z.object({
@@ -27,5 +22,4 @@ export const authenticatedUserRequest = z.object({
 });
 
 export type GetUserProfileDto = z.infer<typeof getUserProfileDto>;
-export type GetUserWithPasswordDto = z.infer<typeof getUserWithPasswordDto>;
 export type AuthenticatedUserRequest = z.infer<typeof authenticatedUserRequest>;
