@@ -5,10 +5,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { comparePassword, hashPassword } from '@/core/shared/utils';
+import { comparePassword, hashPassword } from '@/utils';
 import { PrismaService } from '@/infra/database/prisma.service';
-import type { SignUpDto } from '@/core/dto/auth/signUp.dto';
-import type { SignInDto } from '@/core/dto/auth/signIn.dto';
+import type { SignUpDto } from '@/shared/dto/auth/signUp.dto';
+import type { SignInDto } from '@/shared/dto/auth/signIn.dto';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +19,7 @@ export class AuthService {
   // Cadastro
   async SignUp(data: SignUpDto) {
     // valida campos obrigatórios
-    if (!data.name || !data.email || !data.password) {
+    if (!data || !data.name || !data.email || !data.password) {
       throw new BadRequestException('Required fields not provided');
     }
 
@@ -34,6 +34,7 @@ export class AuthService {
       throw new ConflictException('Credentials already in use');
     }
 
+    // Verifica se documento já existe
     const existingDocument = await this.prismaService.user.findUnique({
       where: {
         document: data.document,
@@ -56,11 +57,19 @@ export class AuthService {
         documentType: data.documentType,
         document: data.document,
       },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        password: false,
+        birthDate: true,
+        role: true,
+        documentType: true,
+        document: true,
+      },
     });
 
-    const { password: _, ...userWithoutPassword } = user;
-
-    return userWithoutPassword;
+    return user;
   }
 
   // Login
@@ -68,6 +77,12 @@ export class AuthService {
     const user = await this.prismaService.user.findUnique({
       where: {
         email: data.email,
+      },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        role: true,
       },
     });
 
