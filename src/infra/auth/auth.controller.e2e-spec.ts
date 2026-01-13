@@ -7,14 +7,14 @@ import {
   generateUniqueCPF,
   generateUniqueEmail,
   generateUniqueName,
-} from '@/core/shared/utils';
+} from '@/utils';
 import { PrismaService } from '@/infra/database/prisma.service';
 import {
   makeAuthenticate,
   makeUser,
   makeUserProfessional,
 } from '@/test/factories';
-import type { DOCUMENT_TYPE, ROLE } from '@/core/types';
+import type { DOCUMENT_TYPE, ROLE } from '@/shared/types';
 
 describe('AuthController (E2E)', () => {
   let app: INestApplication;
