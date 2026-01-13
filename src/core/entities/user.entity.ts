@@ -1,4 +1,4 @@
-import type { DocumentType, ROLE } from '@/core/shared/types';
+import type { DOCUMENT_TYPE, ROLE } from '@/shared/types';
 
 export interface UserEntity {
   id: string;
@@ -7,7 +7,7 @@ export interface UserEntity {
   password: string;
   birthDate: Date;
   role: ROLE;
-  documentType: DocumentType;
+  documentType: DOCUMENT_TYPE;
   document: string;
   createdAt: Date;
   updatedAt: Date;

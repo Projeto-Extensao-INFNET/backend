@@ -1,11 +1,17 @@
-import { CreateAppointmentDto } from '@/core/shared/dto/appointments/create-appointment.dto';
+import { CreateAppointmentDto } from '@/shared/dto/appointments/create-appointment.dto';
+import type { QUERY_STATUS } from '@/shared/types';
 import { PrismaService } from '@/infra/database/prisma.service';
 import {
   ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import {
+  ERROR_SCHEDULE_ALREADY_BOOKED,
+  ERROR_SCHEDULE_NOT_AVAILABLE,
+  ERROR_SCHEDULE_NOT_FOUND,
+  ERROR_USER_NOT_FOUND,
+} from '@/shared/errors';
 
 @Injectable()
 export class CreateAppointmentsService {
@@ -19,7 +25,7 @@ export class CreateAppointmentsService {
     });
 
     if (!userExists) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException(ERROR_USER_NOT_FOUND);
     }
 
     /**
@@ -31,15 +37,15 @@ export class CreateAppointmentsService {
     });
 
     if (!scheduleExists) {
-      throw new NotFoundException('Schedule not found');
+      throw new NotFoundException(ERROR_SCHEDULE_NOT_FOUND);
     }
 
     if (!scheduleExists.isAvailable) {
-      throw new ConflictException('Schedule not available');
+      throw new ConflictException(ERROR_SCHEDULE_NOT_AVAILABLE);
     }
 
     if (scheduleExists.UserAgenda) {
-      throw new ConflictException('Schedule already booked');
+      throw new ConflictException(ERROR_SCHEDULE_ALREADY_BOOKED);
     }
 
     /**
@@ -47,7 +53,7 @@ export class CreateAppointmentsService {
      */
     await this.prismaService.userAgenda.create({
       data: {
-        status: 'SCHEDULED',
+        status: 'SCHEDULED' as QUERY_STATUS,
         user: {
           connect: { id: data.userId },
         },

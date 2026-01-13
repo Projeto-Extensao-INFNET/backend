@@ -1,10 +1,12 @@
+import type { DOCUMENT_TYPE, ROLE } from '@/shared/types/index';
+
 import {
   generateBirthDate,
-  generateUniqueDocument,
+  generateUniqueCPF,
   generateUniqueEmail,
   generateUniqueName,
   generateUUID,
-} from '@/core/shared/utils';
+} from '@/utils';
 
 export const CreateMockUser = {
   id: generateUUID(),
@@ -12,9 +14,21 @@ export const CreateMockUser = {
   email: generateUniqueEmail(),
   password: '12345678',
   birthDate: generateBirthDate(),
-  role: 'PATIENT',
-  documentType: 'CPF',
-  document: generateUniqueDocument(),
+  role: 'PATIENT' as ROLE,
+  documentType: 'CPF' as DOCUMENT_TYPE,
+  document: generateUniqueCPF(),
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
+
+export const CreateMockUserWithoutPassword = {
+  id: generateUUID(),
+  name: generateUniqueName(),
+  email: generateUniqueEmail(),
+  birthDate: generateBirthDate(),
+  role: 'PATIENT' as ROLE,
+  documentType: 'CPF' as DOCUMENT_TYPE,
+  document: generateUniqueCPF(),
   createdAt: new Date(),
   updatedAt: new Date(),
 };

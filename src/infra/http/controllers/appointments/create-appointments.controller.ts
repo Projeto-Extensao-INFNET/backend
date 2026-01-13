@@ -1,6 +1,6 @@
-import { Roles } from '@/core/shared/decorators/roles.decorator';
-import type { CreateAppointmentDto } from '@/core/shared/dto/appointments/create-appointment.dto';
-import { ROLE } from '@/core/shared/types';
+import { Roles } from '@/shared/decorators/roles.decorator';
+import type { CreateAppointmentDto } from '@/shared/dto/appointments/create-appointment.dto';
+import type { ROLE } from '@/shared/types';
 import { CreateAppointmentsService } from '@/domain/services/appointments/create-appointments.service';
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 
@@ -11,7 +11,7 @@ export class CreateAppointmentsController {
   ) {}
 
   @Post('create')
-  @Roles(ROLE.PATIENT)
+  @Roles('PATIENT' as ROLE)
   @HttpCode(201)
   async createAppointments(@Body() body: CreateAppointmentDto) {
     return this.createAppointmentService.createAppointments(body);

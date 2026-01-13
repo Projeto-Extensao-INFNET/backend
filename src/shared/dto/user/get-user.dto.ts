@@ -1,6 +1,7 @@
 import z from 'zod';
 
-export const userProfileDto = z.object({
+// DTO para retornar perfil do usuário (SEM senha)
+export const getUserProfileDto = z.object({
   id: z.uuid(),
   name: z.string(),
   email: z.email(),
@@ -12,6 +13,7 @@ export const userProfileDto = z.object({
   updatedAt: z.date(),
 });
 
+// DTO para retornar usuário autenticado
 export const authenticatedUserRequest = z.object({
   user: z.object({
     userId: z.uuid(),
@@ -19,5 +21,5 @@ export const authenticatedUserRequest = z.object({
   }),
 });
 
-export type UserProfileDto = z.infer<typeof userProfileDto>;
+export type GetUserProfileDto = z.infer<typeof getUserProfileDto>;
 export type AuthenticatedUserRequest = z.infer<typeof authenticatedUserRequest>;

@@ -4,14 +4,17 @@ Este repositório contém o backend do Projeto **FUTURO NOME DO PROJETO**, desen
 
 ## Tecnologias principais
 
-- **Node.js** — Ambiente de execução JavaScript
+- **Node.js** (>= 22.15.1) — Ambiente de execução JavaScript
+- **pnpm** (10.12.1) — Gerenciador de pacotes rápido e eficiente
 - **NestJS** — Framework para aplicações Node.js escaláveis
 - **Prisma ORM** — Mapeamento objeto-relacional para banco de dados
 - **PostgreSQL** — Banco de dados relacional
-- **Vitest** — Testes automatizados
-- **Docker** — Containers para ambientes e banco de dados
-- **BiomeJs** — Linter e Formatter do projeto
+- **Vitest** — Testes automatizados (unitários e E2E)
+- **Docker** — Containers para ambientes de desenvolvimento e produção
+- **ESLint + Prettier** — Linting e formatação de código
+- **SWC** — Compilador rápido para TypeScript/JavaScript
 - **Husky + lint-staged + Commitlint** — Garantem padrões de código e mensagens de commit
+- **Terraform (CDKTF)** — Infraestrutura como código
   
 ## Sobre os arquivos de configuração e ambientes
 
@@ -28,7 +31,11 @@ Outros arquivos importantes:
 - `docker-compose.dev.yml` e `docker-compose.prod.yml`: orquestram containers para desenvolvimento e produção, garantindo ambientes isolados e reprodutíveis.
 - `Dockerfile.dev` e `Dockerfile.prod`: definem como as imagens são construídas para desenvolvimento e produção.
 - `prisma/`: contém o schema do banco, seeds e migrations, usados pelo Prisma ORM.
+- `terraform/`: configuração de infraestrutura como código usando CDKTF (Cloud Development Kit for Terraform).
 - `.husky/`: hooks de git para automação de tarefas antes de commits/push.
+- `.lintstagedrc.json`: configuração do lint-staged para executar formatação e linting em arquivos staged.
+- `.swcrc`: configuração do SWC para compilação rápida.
+- `vitest.config.ts` e `vitest.config.e2e.ts`: configurações para testes unitários e E2E com Vitest.
 
 ## Como rodar localmente
 
@@ -93,10 +100,12 @@ Observações para Docker:
 - `pnpm test:coverage` — Mostra a cobertura dos testes automatizados
 - `pnpm test:e2e` — Executa os testes e2e
 - `pnpm test:coverage:e2e` — Mostra a cobertura dos testes e2e
-- `pnpm lint` — Roda o linter
+- `pnpm format` — Formata o código usando Prettier
+- `pnpm lint` — Roda o linter (ESLint) e corrige problemas automaticamente
 - `pnpm commit` — Roda o commitzen para commits semânticos
 - `pnpm prisma:migrate` — Executa as migrations do banco
 - `pnpm prisma:generate` — Gera o client do Prisma
+- `pnpm prisma:studio` — Abre o Prisma Studio para visualizar/editar dados
 - `pnpm prisma:seed` — Popula o banco de dados
 - `pnpm docker:dev` — Sobe os containers para desenvolvimento
 - `pnpm docker:stop:dev` — Para os containers de desenvolvimento
@@ -107,20 +116,11 @@ Observações para Docker:
 
 O projeto usa Husky, lint-staged e Commitlint para garantir qualidade e padronização:
 
-- `pre-commit`: executa o `lint-staged` sobre arquivos staged e roda `pnpm test:coverage` quando arquivos `src/**/*.ts` forem commitados
-- `commit-msg`: valida a mensagem de commit com Commitlint (convencional)
+- `pre-commit`: executa o `lint-staged` (Prettier e ESLint) sobre arquivos `src/**/*.ts` staged
+- `commit-msg`: valida a mensagem de commit com Commitlint (formato convencional)
 - `pre-push`: executa `pnpm test:coverage` e `pnpm test:coverage:e2e`
 
-Observações:
-
-- É necessário ter Node (>= 22.15.1) e pnpm instalados
-
-## Docker
-
-O projeto possui arquivos para facilitar o uso de containers tanto em desenvolvimento quanto produção:
-
-- Desenvolvimento: `docker-compose.dev.yml` (script `pnpm docker:dev`)
-- Produção: `docker-compose.prod.yml` (script `pnpm docker:prod`)
+O lint-staged está configurado em `.lintstagedrc.json` e aplica formatação (Prettier) e linting (ESLint) automaticamente nos arquivos TypeScript do `src/`.
 
 ## Contribuição
 

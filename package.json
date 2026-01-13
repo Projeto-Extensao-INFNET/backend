@@ -1,7 +1,7 @@
 {
   "name": "backend_projeto_extensao",
   "version": "0.0.1",
-  "description": "",
+  "description": "Backend do meu projeto de extensão da faculdade",
   "author": "Nathan Rodrigues Vieira",
   "private": true,
   "license": "UNLICENSED",
@@ -20,7 +20,7 @@
     "commit": "cz",
     "test": "dotenv -e .env.test vitest run --bail 1",
     "test:watch": "dotenv -e .env.test -- vitest --bail 1",
-    "test:coverage": "dotenv -e .env.test -- vitest run --coverage --no-file-parallelism --passWithNoTests",
+    "test:coverage": "dotenv -e .env.test -- vitest run --coverage --no-file-parallelism",
     "pretest:e2e": "dotenv -e .env.test pnpm dlx prisma migrate deploy",
     "test:e2e": "dotenv -e .env.test -- vitest run --config ./vitest.config.e2e.ts",
     "test:coverage:e2e": "dotenv -e .env.test -- vitest run --config vitest.config.e2e.ts --coverage",

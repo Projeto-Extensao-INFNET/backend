@@ -1,13 +1,8 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
-import { PrismaClient } from '../../generated/prisma';
-import { hashPassword } from '../../src/core/shared/utils';
-import { PrismaPg } from '@prisma/adapter-pg';
-import { env } from '../../src/core/config/env';
+import { PrismaClient } from '../.././src/infra/database/generated/client';
+import { hashPassword } from '../../src/utils';
 
-export const CreateAdminUser = async () => {
-  const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
-  const prisma = new PrismaClient({ adapter });
-
+export const CreateAdminUser = async (prisma: PrismaClient) => {
   const userAdmin = await prisma.user.create({
     data: {
       name: faker.person.fullName(),

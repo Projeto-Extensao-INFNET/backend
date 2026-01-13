@@ -5,29 +5,22 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
+    // Configs básicas
     include: ['**/*.e2e-spec.ts'],
-    globals: true,
-    root: './',
     environment: 'node',
-    hookTimeout: 60000,
+    root: './',
+    globals: true,
     fileParallelism: false,
+    testTimeout: 30000,
+    maxWorkers: 1,
+    maxConcurrency: 1,
+
+    // Coverage
     coverage: {
       reportsDirectory: './coverage',
       provider: 'v8',
       reporter: ['text', 'html', 'lcov', 'cobertura'],
       include: ['src/**/*.ts'],
-      exclude: [
-        '**/types/**',
-        '**/*.d.ts',
-        '**/mocks/**',
-        'src/main.ts',
-        '**/*.module.ts',
-        '**/*.dto.ts',
-        '**/*.entity.ts',
-        '**/*.decorator.ts',
-        '**/*.guard.ts',
-        '**/*.spec.ts',
-      ],
     },
   },
   plugins: [

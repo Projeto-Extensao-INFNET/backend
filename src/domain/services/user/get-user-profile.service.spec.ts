@@ -1,25 +1,27 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { nonExistentUserId } from '@/core/shared/utils';
+import { nonExistentUserId } from '@/utils';
 import { GetUserProfileService } from '@/domain/services/user/get-user-profile.service';
 import { PrismaService } from '@/infra/database/prisma.service';
-import { PrismaUserRepository } from '@/infra/repositories/prisma/prisma-user-repository';
-import { UserRepository } from '@/infra/repositories/user.repository';
+import {
+  IUserRepository,
+  PrismaUserRepository,
+} from '@/core/repositories/prisma-user-repository';
 import { MockPrismaService } from '@/test/mocks/prisma';
-import { CreateMockUser } from '@/test/mocks/create-mock-user/create-mock-user';
+import { CreateMockUserWithoutPassword } from '@/test/mocks/create-mock-user/create-mock-user';
 
 describe('GetUserProfileService', () => {
   let service: GetUserProfileService;
   const mockPrismaService = MockPrismaService();
 
-  const userMock = CreateMockUser;
+  const userMock = CreateMockUserWithoutPassword;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         GetUserProfileService,
         {
-          provide: UserRepository,
+          provide: IUserRepository,
           useClass: PrismaUserRepository,
         },
         {
@@ -56,9 +58,4 @@ describe('GetUserProfileService', () => {
       );
     });
   });
-
-  // describe('createAppointment', () => {});
-  // describe('getAppointments', () => {});
-  // describe('changeAppointment', () => {});
-  // describe('cancelAppointment', () => {});
 });

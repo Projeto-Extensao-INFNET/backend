@@ -1,11 +1,21 @@
+import type {
+  DOCUMENT_TYPE,
+  GENDER,
+  PAYMENT_METHOD,
+  PROFESSIONAL_DOCUMENT_TYPE,
+  ROLE,
+  TYPE_OF_QUERY,
+} from '@/shared/types';
 import {
   generateBirthDate,
-  generateUniqueDocument,
+  generateUniqueCPF,
+  generateUniqueCRM,
   generateUniqueEmail,
   generateUniqueName,
   hashPassword,
-} from '@/core/shared/utils';
+} from '@/utils';
 import type { PrismaService } from '@/infra/database/prisma.service';
+import { faker } from '@faker-js/faker/locale/pt_BR';
 
 export const makeUserProfessional = async (prisma: PrismaService) => {
   const result = await prisma.user.create({
@@ -14,9 +24,9 @@ export const makeUserProfessional = async (prisma: PrismaService) => {
       email: generateUniqueEmail(),
       password: await hashPassword('12345678'),
       birthDate: generateBirthDate(),
-      role: 'PROFESSIONAL',
-      documentType: 'CPF',
-      document: generateUniqueDocument(),
+      role: 'PROFESSIONAL' as ROLE,
+      documentType: 'CPF' as DOCUMENT_TYPE,
+      document: generateUniqueCPF(),
     },
   });
 
@@ -28,25 +38,25 @@ export const makeProfessional = async (prisma: PrismaService) => {
 
   const specialty = await prisma.specialty.create({
     data: {
-      name: `Specialty-${Date.now()}`,
+      name: `Specialty-${faker.person.jobArea()}`,
     },
   });
 
   const typeOfTreatment = await prisma.typesOfTreatment.create({
     data: {
-      name: `Treatment-${Date.now()}`,
+      name: `Treatment-${faker.science.chemicalElement()}`,
     },
   });
 
   const professional = await prisma.professional.create({
     data: {
       userId: user.id,
-      document: `${Date.now()}`,
-      documentType: 'CRM',
-      typeOfQuery: 'ONLINE_VIDEO_CALL',
+      document: generateUniqueCRM(),
+      documentType: 'CRM' as PROFESSIONAL_DOCUMENT_TYPE,
+      typeOfQuery: 'ONLINE_VIDEO_CALL' as TYPE_OF_QUERY,
       price: 100,
-      paymentMethod: 'CREDIT_CARD',
-      gender: 'MALE',
+      paymentMethod: 'CREDIT_CARD' as PAYMENT_METHOD,
+      gender: 'MALE' as GENDER,
       avatar: 'https://example.com/avatar.jpg',
       specialtyId: specialty.id,
       typeOfTreatmentId: typeOfTreatment.id,

@@ -1,14 +1,11 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
-import { PrismaClient, type User } from '../../generated/prisma';
-import { hashPassword } from '../../src/core/shared/utils';
-import { PrismaPg } from '@prisma/adapter-pg';
-import { env } from '../../src/core/config/env';
+import {
+  PrismaClient,
+  type User,
+} from '../.././src/infra/database/generated/client';
+import { hashPassword } from '../../src/utils';
 
-
-export const CreatePatientUser = async () => {
-  const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
-  const prisma = new PrismaClient({ adapter });
-
+export const CreatePatientUser = async (prisma: PrismaClient) => {
   const userPatients: User[] = [];
 
   for (let i = 0; i < 10; i++) {

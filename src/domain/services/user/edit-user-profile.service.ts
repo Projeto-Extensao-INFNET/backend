@@ -1,21 +1,16 @@
-import { UserEntity } from '@/core/entities/user.entity';
-import { EditProfileDto } from '@dtos/user/edit-profile.dto';
-import { UserRepository } from '@/infra/repositories/user.repository';
+import { EditProfileDto } from '@/shared/dto/user/edit-profile.dto';
+import { IUserRepository } from '@/core/repositories/prisma-user-repository';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class EditUserProfileService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly repo: IUserRepository) {}
 
-  async editProfile(
-    id: string,
-    dto: EditProfileDto,
-  ): Promise<Omit<UserEntity, 'password'>> {
-    await this.userRepository.findById(id);
+  async editProfile(id: string, dto: EditProfileDto): Promise<EditProfileDto> {
+    await this.repo.findById(id);
 
-    const updatedUser = await this.userRepository.editProfile(id, dto);
+    const updatedUser = await this.repo.editProfile(id, dto);
 
-    const { password: _, ...userWithoutPassword } = updatedUser;
-    return userWithoutPassword;
+    return updatedUser;
   }
 }

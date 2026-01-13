@@ -1,8 +1,8 @@
+import { SALT_ROUNDS } from '@/shared/constants';
 import { compare, hash } from 'bcryptjs';
 
 export const hashPassword = async (password: string): Promise<string> => {
-  const saltRounds = 8;
-  return hash(password, saltRounds);
+  return hash(password, SALT_ROUNDS);
 };
 
 export const comparePassword = async (

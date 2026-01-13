@@ -1,38 +1,49 @@
 import {
-  Inject,
   Injectable,
+  Logger,
   type OnModuleDestroy,
   type OnModuleInit,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { PrismaClient } from 'generated/prisma';
-import { env, Env } from '@/core/config/env';
+import { env } from '@/config/env';
 import { PrismaPg } from '@prisma/adapter-pg';
-
-const connectionString = env.DATABASE_URL;
+import { PrismaClient } from './generated/client';
 
 @Injectable()
 export class PrismaService
   extends PrismaClient
   implements OnModuleInit, OnModuleDestroy
 {
-  constructor(@Inject(ConfigService) configService: ConfigService<Env, true>) {
+  constructor() {
     const adapter = new PrismaPg({
-      connectionString,
+      connectionString: env.DATABASE_URL,
     });
 
     super({
       adapter,
       log:
-        configService.get('NODE_ENV', { infer: true }) === 'development'
-          ? ['query', 'error', 'warn']
-          : ['error'],
+        env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
     });
   }
-  onModuleInit() {
-    return this.$connect();
+  async onModuleInit() {
+    try {
+      await this.$connect();
+      Logger.log('========================');
+      Logger.log('Database connection OK!');
+      Logger.log('========================');
+    } catch (err) {
+      Logger.error(`Database connection failed ${err}`);
+      throw err;
+    }
   }
-  onModuleDestroy() {
-    return this.$disconnect();
+
+  async onModuleDestroy() {
+    try {
+      await this.$disconnect();
+      Logger.log('========================');
+      Logger.log('Database disconnected!');
+      Logger.log('========================');
+    } catch (err) {
+      Logger.error(`Error disconnecting database: ${err}`);
+    }
   }
 }

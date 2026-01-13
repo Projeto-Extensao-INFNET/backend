@@ -1,15 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import { UserEntity } from '@/core/entities/user.entity';
-import { UserRepository } from '@/infra/repositories/user.repository';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import type { GetUserProfileDto } from '@/shared/dto/user/get-user.dto';
+import { IUserRepository } from '@/core/repositories/prisma-user-repository';
+import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
 
 @Injectable()
 export class GetUserProfileService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly repo: IUserRepository) {}
 
-  async getUserProfile(userId: string): Promise<Omit<UserEntity, 'password'>> {
-    const user = await this.userRepository.getProfile(userId);
+  async getUserProfile(userId: string): Promise<GetUserProfileDto> {
+    const user = await this.repo.getProfile(userId);
 
-    const { password: _, ...userWithoutPassword } = user; // não exibe a senha o listar os dados do usuário
-    return userWithoutPassword;
+    if (!user) {
+      throw new NotFoundException(ERROR_USER_NOT_FOUND);
+    }
+
+    return user;
   }
 }

@@ -1,11 +1,11 @@
+import { IUserRepository } from '@/core/repositories/prisma-user-repository';
 import { Injectable } from '@nestjs/common';
-import { UserRepository } from '@/infra/repositories/user.repository';
 
 @Injectable()
 export class ListProfessionalsService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly repo: IUserRepository) {}
 
   async listProfessionals() {
-    return await this.userRepository.listProfessionals();
+    return await this.repo.listProfessionals();
   }
 }

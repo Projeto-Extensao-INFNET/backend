@@ -1,10 +1,12 @@
 import { MockPrismaService } from '@/test/mocks/prisma';
 import { DeleteUserProfileService } from './delete-user-profile.service';
-import { nonExistentUserId } from '@/core/shared/utils';
+import { nonExistentUserId } from '@/utils';
 import { NotFoundException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
-import { UserRepository } from '@/infra/repositories/user.repository';
-import { PrismaUserRepository } from '@/infra/repositories/prisma/prisma-user-repository';
+import {
+  IUserRepository,
+  PrismaUserRepository,
+} from '@/core/repositories/prisma-user-repository';
 import { PrismaService } from '@/infra/database/prisma.service';
 import { CreateMockUser } from '@/test/mocks/create-mock-user/create-mock-user';
 
@@ -19,7 +21,7 @@ describe('deleteAccount ', () => {
       providers: [
         DeleteUserProfileService,
         {
-          provide: UserRepository,
+          provide: IUserRepository,
           useClass: PrismaUserRepository,
         },
         {

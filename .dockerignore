@@ -16,7 +16,7 @@ coverage/
 .husky/
 
 # prisma
-/generated/prisma
+src/infra/database/generated/
 
 *.log
 

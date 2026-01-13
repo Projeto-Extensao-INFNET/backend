@@ -1,19 +1,20 @@
 import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
-import { AppModule } from '@/app.module';
+import { AppModule } from '../app.module';
 import {
   generateBirthDate,
-  generateUniqueDocument,
+  generateUniqueCPF,
   generateUniqueEmail,
   generateUniqueName,
-} from '@/core/shared/utils';
+} from '@/utils';
 import { PrismaService } from '@/infra/database/prisma.service';
 import {
   makeAuthenticate,
   makeUser,
   makeUserProfessional,
 } from '@/test/factories';
+import type { DOCUMENT_TYPE, ROLE } from '@/shared/types';
 
 describe('AuthController (E2E)', () => {
   let app: INestApplication;
@@ -44,10 +45,10 @@ describe('AuthController (E2E)', () => {
         name: generateUniqueName(),
         email: generateUniqueEmail(),
         password: '12345678',
-        role: 'PATIENT',
+        role: 'PATIENT' as ROLE,
+        documentType: 'CPF' as DOCUMENT_TYPE,
         birthDate: generateBirthDate(),
-        documentType: 'CPF',
-        document: generateUniqueDocument(),
+        document: generateUniqueCPF(),
       };
 
       const response = await request(app.getHttpServer())
@@ -89,10 +90,10 @@ describe('AuthController (E2E)', () => {
         name: generateUniqueName(),
         email: generateUniqueEmail(),
         password: '12345678',
-        role: 'PATIENT',
+        role: 'PATIENT' as ROLE,
+        documentType: 'CPF' as DOCUMENT_TYPE,
         birthDate: generateBirthDate(),
-        documentType: 'CPF',
-        document: generateUniqueDocument(),
+        document: generateUniqueCPF(),
       };
 
       const signUpResponse = await request(app.getHttpServer())
