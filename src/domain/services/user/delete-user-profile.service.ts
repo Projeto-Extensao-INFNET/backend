@@ -1,5 +1,5 @@
+import { IUserRepository } from '@/core/repositories/prisma-user-repository';
 import { Injectable } from '@nestjs/common';
-import { IUserRepository } from '@/core/repositories/user.repository';
 
 @Injectable()
 export class DeleteUserProfileService {
