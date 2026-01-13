@@ -6,12 +6,12 @@ import {
   ApiResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Roles } from '@/core/shared/decorators/roles.decorator';
+import { Roles } from '@/shared/decorators/roles.decorator';
 import type {
   AuthenticatedUserRequest,
   GetUserProfileDto,
-} from '@/core/dto/user/get-user.dto';
-import type { ROLE } from '@/core/types';
+} from '@/shared/dto/user/get-user.dto';
+import type { ROLE } from '@/shared/types';
 import { GetUserProfileService } from '@/domain/services/user/get-user-profile.service';
 import { JwtAuthGuard } from '../../../auth/auth.guard';
 
@@ -56,21 +56,6 @@ export class GetUserProfileController {
   async getUserProfile(
     @Request() req: AuthenticatedUserRequest,
   ): Promise<GetUserProfileDto> {
-    const userId = req.user.userId;
-
-    const user = await this.getUserProfileService.getUserProfile(userId);
-
-    const userProfile: GetUserProfileDto = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      birthDate: user.birthDate,
-      documentType: user.documentType,
-      document: user.document,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-    };
-    return userProfile;
+    return await this.getUserProfileService.getUserProfile(req.user.userId);
   }
 }
