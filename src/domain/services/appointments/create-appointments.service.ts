@@ -6,6 +6,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import {
+  ERROR_SCHEDULE_ALREADY_BOOKED,
+  ERROR_SCHEDULE_NOT_AVAILABLE,
+  ERROR_SCHEDULE_NOT_FOUND,
+  ERROR_USER_NOT_FOUND,
+} from '@/shared/errors';
 
 @Injectable()
 export class CreateAppointmentsService {
@@ -19,7 +25,7 @@ export class CreateAppointmentsService {
     });
 
     if (!userExists) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException(ERROR_USER_NOT_FOUND);
     }
 
     /**
@@ -31,15 +37,15 @@ export class CreateAppointmentsService {
     });
 
     if (!scheduleExists) {
-      throw new NotFoundException('Schedule not found');
+      throw new NotFoundException(ERROR_SCHEDULE_NOT_FOUND);
     }
 
     if (!scheduleExists.isAvailable) {
-      throw new ConflictException('Schedule not available');
+      throw new ConflictException(ERROR_SCHEDULE_NOT_AVAILABLE);
     }
 
     if (scheduleExists.UserAgenda) {
-      throw new ConflictException('Schedule already booked');
+      throw new ConflictException(ERROR_SCHEDULE_ALREADY_BOOKED);
     }
 
     /**
