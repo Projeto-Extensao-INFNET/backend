@@ -5,11 +5,33 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    globals: true,
-    root: './',
-    environment: 'node',
-    setupFiles: [resolve(__dirname, 'vitest.setup.ts')],
+    // Configs básicas
     include: ['**/*.spec.ts'],
+    reporters: ['verbose'],
+    environment: 'node',
+    root: './',
+    globals: true,
+    restoreMocks: true,
+    clearMocks: true,
+    testTimeout: 10000,
+
+    // UI (não está funcionando no WSL)
+    // ui: true,
+    // open: true,
+
+    // Performance
+    pool: 'threads',
+    poolOptions: {
+      threads: {
+        minThreads: 4,
+        maxThreads: 8,
+      },
+    },
+
+    // Setup Global
+    // setupFiles: [resolve(__dirname, 'vitest.setup.ts')],
+
+    // Coverage
     coverage: {
       reportsDirectory: './coverage',
       reporter: ['text', 'html', 'lcov', 'cobertura'],
@@ -17,16 +39,27 @@ export default defineConfig({
       include: ['src/**/*.ts'],
       exclude: [
         '**/types/**',
+        '**/dto/**',
         '**/*.d.ts',
+        '**/*.dto.ts',
         '**/mocks/**',
         '**/factories/**',
         'src/main.ts',
         '**/*.module.ts',
-        '**/*.dto.ts',
         '**/*.entity.ts',
         '**/*.decorator.ts',
         '**/*.guard.ts',
       ],
+
+      // Metas de cobertura dos testes
+      thresholds: {
+        global: {
+          branches: 80,
+          functions: 80,
+          lines: 80,
+          statements: 80,
+        },
+      },
     },
   },
   plugins: [
