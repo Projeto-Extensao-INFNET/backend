@@ -10,12 +10,12 @@ Content-Type: application/json
 
 {
   "name": "João Fino 3",
-  "email": "fino_3@example.com",
+  "email": "fino_4@example.com",
   "password": "12345678",
-  "birthDate": "1995-03-20",
+  "birthDate": "1995-02-20T00:00:00.000Z",
   "role": "PATIENT",
   "documentType": "CPF",
-  "document": "987.654.321-09"
+  "document": "987.654.221-09"
 }
 
 ###
