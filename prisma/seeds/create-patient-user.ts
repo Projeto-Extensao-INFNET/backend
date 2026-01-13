@@ -3,7 +3,7 @@ import {
   PrismaClient,
   type User,
 } from '../.././src/infra/database/generated/client';
-import { hashPassword } from '../../src/core/shared/utils';
+import { hashPassword } from '../../src/utils';
 
 export const CreatePatientUser = async (prisma: PrismaClient) => {
   const userPatients: User[] = [];

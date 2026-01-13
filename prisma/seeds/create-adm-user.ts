@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
 import { PrismaClient } from '../.././src/infra/database/generated/client';
-import { hashPassword } from '../../src/core/shared/utils';
+import { hashPassword } from '../../src/utils';
 
 export const CreateAdminUser = async (prisma: PrismaClient) => {
   const userAdmin = await prisma.user.create({
