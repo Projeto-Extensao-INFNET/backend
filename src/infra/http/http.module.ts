@@ -34,8 +34,10 @@ import { CancelAppointmentsService } from '@Services/appointments/cancel-appoint
 /**
  *  REPOSITORIES
  */
-import { PrismaUserRepository } from '@/domain/repositories/prisma-user-repository';
-import { IUserRepository } from '@/core/repositories/user.repository';
+import {
+  IUserRepository,
+  PrismaUserRepository,
+} from '@/core/repositories/prisma-user-repository';
 
 @Module({
   providers: [
