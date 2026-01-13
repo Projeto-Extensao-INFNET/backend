@@ -1,4 +1,4 @@
-import type { DOCUMENT_TYPE, ROLE } from '@/core/types/index';
+import type { DOCUMENT_TYPE, ROLE } from '@/shared/types/index';
 
 import {
   generateBirthDate,
@@ -6,7 +6,7 @@ import {
   generateUniqueEmail,
   generateUniqueName,
   generateUUID,
-} from '@/core/shared/utils';
+} from '@/utils';
 
 export const CreateMockUser = {
   id: generateUUID(),

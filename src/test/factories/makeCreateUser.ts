@@ -1,11 +1,11 @@
-import type { DOCUMENT_TYPE, ROLE } from '@/core/types';
-import { hashPassword } from '@/core/shared/utils';
+import type { DOCUMENT_TYPE, ROLE } from '@/shared/types';
+import { hashPassword } from '@/utils';
 import {
   generateBirthDate,
   generateUniqueCPF,
   generateUniqueEmail,
   generateUniqueName,
-} from '@/core/shared/utils/generate-data';
+} from '@/utils/generate-data';
 import { PrismaService } from '@/infra/database/prisma.service';
 
 // cria um usuário

@@ -5,7 +5,7 @@ import type {
   PROFESSIONAL_DOCUMENT_TYPE,
   ROLE,
   TYPE_OF_QUERY,
-} from '@/core/types';
+} from '@/shared/types';
 import {
   generateBirthDate,
   generateUniqueCPF,
@@ -13,7 +13,7 @@ import {
   generateUniqueEmail,
   generateUniqueName,
   hashPassword,
-} from '@/core/shared/utils';
+} from '@/utils';
 import type { PrismaService } from '@/infra/database/prisma.service';
 import { faker } from '@faker-js/faker/locale/pt_BR';
 
