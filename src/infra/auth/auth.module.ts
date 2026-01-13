@@ -5,6 +5,7 @@ import { JwtStrategy } from '@/infra/auth/jwt.strategy';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { env } from '@/config/env';
+import { JWT_EXPIRATION } from '@/shared/constants';
 
 @Global()
 @Module({
@@ -13,7 +14,7 @@ import { env } from '@/config/env';
     JwtModule.registerAsync({
       useFactory: async () => ({
         secret: env.JWT_SECRET,
-        signOptions: { expiresIn: '1h' },
+        signOptions: { expiresIn: JWT_EXPIRATION },
       }),
     }),
   ],
