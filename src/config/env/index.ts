@@ -1,8 +1,11 @@
 import z from 'zod';
+import { loadEnvFile } from 'node:process';
 
-/**
- * VALIDAÇÃO DAS VARIÁVEIS DE AMBIENTE COM ZOD
- */
+// Carrega o arquivo .env
+loadEnvFile('.env');
+
+// VALIDAÇÃO DAS VARIÁVEIS DE AMBIENTE COM ZOD
+
 export const envSchema = z.object({
   DATABASE_URL: z.url().startsWith('postgresql://'),
   PORT: z.coerce.number().optional().default(3333),
@@ -13,9 +16,8 @@ export const envSchema = z.object({
   JWT_SECRET: z.string(),
 });
 
-/**
- * VALIDA O process.env COM Zod
- */
+// VALIDA O process.env COM Zod
+
 const _env = envSchema.safeParse(process.env);
 
 if (_env.success === false) {
