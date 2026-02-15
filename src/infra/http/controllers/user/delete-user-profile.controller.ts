@@ -1,13 +1,12 @@
+import type { AuthenticatedUserResponse } from '@/shared/dto/auth/auth-user';
 import {
   Controller,
   Delete,
   HttpCode,
+  HttpStatus,
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { Roles } from '@/shared/decorators/roles.decorator';
-import type { AuthenticatedUserRequest } from '@/shared/dto/user/get-user.dto';
-import type { ROLE } from '@/shared/types';
 import { DeleteUserProfileService } from '@Services/user/delete-user-profile.service';
 import { JwtAuthGuard } from '../../../auth/auth.guard';
 
@@ -17,14 +16,13 @@ export class DeleteUserProfileController {
     private readonly deleteUserProfileService: DeleteUserProfileService,
   ) {}
 
-  @Roles('PATIENT' as ROLE)
   @Delete('me')
   @UseGuards(JwtAuthGuard)
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUserProfile(
-    @Request() req: AuthenticatedUserRequest,
+    @Request() req: AuthenticatedUserResponse,
   ): Promise<void> {
     const userId = req.user.userId;
-    await this.deleteUserProfileService.deleteUserProfile(userId);
+    await this.deleteUserProfileService.execute(userId);
   }
 }
