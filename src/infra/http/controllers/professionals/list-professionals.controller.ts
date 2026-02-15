@@ -1,16 +1,17 @@
-import { Controller, Get, HttpCode } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { Roles } from '@/shared/decorators/roles.decorator';
 import type { ROLE } from '@/shared/types';
 import { ListProfessionalsService } from '@/domain/services/professionals/list-professionals.service';
+import type { PaginationQueryDto } from '@/shared/dto/pagination/pagination.dto';
 
-@Controller('/accounts')
+@Controller('/professionals')
 export class ListProfessionalsController {
   constructor(private readonly professionalService: ListProfessionalsService) {}
 
   @Roles('PATIENT' as ROLE)
-  @Get('professionals')
-  @HttpCode(200)
-  async listProfessionals() {
-    return await this.professionalService.listProfessionals();
+  @Get('')
+  @HttpCode(HttpStatus.OK)
+  async listProfessionals(@Query() query: PaginationQueryDto) {
+    return await this.professionalService.execute(query);
   }
 }

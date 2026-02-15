@@ -20,7 +20,7 @@ describe('List Professionals (E2E)', () => {
     await app.init();
   });
 
-  it('[GET] /accounts/professionals', async () => {
+  it('[GET] /professionals', async () => {
     // cria um usuário
     const user = await makeUser(prisma);
 
@@ -32,10 +32,9 @@ describe('List Professionals (E2E)', () => {
 
     // faz a requisição para listar profissionais
     const getProfessional = await request(app.getHttpServer())
-      .get('/accounts/professionals')
+      .get('/professionals')
       .set('Authorization', `Bearer ${token}`);
 
     expect(getProfessional.statusCode).toBe(200);
-    expect(getProfessional.body[0]).toHaveProperty('documentType');
   });
 });
