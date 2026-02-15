@@ -19,7 +19,6 @@ export const CreateUserAgenda = async (prisma: PrismaClient) => {
   // se não houver horários disponíveis, emite um erro e para o seed
   if (schedules.length === 0) {
     console.warn('Sem horários livres para criar agendamentos!');
-    await prisma.$disconnect();
     return;
   }
 
@@ -78,6 +77,5 @@ export const CreateUserAgenda = async (prisma: PrismaClient) => {
       }),
     ]);
   }
-
-  await prisma.$disconnect();
+  console.log('✔️ users agenda created');
 };

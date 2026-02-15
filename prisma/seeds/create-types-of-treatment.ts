@@ -7,6 +7,7 @@ export const CreateTypesOfTreatment = async (prisma: PrismaClient) => {
       { name: 'Terapia de Casais' },
       { name: 'Terapia Individual' },
     ],
+    skipDuplicates: true,
   });
-  await prisma.$disconnect();
+  console.log('✔️ types of treatment created');
 };

@@ -17,11 +17,11 @@ const seed = async () => {
   await prisma.userAgenda.deleteMany();
   await prisma.schedule.deleteMany();
   await prisma.professional.deleteMany();
-  await prisma.user.deleteMany();
+  // await prisma.user.deleteMany(); evitar para nao excluir meu usuário ADM
   await prisma.specialty.deleteMany();
   await prisma.typesOfTreatment.deleteMany();
 
-  console.log('✔ Database reset');
+  console.log('✔️ Database reset');
 
   await CreateAdminUser(prisma);
   await CreateSpecialties(prisma);
@@ -33,12 +33,11 @@ const seed = async () => {
 };
 
 seed()
-  .then(() => {
-    console.log('database seeded 🌱');
-  })
-  .catch((error) => {
-    console.error('error on seed database:', error);
-  })
-  .finally(async () => {
+  .then(async () => {
     await prisma.$disconnect();
+  })
+  .catch(async (error) => {
+    console.error('error on seed database:', error);
+    await prisma.$disconnect();
+    process.exit(1);
   });

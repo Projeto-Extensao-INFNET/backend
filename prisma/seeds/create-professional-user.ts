@@ -48,13 +48,11 @@ export const CreateProfessionalUser = async (prisma: PrismaClient) => {
           Gender.NON_BINARY,
           Gender.TRANSGENDER,
         ]),
-        avatar: faker.image.avatar(),
         phone: faker.phone.number(),
         specialtyId: faker.helpers.arrayElement(specialties).id,
         typeOfTreatmentId: faker.helpers.arrayElement(typesOfTreatment).id,
       },
     });
   }
-
-  await prisma.$disconnect();
+  console.log('✔️ professionals created');
 };

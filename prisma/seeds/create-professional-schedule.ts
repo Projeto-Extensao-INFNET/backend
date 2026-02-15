@@ -19,6 +19,5 @@ export const CreateProfessionalSchedule = async (prisma: PrismaClient) => {
       },
     });
   }
-
-  await prisma.$disconnect();
+  console.log('✔️ professionals schedule created');
 };
