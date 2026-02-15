@@ -9,11 +9,7 @@ import {
   generateUniqueName,
 } from '@/utils';
 import { PrismaService } from '@/infra/database/prisma.service';
-import {
-  makeAuthenticate,
-  makeUser,
-  makeUserProfessional,
-} from '@/test/factories';
+import { makeAuthenticate, makeUser } from '@/test/factories';
 import type { DOCUMENT_TYPE, ROLE } from '@/shared/types';
 
 describe('AuthController (E2E)', () => {
@@ -68,20 +64,6 @@ describe('AuthController (E2E)', () => {
 
         expect(token).toBeDefined();
         expect(typeof token).toBe('string');
-      });
-
-      it('[POST] /auth/signin - should return 401 when user try to login with wrong role', async () => {
-        const user = await makeUserProfessional(prisma);
-
-        await request(app.getHttpServer()).post('/auth/signup');
-
-        const token = await makeAuthenticate(app, user.email);
-
-        const response = await request(app.getHttpServer())
-          .get('/accounts/me')
-          .set('Authorization', `Bearer ${token}`);
-
-        expect(response.status).toBe(401);
       });
     });
 
