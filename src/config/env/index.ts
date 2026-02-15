@@ -1,6 +1,6 @@
 import z from 'zod';
 import { loadEnvFile } from 'node:process';
-import { PORT } from '../../shared/constants/index';
+import { DEV_CORS_ORIGIN, PORT } from '../../shared/constants/index';
 
 // Carrega o arquivo .env
 loadEnvFile('.env');
@@ -13,7 +13,7 @@ export const envSchema = z.object({
   NODE_ENV: z
     .enum(['development', 'test', 'production'])
     .default('development'),
-  CORS_ORIGIN: z.url().startsWith('http://localhost:'),
+  DEV_CORS_ORIGIN: z.url().startsWith(DEV_CORS_ORIGIN),
   JWT_SECRET: z.string(),
 });
 
