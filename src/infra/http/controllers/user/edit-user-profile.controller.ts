@@ -2,14 +2,13 @@ import {
   Body,
   Controller,
   HttpCode,
+  HttpStatus,
   Patch,
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { Roles } from '@/shared/decorators/roles.decorator';
 import type { EditProfileDto } from '@/shared/dto/user/edit-profile.dto';
-import type { AuthenticatedUserRequest } from '@/shared/dto/user/get-user.dto';
-import type { ROLE } from '@/shared/types';
+import type { AuthenticatedUserResponse } from '@/shared/dto/auth/auth-user';
 import { EditUserProfileService } from '@Services/user/edit-user-profile.service';
 import { JwtAuthGuard } from '@/infra/auth/auth.guard';
 
@@ -19,15 +18,14 @@ export class EditUserProfileController {
     private readonly editUserProfileService: EditUserProfileService,
   ) {}
 
-  @Roles('PATIENT' as ROLE)
   @UseGuards(JwtAuthGuard)
   @Patch('me')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async editProfile(
-    @Request() req: AuthenticatedUserRequest,
+    @Request() req: AuthenticatedUserResponse,
     @Body() dto: EditProfileDto,
   ) {
     const userId = req.user.userId;
-    return await this.editUserProfileService.editProfile(userId, dto);
+    return await this.editUserProfileService.execute(userId, dto);
   }
 }
