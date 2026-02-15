@@ -1,9 +1,9 @@
+import {
+  IProfessionalsRepository,
+  PrismaProfessionalsRepository,
+} from '@/core/repositories/prisma-professionals.repository';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '@/infra/database/prisma.service';
-import {
-  IUserRepository,
-  PrismaUserRepository,
-} from '@/core/repositories/prisma-user-repository';
 import { MockPrismaService } from '@/test/mocks/prisma';
 import { ListProfessionalsService } from './list-professionals.service';
 
@@ -15,8 +15,8 @@ describe('ProfessionalService', () => {
       providers: [
         ListProfessionalsService,
         {
-          provide: IUserRepository,
-          useClass: PrismaUserRepository,
+          provide: IProfessionalsRepository,
+          useClass: PrismaProfessionalsRepository,
         },
         {
           provide: PrismaService,
