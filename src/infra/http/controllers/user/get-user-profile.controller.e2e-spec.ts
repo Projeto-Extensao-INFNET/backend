@@ -29,6 +29,13 @@ describe('Get User Profile (E2E)', () => {
       .set('Authorization', `Bearer ${token}`);
 
     expect(getUser.statusCode).toBe(200);
-    expect(getUser.body).toHaveProperty('name');
+    expect(getUser.body).toMatchObject({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      birthDate: user.birthDate.toISOString(),
+      role: user.role,
+      document: user.document,
+    });
   });
 });

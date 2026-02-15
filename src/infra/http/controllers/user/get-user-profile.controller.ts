@@ -1,24 +1,27 @@
-import { Controller, Get, HttpCode, Request, UseGuards } from '@nestjs/common';
-import { Roles } from '@/shared/decorators/roles.decorator';
-import type {
-  AuthenticatedUserRequest,
-  GetUserProfileDto,
-} from '@/shared/dto/user/get-user.dto';
-import type { ROLE } from '@/shared/types';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
+import type { GetUserProfileResponse } from '@/shared/dto/user/get-user.dto';
 import { GetUserProfileService } from '@/domain/services/user/get-user-profile.service';
 import { JwtAuthGuard } from '../../../auth/auth.guard';
+import type { AuthenticatedUserResponse } from '@/shared/dto/auth/auth-user';
 
 @Controller('/accounts')
 export class GetUserProfileController {
   constructor(private readonly getUserProfileService: GetUserProfileService) {}
 
-  @Roles('PATIENT' as ROLE)
   @Get('me')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
   async getUserProfile(
-    @Request() req: AuthenticatedUserRequest,
-  ): Promise<GetUserProfileDto> {
-    return await this.getUserProfileService.getUserProfile(req.user.userId);
+    @Request() req: AuthenticatedUserResponse,
+  ): Promise<GetUserProfileResponse> {
+    const userId = req.user.userId;
+    return await this.getUserProfileService.execute(userId);
   }
 }
