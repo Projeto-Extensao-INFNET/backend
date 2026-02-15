@@ -19,7 +19,7 @@ services:
       [
         "sh",
         "-c",
-        "pnpm prisma:generate && pnpm prisma:migrate && pnpm start:dev",
+        "pnpm prisma:generate && pnpm prisma:migrate && pnpm prisma:seed && pnpm start:dev",
       ]
     volumes:
       - .:/app
@@ -45,4 +45,3 @@ services:
 
 volumes:
   postgres_data:
-  app_node_modules:
