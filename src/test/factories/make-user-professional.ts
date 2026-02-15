@@ -57,7 +57,6 @@ export const makeProfessional = async (prisma: PrismaService) => {
       price: 100,
       paymentMethod: 'CREDIT_CARD' as PAYMENT_METHOD,
       gender: 'MALE' as GENDER,
-      avatar: 'https://example.com/avatar.jpg',
       specialtyId: specialty.id,
       typeOfTreatmentId: typeOfTreatment.id,
     },
