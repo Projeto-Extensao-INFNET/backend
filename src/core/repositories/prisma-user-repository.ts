@@ -1,27 +1,41 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { Professional } from '../../infra/database/generated/client';
 import { PrismaService } from '@/infra/database/prisma.service';
 import { UserEntity } from '@/core/entities/user.entity';
 import { EditProfileDto } from '@/shared/dto/user/edit-profile.dto';
-import type { GetUserProfileDto } from '@/shared/dto/user/get-user.dto';
 import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
+import type {
+  PaginationQueryDto,
+  PaginationResultDto,
+} from '@/shared/dto/pagination/pagination.dto';
+import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER } from '@/shared/constants';
+import type { GetUserProfileResponse } from '@/shared/dto/user/get-user.dto';
 
 // Cria um contrato que poderá ser usado por vários repositórios reais
 export abstract class IUserRepository {
-  abstract getProfile(userId: string): Promise<GetUserProfileDto | null>;
+  abstract uploadAvatar(userId: string, avatarUrl: string): Promise<void>;
+  abstract getProfile(userId: string): Promise<GetUserProfileResponse>;
   abstract findById(id: string): Promise<Omit<UserEntity, 'password'>>;
   abstract deleteProfile(id: string): Promise<void>;
   abstract editProfile(
     id: string,
     dto: EditProfileDto,
   ): Promise<EditProfileDto>;
-  abstract listProfessionals(): Promise<Professional[]>; // vai pro repo de professionals
+  abstract getAllUsers(
+    params: PaginationQueryDto,
+  ): Promise<PaginationResultDto<Omit<UserEntity, 'password'>>>;
 }
 
 // implementação real do IUserRepository usando o Prisma para acessar o banco de dados
 @Injectable()
 export class PrismaUserRepository implements IUserRepository {
   constructor(private readonly prismaService: PrismaService) {}
+
+  async uploadAvatar(userId: string, avatarUrl: string): Promise<void> {
+    await this.prismaService.user.update({
+      where: { id: userId },
+      data: { avatar: avatarUrl },
+    });
+  }
 
   async findById(id: string): Promise<Omit<UserEntity, 'password'>> {
     const user = await this.prismaService.user.findUnique({
@@ -49,10 +63,65 @@ export class PrismaUserRepository implements IUserRepository {
     return user;
   }
 
-  async getProfile(userId: string): Promise<UserEntity | null> {
+  async getAllUsers(
+    params: PaginationQueryDto,
+  ): Promise<PaginationResultDto<Omit<UserEntity, 'password'>>> {
+    const { page = DEFAULT_PAGE_NUMBER, limit = DEFAULT_PAGE_LIMIT } = params;
+    const take = Number(limit);
+    const skip = (Number(page) - 1) * take;
+
+    const users = await this.prismaService.user.findMany({
+      skip,
+      take,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        avatar: true,
+        password: false,
+        birthDate: true,
+        document: true,
+        documentType: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    const total = await this.prismaService.user.count();
+    const totalPages = Math.ceil(total / take);
+
+    return {
+      data: users,
+      meta: {
+        total_items: total,
+        total_pages: totalPages,
+        page,
+        limit,
+      },
+    };
+  }
+
+  async getProfile(userId: string): Promise<GetUserProfileResponse> {
     const user = await this.prismaService.user.findUnique({
       where: {
         id: userId,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        password: false,
+        avatar: true,
+        birthDate: true,
+        document: true,
+        documentType: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
 
@@ -60,7 +129,15 @@ export class PrismaUserRepository implements IUserRepository {
       throw new NotFoundException(ERROR_USER_NOT_FOUND);
     }
 
-    return user;
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      avatar: String(user.avatar),
+      birthDate: user.birthDate.toISOString(),
+      role: user.role,
+      document: user.document,
+    };
   }
 
   async deleteProfile(id: string): Promise<void> {
@@ -76,56 +153,10 @@ export class PrismaUserRepository implements IUserRepository {
       where: { id },
       data: dto,
       select: {
-        id: true,
         name: true,
-        email: true,
-        birthDate: true,
-        document: true,
-        documentType: true,
-        role: true,
-        createdAt: true,
-        updatedAt: true,
       },
     });
 
     return user;
-  }
-
-  // vai pro prisma-professional-repository
-  async listProfessionals(): Promise<Professional[]> {
-    const professionals = await this.prismaService.professional.findMany({
-      select: {
-        id: true,
-        typeOfQuery: true,
-        price: true,
-        paymentMethod: true,
-        document: true,
-        documentType: true,
-        gender: true,
-        avatar: true,
-        phone: true,
-        userId: true,
-        specialtyId: true,
-        typeOfTreatmentId: true,
-        user: {
-          select: {
-            name: true,
-            email: true,
-          },
-        },
-        specialty: {
-          select: {
-            name: true,
-          },
-        },
-        typeOfTreatment: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    });
-
-    return professionals;
   }
 }
