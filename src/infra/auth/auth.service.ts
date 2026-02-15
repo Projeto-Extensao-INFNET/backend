@@ -28,14 +28,13 @@ export class AuthService {
       throw new BadRequestException(ERROR_REQUIRED_FIELDS);
     }
 
-    // Verifica se email já existe
-    const existingUser = await this.prismaService.user.findUnique({
+    const existingEmail = await this.prismaService.user.findUnique({
       where: {
         email: data.email,
       },
     });
 
-    if (existingUser) {
+    if (existingEmail) {
       throw new ConflictException(ERROR_CREDENTIALS_IN_USE);
     }
 

@@ -89,10 +89,17 @@ describe('AuthService', () => {
         updatedAt: expect.any(Date),
       });
 
-      // verifica se email já existe antes de criar
+      // verifica se email  já existe antes de criar
       expect(mockPrismaService.user.findUnique).toHaveBeenCalledWith({
         where: {
           email: userSignUpData.email,
+        },
+      });
+
+      // verifica se documento já existe antes de criar
+      expect(mockPrismaService.user.findUnique).toHaveBeenCalledWith({
+        where: {
+          document: userSignUpData.document,
         },
       });
 
