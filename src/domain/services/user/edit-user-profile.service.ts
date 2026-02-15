@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 export class EditUserProfileService {
   constructor(private readonly repo: IUserRepository) {}
 
-  async editProfile(id: string, dto: EditProfileDto): Promise<EditProfileDto> {
+  async execute(id: string, dto: EditProfileDto): Promise<EditProfileDto> {
     await this.repo.findById(id);
 
     const updatedUser = await this.repo.editProfile(id, dto);

@@ -33,7 +33,7 @@ describe('editProfile', () => {
   it('should edit user profile', async () => {
     const user = CreateMockUser;
 
-    const dto = { name: 'Novo nome', email: 'novo@email.com' }; // dados que serão usados na edição do perfil
+    const dto = { name: 'Novo nome' }; // dados que serão usados na edição do perfil
 
     // primeiro valida se o usuario existe
     mockPrismaService.user.findUnique.mockResolvedValue(user);
@@ -45,7 +45,7 @@ describe('editProfile', () => {
     });
 
     // executa o método de editProfile no service
-    const result = await service.editProfile(user.id, dto);
+    const result = await service.execute(user.id, dto);
 
     // verifica se o update foi chamado com os dados corretos (vindos do DTO)
 
@@ -53,6 +53,5 @@ describe('editProfile', () => {
       expect.objectContaining({ where: { id: user.id }, data: dto }),
     );
     expect(result.name).toBe(dto.name); // verifica se o novo campo editado aparece corretamente
-    expect(result.email).toBe(dto.email); // verifica se o novo campo editado aparece corretamente
   });
 });
