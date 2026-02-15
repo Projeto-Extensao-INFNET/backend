@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 export class DeleteUserProfileService {
   constructor(private readonly repo: IUserRepository) {}
 
-  async deleteUserProfile(id: string): Promise<void> {
+  async execute(id: string): Promise<void> {
     await this.repo.findById(id);
 
     await this.repo.deleteProfile(id);

@@ -43,7 +43,7 @@ describe('deleteAccount ', () => {
       .mockResolvedValueOnce(user) // 1ª chamada: retorna o usuário
       .mockResolvedValueOnce(null); // 2ª chamada: retorna null
 
-    await service.deleteUserProfile(user.id);
+    await service.execute(user.id);
 
     const result = await mockPrismaService.user.findUnique({
       where: {
@@ -59,7 +59,7 @@ describe('deleteAccount ', () => {
       new NotFoundException('User not found'),
     );
 
-    await expect(service.deleteUserProfile(nonExistentUserId)).rejects.toThrow(
+    await expect(service.execute(nonExistentUserId)).rejects.toThrow(
       new NotFoundException('User not found'),
     );
   });
