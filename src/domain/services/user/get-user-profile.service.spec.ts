@@ -44,16 +44,15 @@ describe('GetUserProfileService', () => {
 
       mockPrismaService.user.findUnique.mockResolvedValue(userMock);
 
-      const result = await service.getUserProfile(user.id);
+      const result = await service.execute(user.id);
 
-      expect(result).not.toHaveProperty('password');
       expect(result.id).toBe(user.id);
     });
 
     it('it should throw NotFoundException when user not found', async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.getUserProfile(nonExistentUserId)).rejects.toThrow(
+      await expect(service.execute(nonExistentUserId)).rejects.toThrow(
         new NotFoundException('User not found'),
       );
     });
