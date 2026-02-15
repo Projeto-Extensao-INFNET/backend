@@ -33,7 +33,6 @@ describe('GetAllUsersController (E2E)', () => {
         limit: 10,
       });
 
-    console.log(users.body);
     expect(users.statusCode).toBe(200);
     expect(users.body.meta).toHaveProperty('total_items');
     expect(users.body.meta).toHaveProperty('total_pages');
