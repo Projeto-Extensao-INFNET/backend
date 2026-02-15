@@ -28,6 +28,7 @@ model User {
   id           String       @id @default(uuid())
   name         String
   email        String       @unique
+  avatar       String?
   password     String
   birthDate    DateTime     @map("birth_date")
   role         ROLE
@@ -93,7 +94,6 @@ model Professional {
   documentType  ProfessionalDocumentType @map("document_type")
   document      String                   @unique
   gender        Gender
-  avatar        String
   phone         String?
 
   user   User   @relation(fields: [userId], references: [id])
