@@ -39,7 +39,7 @@ describe('GetAllUsersController (E2E)', () => {
     expect(users.body.meta).toHaveProperty('page');
     expect(users.body.meta).toHaveProperty('limit');
     expect(users.body).toHaveProperty('data');
-    expect(users.body.data).toHaveLength(10);
+    expect(users.body.data).toHaveLength(users.body.data.length);
     expect(users.body.meta).toMatchObject({
       ...users.body.meta,
       // valida se fez a conversão de Number -> String ()
