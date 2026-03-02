@@ -28,7 +28,7 @@ export class PrismaAppointmentsRepository
         throw new NotFoundException(ERROR_USER_NOT_FOUND);
       }
 
-      // Valida se Agenda existe e possíveis conflitos/falta de campos
+      // Valida se Agenda do Profissional existe e possíveis conflitos/falta de campos
       const scheduleExists = await prisma.schedule.findUnique({
         where: { id: data.scheduleId },
         include: { UserAgenda: true, professional: true },
@@ -82,7 +82,6 @@ export class PrismaAppointmentsRepository
         update: {
           schedule: {
             update: {
-              // Transforma a consulta que estava disponível para indisponível
               isConfirmed: true,
               isAvailable: false,
             },
