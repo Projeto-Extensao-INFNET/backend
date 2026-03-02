@@ -10,10 +10,10 @@ coverage/
 .gitignore
 
 # IDE - VSCode
-.vscode/*
+/.vscode/*
 !.vscode/settings.json
 
-.husky/
+/.husky/
 
 # prisma
 src/infra/database/generated/
@@ -23,7 +23,6 @@ src/infra/database/generated/
 # dotenv environment variable files
 .env
 .env.test
-.env.production
 
 # markdown files
 README.md
