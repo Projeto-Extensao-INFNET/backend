@@ -6,7 +6,6 @@ import { Injectable, NotFoundException, Request } from '@nestjs/common';
 @Injectable()
 export class AvatarUploadService {
   constructor(private readonly repo: IUserRepository) {}
-
   async exec(
     @Request() req: AuthenticatedUserResponse,
     avatarFile: Express.Multer.File,
