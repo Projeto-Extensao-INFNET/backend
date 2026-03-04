@@ -18,7 +18,6 @@ import {
   ApiQuery,
   ApiResponse,
 } from '@nestjs/swagger';
-import { GetUserProfileResponseClass } from '@/shared/dto/user/get-user.dto';
 
 @Controller('/accounts')
 @ApiTags('Accounts')
@@ -31,16 +30,43 @@ export class GetAllUsersController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
   @ApiOperation({
-    summary: 'Get all users (admin only)',
+    summary: 'Get all users (paginated)',
     operationId: 'getUsers',
   })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
   @ApiResponse({
     status: 200,
-    description: 'List of users',
-    type: GetUserProfileResponseClass,
-    isArray: true,
+    description: 'List of users (paginated)',
+    schema: {
+      type: 'object',
+      properties: {
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string', format: 'uuid' },
+              name: { type: 'string' },
+              email: { type: 'string', format: 'email' },
+              birthDate: { type: 'string', format: 'date-time' },
+              avatar: { type: 'string' },
+              role: { type: 'string' },
+              document: { type: 'string' },
+            },
+          },
+        },
+        meta: {
+          type: 'object',
+          properties: {
+            total_items: { type: 'number' },
+            total_pages: { type: 'number' },
+            page: { type: 'number' },
+            limit: { type: 'number' },
+          },
+        },
+      },
+    },
   })
   async getAllUsers(@Query() query: PaginationQueryDto) {
     return await this.getAllUsersService.execute(query);
