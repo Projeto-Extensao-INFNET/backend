@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { createZodDto } from 'nestjs-zod';
 
 export const createAppointmentDto = z.object({
   scheduleId: z.string(),
@@ -10,3 +11,8 @@ export const createAppointmentDto = z.object({
 });
 
 export type CreateAppointmentDto = z.infer<typeof createAppointmentDto>;
+
+// Classe para documentação Swagger
+export class CreateAppointmentDtoClass extends createZodDto(
+  createAppointmentDto,
+) {}

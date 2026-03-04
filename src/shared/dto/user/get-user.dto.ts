@@ -1,4 +1,5 @@
 import z from 'zod';
+import { createZodDto } from 'nestjs-zod';
 
 // DTO para retornar perfil do usuário
 export const getUserProfileResponse = z.object({
@@ -12,3 +13,8 @@ export const getUserProfileResponse = z.object({
 });
 
 export type GetUserProfileResponse = z.infer<typeof getUserProfileResponse>;
+
+// Classe para documentação Swagger
+export class GetUserProfileResponseClass extends createZodDto(
+  getUserProfileResponse,
+) {}
