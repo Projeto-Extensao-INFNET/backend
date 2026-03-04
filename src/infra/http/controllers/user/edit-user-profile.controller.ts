@@ -17,10 +17,8 @@ import {
   ApiBody,
   ApiResponse,
 } from '@nestjs/swagger';
-import {
-  EditProfileDtoClass,
-  type EditProfileDto,
-} from '@/shared/dto/user/edit-profile.dto';
+import { EditProfileDto } from '@/shared/dto/user/edit-profile.dto';
+import { GetUserProfileResponse } from '@/shared/dto/user/get-user.dto';
 
 @Controller('/accounts')
 @ApiTags('Accounts')
@@ -37,9 +35,19 @@ export class EditUserProfileController {
     summary: 'Edit authenticated user profile',
     operationId: 'editProfile',
   })
-  @ApiBody({ type: EditProfileDtoClass })
-  @ApiResponse({ status: 200, description: 'Profile updated' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiBody({
+    description: 'User profile data to update',
+    type: EditProfileDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Profile updated successfully',
+    type: GetUserProfileResponse,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
   async editProfile(
     @Request() req: AuthenticatedUserResponse,
     @Body() dto: EditProfileDto,
