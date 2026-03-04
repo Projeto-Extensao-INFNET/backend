@@ -16,10 +16,7 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
-import {
-  GetUserProfileResponseClass,
-  type GetUserProfileResponse,
-} from '@/shared/dto/user/get-user.dto';
+import { GetUserProfileResponse } from '@/shared/dto/user/get-user.dto';
 
 @Controller('/accounts')
 @ApiTags('Accounts')
@@ -34,7 +31,11 @@ export class GetUserProfileController {
     summary: 'Get authenticated user profile',
     operationId: 'getProfile',
   })
-  @ApiResponse({ status: 200, type: GetUserProfileResponseClass })
+  @ApiResponse({
+    status: 200,
+    description: 'User profile retrieved successfully',
+    type: GetUserProfileResponse,
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: ERROR_USER_NOT_FOUND })
   async getUserProfile(
