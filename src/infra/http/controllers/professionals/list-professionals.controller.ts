@@ -10,7 +10,6 @@ import {
   ApiQuery,
   ApiResponse,
 } from '@nestjs/swagger';
-import { GetUserProfileResponseClass } from '@/shared/dto/user/get-user.dto';
 
 @Controller('/professionals')
 @ApiTags('Professionals')
@@ -29,9 +28,36 @@ export class ListProfessionalsController {
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
   @ApiResponse({
     status: 200,
-    description: 'List of professionals',
-    type: GetUserProfileResponseClass,
-    isArray: true,
+    description: 'List of professionals (paginated)',
+    schema: {
+      type: 'object',
+      properties: {
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string', format: 'uuid' },
+              name: { type: 'string' },
+              email: { type: 'string', format: 'email' },
+              birthDate: { type: 'string', format: 'date-time' },
+              avatar: { type: 'string' },
+              role: { type: 'string' },
+              document: { type: 'string' },
+            },
+          },
+        },
+        meta: {
+          type: 'object',
+          properties: {
+            total_items: { type: 'number' },
+            total_pages: { type: 'number' },
+            page: { type: 'number' },
+            limit: { type: 'number' },
+          },
+        },
+      },
+    },
   })
   async listProfessionals(@Query() query: PaginationQueryDto) {
     return await this.professionalService.execute(query);
