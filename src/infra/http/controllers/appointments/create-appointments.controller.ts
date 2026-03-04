@@ -15,10 +15,7 @@ import {
   ERROR_SCHEDULE_NOT_AVAILABLE,
   ERROR_SCHEDULE_ALREADY_BOOKED,
 } from '@/shared/errors';
-import {
-  CreateAppointmentDtoClass,
-  type CreateAppointmentDto,
-} from '@/shared/dto/appointments/create-appointment.dto';
+import { CreateAppointmentDto } from '@/shared/dto/appointments/create-appointment.dto';
 
 @Controller('/appointments')
 @ApiTags('Appointments')
@@ -35,9 +32,18 @@ export class CreateAppointmentsController {
     summary: 'Create an appointment (patient only)',
     operationId: 'createAppointment',
   })
-  @ApiBody({ type: CreateAppointmentDtoClass })
-  @ApiResponse({ status: 201, description: 'Appointment created' })
-  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiBody({
+    description: 'Appointment data to create',
+    type: CreateAppointmentDto,
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Appointment created successfully',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request - Invalid appointment data',
+  })
   @ApiResponse({ status: 404, description: ERROR_USER_NOT_FOUND })
   @ApiResponse({ status: 404, description: ERROR_SCHEDULE_NOT_FOUND })
   @ApiResponse({ status: 409, description: ERROR_SCHEDULE_NOT_AVAILABLE })
