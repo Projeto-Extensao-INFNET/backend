@@ -1,12 +1,14 @@
-import { z } from 'zod';
-import { createZodDto } from 'nestjs-zod';
+import { IsString, IsOptional } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-export const editProfileDto = z.object({
-  name: z.string().optional(),
-  avatar: z.string().optional(),
-});
+export class EditProfileDto {
+  @ApiProperty({ example: 'John Doe', required: false })
+  @IsOptional()
+  @IsString()
+  name?: string;
 
-export type EditProfileDto = z.infer<typeof editProfileDto>;
-
-// Classe para uso no Swagger
-export class EditProfileDtoClass extends createZodDto(editProfileDto) {}
+  @ApiProperty({ example: 'data:image/jpeg;base64,...', required: false })
+  @IsOptional()
+  @IsString()
+  avatar?: string;
+}

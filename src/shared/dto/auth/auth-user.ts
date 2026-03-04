@@ -1,19 +1,17 @@
-import { createZodDto } from 'nestjs-zod';
-import z from 'zod';
+import { IsUUID, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-// DTO para retornar usuário autenticado
-export const authenticatedUserResponse = z.object({
-  user: z.object({
-    userId: z.uuid(),
-    username: z.string(),
-  }),
-});
+class User {
+  @ApiProperty({ format: 'uuid' })
+  @IsUUID()
+  userId!: string;
 
-export type AuthenticatedUserResponse = z.infer<
-  typeof authenticatedUserResponse
->;
+  @ApiProperty({ example: 'john_doe' })
+  @IsString()
+  username!: string;
+}
 
-// Classe para uso exclusivo no Swagger
-export class AuthenticatedUserResponseClass extends createZodDto(
-  authenticatedUserResponse,
-) {}
+export class AuthenticatedUserResponse {
+  @ApiProperty({ type: User })
+  user!: User;
+}

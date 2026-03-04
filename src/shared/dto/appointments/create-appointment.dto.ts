@@ -1,18 +1,40 @@
-import { z } from 'zod';
-import { createZodDto } from 'nestjs-zod';
+import { IsString, IsBoolean } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-export const createAppointmentDto = z.object({
-  scheduleId: z.string(),
-  userId: z.string(),
-  specialtyId: z.string(),
-  typeOfTreatmentId: z.string(),
-  isAvailable: z.boolean(),
-  isConfirmed: z.boolean(),
-});
+export class CreateAppointmentDto {
+  @ApiProperty({
+    format: 'uuid',
+    example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+  })
+  @IsString()
+  scheduleId!: string;
 
-export type CreateAppointmentDto = z.infer<typeof createAppointmentDto>;
+  @ApiProperty({
+    format: 'uuid',
+    example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+  })
+  @IsString()
+  userId!: string;
 
-// Classe para documentação Swagger
-export class CreateAppointmentDtoClass extends createZodDto(
-  createAppointmentDto,
-) {}
+  @ApiProperty({
+    format: 'uuid',
+    example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+  })
+  @IsString()
+  specialtyId!: string;
+
+  @ApiProperty({
+    format: 'uuid',
+    example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+  })
+  @IsString()
+  typeOfTreatmentId!: string;
+
+  @ApiProperty({ example: true })
+  @IsBoolean()
+  isAvailable!: boolean;
+
+  @ApiProperty({ example: false })
+  @IsBoolean()
+  isConfirmed!: boolean;
+}

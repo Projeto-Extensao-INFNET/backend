@@ -1,20 +1,34 @@
-import z from 'zod';
-import { createZodDto } from 'nestjs-zod';
+import { IsUUID, IsString, IsEmail, IsDate } from 'class-validator';
+import { Type } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
-// DTO para retornar perfil do usuário
-export const getUserProfileResponse = z.object({
-  id: z.uuid(),
-  name: z.string(),
-  email: z.email(),
-  birthDate: z.iso.datetime(),
-  avatar: z.string(),
-  role: z.string(),
-  document: z.string(),
-});
+export class GetUserProfileResponse {
+  @ApiProperty({ format: 'uuid' })
+  @IsUUID()
+  id!: string;
 
-export type GetUserProfileResponse = z.infer<typeof getUserProfileResponse>;
+  @ApiProperty({ example: 'John Doe' })
+  @IsString()
+  name!: string;
 
-// Classe para documentação Swagger
-export class GetUserProfileResponseClass extends createZodDto(
-  getUserProfileResponse,
-) {}
+  @ApiProperty({ example: 'john@example.com' })
+  @IsEmail()
+  email!: string;
+
+  @ApiProperty({ type: Date, example: '1990-01-01T00:00:00Z' })
+  @IsDate()
+  @Type(() => Date)
+  birthDate!: Date | string;
+
+  @ApiProperty({ example: 'data:image/jpeg;base64,...' })
+  @IsString()
+  avatar!: string;
+
+  @ApiProperty({ example: 'PATIENT' })
+  @IsString()
+  role!: string;
+
+  @ApiProperty({ example: '12345678901' })
+  @IsString()
+  document!: string;
+}

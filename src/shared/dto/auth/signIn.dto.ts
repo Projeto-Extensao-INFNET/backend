@@ -1,12 +1,14 @@
-import { z } from 'zod';
-import { createZodDto } from 'nestjs-zod';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-export const signInDto = z.object({
-  email: z.email().nonempty(),
-  password: z.string().nonempty(),
-});
+export class SignInDto {
+  @ApiProperty({ example: 'user@example.com' })
+  @IsEmail()
+  @IsNotEmpty()
+  email!: string;
 
-export type SignInDto = z.infer<typeof signInDto>;
-
-// Classe para uso exclusivo no Swagger
-export class SignInDtoClass extends createZodDto(signInDto) {}
+  @ApiProperty({ example: 'password123' })
+  @IsString()
+  @IsNotEmpty()
+  password!: string;
+}
