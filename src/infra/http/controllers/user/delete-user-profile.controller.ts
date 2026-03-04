@@ -31,7 +31,10 @@ export class DeleteUserProfileController {
     summary: 'Delete authenticated user account',
     operationId: 'deleteProfile',
   })
-  @ApiResponse({ status: 204, description: 'Deleted' })
+  @ApiResponse({
+    status: 204,
+    description: 'User account deleted successfully',
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async deleteUserProfile(
     @Request() req: AuthenticatedUserResponse,
