@@ -16,7 +16,18 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
+import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
 
+@ApiTags('Accounts')
+@ApiBearerAuth('authorization')
 @Controller('/accounts')
 export class UploadAvatarController {
   constructor(private readonly service: AvatarUploadService) {}
@@ -26,6 +37,28 @@ export class UploadAvatarController {
   @Roles('ADMIN', 'PATIENT', 'PROFESSIONAL' as ROLE)
   @UseInterceptors(FileInterceptor('avatar'))
   @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({
+    summary: 'Upload avatar for authenticated user',
+    operationId: 'uploadAvatar',
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        avatar: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 201, description: 'Avatar uploaded' })
+  @ApiResponse({
+    status: 422,
+    description: 'Unprocessable entity - file validation failed',
+  })
+  @ApiResponse({ status: 404, description: ERROR_USER_NOT_FOUND })
   async exec(
     @Request() req: AuthenticatedUserResponse,
     @UploadedFile(
