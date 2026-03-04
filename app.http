@@ -1,16 +1,12 @@
 @baseUrl = http://localhost:3333
-@token = {{SignIn.response.body.accessToken}}
+@token = {{SignIn.response.body.$.accessToken}}
 
-#=====================
-#========HEALTH=======
-#=====================
 
 # @name Health
 GET {{baseUrl}}/health
 
-#=====================
-#========AUTH=========
-#=====================
+###
+
 # @name SignUp
 POST {{baseUrl}}/auth/signup
 Content-Type: application/json
@@ -52,16 +48,13 @@ Content-Disposition: form-data; name="avatar"; filename="test.jpg"
 
 ###
 
-#=====================
-#========USER=========
-#=====================
-
 # @name user_profile
 GET {{baseUrl}}/accounts/me
 Authorization:  Bearer {{token}}
 Content-Type: application/json
 
 ###
+
 # @name all_users
 GET {{baseUrl}}/accounts/users?page=1&limit=10
 Authorization:  Bearer {{token}}
@@ -87,19 +80,11 @@ Content-Type: application/json
 
 ###
 
-#=====================
-#====APPOINTMENTS=====
-#=====================
-
 # @name user_appointments
 GET {{baseUrl}}/appointments
 Authorization:  Bearer {{token}}
 
 ###
-
-#=====================
-#====PROFESSIONALS====
-#=====================
 
 # @name list_professionals
 GET {{baseUrl}}/professionals?page=1&limit=10
