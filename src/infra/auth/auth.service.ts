@@ -7,13 +7,17 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { comparePassword, hashPassword } from '@/utils';
 import { PrismaService } from '@/infra/database/prisma.service';
-import type { SignUpDto } from '@/shared/dto/auth/signUp.dto';
+import type {
+  SignUpDto,
+  SignUpResponseDto,
+} from '@/shared/dto/auth/signUp.dto';
 import type { SignInDto } from '@/shared/dto/auth/signIn.dto';
 import {
   ERROR_CREDENTIALS_IN_USE,
   ERROR_INVALID_CREDENTIALS,
   ERROR_REQUIRED_FIELDS,
 } from '@/shared/errors';
+import type { AccessTokenResponse } from '@/shared/dto/auth/token-response';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +26,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
   // Cadastro
-  async SignUp(data: SignUpDto) {
+  async SignUp(data: SignUpDto): Promise<SignUpResponseDto> {
     // valida campos obrigatórios
     if (!data || !data.name || !data.email || !data.password) {
       throw new BadRequestException(ERROR_REQUIRED_FIELDS);
@@ -77,7 +81,7 @@ export class AuthService {
   }
 
   // Login
-  async SignIn(data: SignInDto) {
+  async SignIn(data: SignInDto): Promise<AccessTokenResponse> {
     const user = await this.prismaService.user.findUnique({
       where: {
         email: data.email,
