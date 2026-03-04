@@ -9,6 +9,7 @@ import {
 } from '@/core/repositories/prisma-user-repository';
 import { PrismaService } from '@/infra/database/prisma.service';
 import { CreateMockUser } from '@/test/mocks/create-mock-user/create-mock-user';
+import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
 
 describe('deleteAccount ', () => {
   let service: DeleteUserProfileService;
@@ -56,11 +57,11 @@ describe('deleteAccount ', () => {
 
   it('it should throw NotFoundException when user not found', async () => {
     mockPrismaService.user.delete.mockRejectedValue(
-      new NotFoundException('User not found'),
+      new NotFoundException(ERROR_USER_NOT_FOUND),
     );
 
     await expect(service.execute(nonExistentUserId)).rejects.toThrow(
-      new NotFoundException('User not found'),
+      new NotFoundException(ERROR_USER_NOT_FOUND),
     );
   });
 });

@@ -1,4 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
+import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
 import { Test, TestingModule } from '@nestjs/testing';
 import { nonExistentUserId } from '@/utils';
 import { GetUserProfileService } from '@/domain/services/user/get-user-profile.service';
@@ -53,7 +54,7 @@ describe('GetUserProfileService', () => {
       mockPrismaService.user.findUnique.mockResolvedValue(null);
 
       await expect(service.execute(nonExistentUserId)).rejects.toThrow(
-        new NotFoundException('User not found'),
+        new NotFoundException(ERROR_USER_NOT_FOUND),
       );
     });
   });

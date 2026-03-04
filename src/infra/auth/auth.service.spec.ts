@@ -3,6 +3,11 @@ import {
   ConflictException,
   UnauthorizedException,
 } from '@nestjs/common';
+import {
+  ERROR_CREDENTIALS_IN_USE,
+  ERROR_REQUIRED_FIELDS,
+  ERROR_INVALID_CREDENTIALS,
+} from '@/shared/errors';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import type { DOCUMENT_TYPE, ROLE } from '@/shared/types';
@@ -158,7 +163,7 @@ describe('AuthService', () => {
       });
 
       await expect(service.SignUp(userSignUpData)).rejects.toThrow(
-        new ConflictException('Credentials already in use'),
+        new ConflictException(ERROR_CREDENTIALS_IN_USE),
       );
     });
 
@@ -176,7 +181,7 @@ describe('AuthService', () => {
       mockPrismaService.user.findUnique.mockResolvedValue(null);
 
       await expect(service.SignUp(invalidData)).rejects.toThrow(
-        new BadRequestException('Required fields not provided'),
+        new BadRequestException(ERROR_REQUIRED_FIELDS),
       );
     });
   });
@@ -213,7 +218,7 @@ describe('AuthService', () => {
           email: 'test_errado@acme.com',
           password: 'senha__123',
         }),
-      ).rejects.toThrow(new UnauthorizedException('Invalid credentials'));
+      ).rejects.toThrow(new UnauthorizedException(ERROR_INVALID_CREDENTIALS));
     });
 
     it('should throw unauthorized exception when password is incorrect', async () => {
@@ -230,7 +235,7 @@ describe('AuthService', () => {
           email: 'test_errado@acme.com',
           password: 'senha_123',
         }),
-      ).rejects.toThrow(new UnauthorizedException('Invalid credentials'));
+      ).rejects.toThrow(new UnauthorizedException(ERROR_INVALID_CREDENTIALS));
     });
   });
 });
