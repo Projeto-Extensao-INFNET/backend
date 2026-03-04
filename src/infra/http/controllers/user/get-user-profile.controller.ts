@@ -6,18 +6,37 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import type { GetUserProfileResponse } from '@/shared/dto/user/get-user.dto';
 import { GetUserProfileService } from '@/domain/services/user/get-user-profile.service';
 import { JwtAuthGuard } from '../../../auth/auth.guard';
 import type { AuthenticatedUserResponse } from '@/shared/dto/auth/auth-user';
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
+import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
+import {
+  GetUserProfileResponseClass,
+  type GetUserProfileResponse,
+} from '@/shared/dto/user/get-user.dto';
 
 @Controller('/accounts')
+@ApiTags('Accounts')
+@ApiBearerAuth('authorization')
 export class GetUserProfileController {
   constructor(private readonly getUserProfileService: GetUserProfileService) {}
 
   @Get('me')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: 'Get authenticated user profile',
+    operationId: 'getProfile',
+  })
+  @ApiResponse({ status: 200, type: GetUserProfileResponseClass })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: ERROR_USER_NOT_FOUND })
   async getUserProfile(
     @Request() req: AuthenticatedUserResponse,
   ): Promise<GetUserProfileResponse> {

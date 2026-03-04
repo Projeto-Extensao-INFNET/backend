@@ -9,8 +9,16 @@ import {
 } from '@nestjs/common';
 import { DeleteUserProfileService } from '@Services/user/delete-user-profile.service';
 import { JwtAuthGuard } from '../../../auth/auth.guard';
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 
 @Controller('/accounts')
+@ApiTags('Accounts')
+@ApiBearerAuth('authorization')
 export class DeleteUserProfileController {
   constructor(
     private readonly deleteUserProfileService: DeleteUserProfileService,
@@ -19,6 +27,12 @@ export class DeleteUserProfileController {
   @Delete('me')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({
+    summary: 'Delete authenticated user account',
+    operationId: 'deleteProfile',
+  })
+  @ApiResponse({ status: 204, description: 'Deleted' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async deleteUserProfile(
     @Request() req: AuthenticatedUserResponse,
   ): Promise<void> {
