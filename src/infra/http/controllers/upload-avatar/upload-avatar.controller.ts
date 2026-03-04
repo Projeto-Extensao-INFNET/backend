@@ -43,17 +43,23 @@ export class UploadAvatarController {
   })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
+    description: 'Avatar file to upload (JPEG, PNG, JPG)',
     schema: {
       type: 'object',
       properties: {
         avatar: {
           type: 'string',
           format: 'binary',
+          description: 'Avatar image file',
         },
       },
+      required: ['avatar'],
     },
   })
-  @ApiResponse({ status: 201, description: 'Avatar uploaded' })
+  @ApiResponse({
+    status: 201,
+    description: 'Avatar uploaded successfully',
+  })
   @ApiResponse({
     status: 422,
     description: 'Unprocessable entity - file validation failed',
