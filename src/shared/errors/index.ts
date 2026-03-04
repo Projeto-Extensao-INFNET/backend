@@ -1,8 +1,8 @@
-export const ERROR_INVALID_CREDENTIALS = 'Invalid credentials';
-export const ERROR_CREDENTIALS_IN_USE = 'Credentials already in use';
-export const ERROR_REQUIRED_FIELDS = 'Required fields not provided';
-export const ERROR_USER_NOT_FOUND = 'User not found';
-export const ERROR_USERS_NOT_FOUND = 'Users not found';
-export const ERROR_SCHEDULE_NOT_FOUND = 'Schedule not found';
-export const ERROR_SCHEDULE_NOT_AVAILABLE = 'Schedule not available';
-export const ERROR_SCHEDULE_ALREADY_BOOKED = 'Schedule already booked';
+export const ERROR_INVALID_CREDENTIALS = 'Credenciais inválidas';
+export const ERROR_CREDENTIALS_IN_USE = 'Credenciais já em uso';
+export const ERROR_REQUIRED_FIELDS = 'Campos obrigatórios não preenchidos';
+export const ERROR_USER_NOT_FOUND = 'Usuário não encontrado';
+export const ERROR_USERS_NOT_FOUND = 'Usuários não encontrados';
+export const ERROR_SCHEDULE_NOT_FOUND = 'Agendamento não encontrado';
+export const ERROR_SCHEDULE_NOT_AVAILABLE = 'Agendamento não disponível';
+export const ERROR_SCHEDULE_ALREADY_BOOKED = 'Agendamento já reservado';
