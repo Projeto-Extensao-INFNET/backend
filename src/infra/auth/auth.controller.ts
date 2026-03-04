@@ -6,9 +6,9 @@ import {
   ERROR_CREDENTIALS_IN_USE,
   ERROR_INVALID_CREDENTIALS,
 } from '@/shared/errors';
-import { type SignUpDto } from '@/shared/dto/auth/signUp.dto';
-import { SignInDtoClass, type SignInDto } from '@/shared/dto/auth/signIn.dto';
-import { AuthenticatedUserResponseClass } from '@/shared/dto/auth/auth-user';
+import { SignUpDto, SignUpResponseDto } from '@/shared/dto/auth/signUp.dto';
+import { SignInDto } from '@/shared/dto/auth/signIn.dto';
+import { AccessTokenResponse } from '@/shared/dto/auth/token-response';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -21,36 +21,12 @@ export class AuthController {
     summary: 'Create a new user account',
     operationId: 'SignUp',
   })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        name: { type: 'string' },
-        email: { type: 'string', format: 'email' },
-        password: { type: 'string' },
-        birthDate: { type: 'string', format: 'date' },
-        role: {
-          type: 'string',
-          enum: ['PATIENT', 'PROFESSIONAL', 'ADMIN'],
-        },
-        documentType: {
-          type: 'string',
-          enum: ['CPF', 'RG'],
-        },
-        document: { type: 'string' },
-      },
-      required: [
-        'name',
-        'email',
-        'password',
-        'birthDate',
-        'role',
-        'documentType',
-        'document',
-      ],
-    },
+  @ApiBody({ type: SignUpDto })
+  @ApiResponse({
+    status: 201,
+    description: 'User created successfully',
+    type: SignUpResponseDto,
   })
-  @ApiResponse({ status: 201, description: 'User created' })
   @ApiResponse({ status: 400, description: ERROR_REQUIRED_FIELDS })
   @ApiResponse({ status: 409, description: ERROR_CREDENTIALS_IN_USE })
   signUp(@Body() body: SignUpDto) {
@@ -63,11 +39,11 @@ export class AuthController {
     summary: 'Authenticate and receive access token',
     operationId: 'SignIn',
   })
-  @ApiBody({ type: SignInDtoClass })
+  @ApiBody({ type: SignInDto })
   @ApiResponse({
     status: 201,
-    description: 'Authenticated',
-    type: AuthenticatedUserResponseClass,
+    description: 'Authenticated successfully',
+    type: AccessTokenResponse,
   })
   @ApiResponse({ status: 401, description: ERROR_INVALID_CREDENTIALS })
   signIn(@Body() body: SignInDto) {
