@@ -1,4 +1,4 @@
-import { IPrismaAppointmentsRepository } from '@/core/repositories/prisma-appointments.repository';
+import { IPrismaAppointmentsRepository } from '@/infra/database/repositories/prisma-appointments.repository';
 import type { CreateAppointmentDto } from '@/shared/dto/appointments/create-appointment.dto';
 import { Injectable } from '@nestjs/common';
 

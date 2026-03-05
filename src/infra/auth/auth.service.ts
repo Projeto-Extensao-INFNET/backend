@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { comparePassword, hashPassword } from '@/utils';
-import { PrismaService } from '@/infra/database/prisma.service';
+import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import type {
   SignUpDto,
   SignUpResponseDto,

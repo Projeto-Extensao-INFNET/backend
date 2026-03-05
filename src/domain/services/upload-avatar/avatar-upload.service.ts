@@ -1,4 +1,4 @@
-import { IUserRepository } from '@/core/repositories/prisma-user-repository';
+import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
 import type { AuthenticatedUserResponse } from '@/shared/dto/auth/auth-user';
 import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
 import { Injectable, NotFoundException, Request } from '@nestjs/common';

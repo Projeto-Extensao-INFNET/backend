@@ -1,4 +1,4 @@
-import { IUserRepository } from '@/core/repositories/prisma-user-repository';
+import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

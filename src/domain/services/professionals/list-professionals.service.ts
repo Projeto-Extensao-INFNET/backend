@@ -1,5 +1,5 @@
-import { IProfessionalsRepository } from '@/core/repositories/prisma-professionals.repository';
-import type { Professional } from '@/infra/database/generated/client';
+import { IProfessionalsRepository } from '@/infra/database/repositories/prisma-professionals.repository';
+import type { Professional } from '@/infra/database/prisma/generated/client';
 import type {
   PaginationQueryDto,
   PaginationResultDto,

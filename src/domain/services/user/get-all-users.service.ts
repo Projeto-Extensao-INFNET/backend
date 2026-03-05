@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IUserRepository } from '@/core/repositories/prisma-user-repository';
+import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
 import type { UserEntity } from '@/core/entities/user.entity';
 import type {
   PaginationQueryDto,
