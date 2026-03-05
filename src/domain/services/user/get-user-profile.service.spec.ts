@@ -3,19 +3,16 @@ import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
 import { Test, TestingModule } from '@nestjs/testing';
 import { nonExistentUserId } from '@/utils';
 import { GetUserProfileService } from '@/domain/services/user/get-user-profile.service';
-import { PrismaService } from '@/infra/database/prisma.service';
-import {
-  IUserRepository,
-  PrismaUserRepository,
-} from '@/core/repositories/prisma-user-repository';
-import { MockPrismaService } from '@/test/mocks/prisma';
-import { CreateMockUserWithoutPassword } from '@/test/mocks/create-mock-user/create-mock-user';
+import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
+import { CreateMockUserWithoutPassword } from '@/__mocks__/create-mock-user/create-mock-user';
+
+const mockUserRepository = {
+  getProfile: vi.fn(),
+};
 
 describe('GetUserProfileService', () => {
   let service: GetUserProfileService;
-  const mockPrismaService = MockPrismaService();
-
-  const userMock = CreateMockUserWithoutPassword;
+  let userMock = CreateMockUserWithoutPassword;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -23,11 +20,7 @@ describe('GetUserProfileService', () => {
         GetUserProfileService,
         {
           provide: IUserRepository,
-          useClass: PrismaUserRepository,
-        },
-        {
-          provide: PrismaService,
-          useValue: mockPrismaService,
+          useValue: mockUserRepository,
         },
       ],
     }).compile();
@@ -43,7 +36,7 @@ describe('GetUserProfileService', () => {
     it('should get user profile', async () => {
       const user = userMock;
 
-      mockPrismaService.user.findUnique.mockResolvedValue(userMock);
+      mockUserRepository.getProfile.mockResolvedValue(userMock);
 
       const result = await service.execute(user.id);
 
@@ -51,7 +44,7 @@ describe('GetUserProfileService', () => {
     });
 
     it('it should throw NotFoundException when user not found', async () => {
-      mockPrismaService.user.findUnique.mockResolvedValue(null);
+      mockUserRepository.getProfile.mockResolvedValue(null);
 
       await expect(service.execute(nonExistentUserId)).rejects.toThrow(
         new NotFoundException(ERROR_USER_NOT_FOUND),
