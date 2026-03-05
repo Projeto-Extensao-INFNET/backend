@@ -1,3 +1,3 @@
 export const JWTMockService = () => ({
-	sign: vi.fn(),
+  sign: vi.fn(),
 });
