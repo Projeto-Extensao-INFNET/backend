@@ -1,11 +1,8 @@
-import {
-  IProfessionalsRepository,
-  PrismaProfessionalsRepository,
-} from '@/core/repositories/prisma-professionals.repository';
+import { IProfessionalsRepository } from '@/infra/database/repositories/prisma-professionals.repository';
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '@/infra/database/prisma.service';
-import { MockPrismaService } from '@/test/mocks/prisma';
 import { ListProfessionalsService } from './list-professionals.service';
+
+const mockProfessionalsRepository = {};
 
 describe('ProfessionalService', () => {
   let service: ListProfessionalsService;
@@ -16,11 +13,7 @@ describe('ProfessionalService', () => {
         ListProfessionalsService,
         {
           provide: IProfessionalsRepository,
-          useClass: PrismaProfessionalsRepository,
-        },
-        {
-          provide: PrismaService,
-          useValue: MockPrismaService,
+          useValue: mockProfessionalsRepository,
         },
       ],
     }).compile();
