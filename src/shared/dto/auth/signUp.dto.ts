@@ -2,7 +2,7 @@ import { IsString, IsEmail, MinLength, IsDate, IsEnum } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { MIN_PASSWORD_LENGTH } from '@/shared/constants';
-import { ROLE, DocumentType } from '@/infra/database/generated/enums';
+import { ROLE, DocumentType } from '@/infra/database/prisma/generated/enums';
 
 export class SignUpDto {
   @ApiProperty({ example: 'John Doe' })
