@@ -14,7 +14,7 @@ import {
   generateUniqueName,
   hashPassword,
 } from '@/utils';
-import type { PrismaService } from '@/infra/database/prisma.service';
+import type { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { faker } from '@faker-js/faker/locale/pt_BR';
 
 export const makeUserProfessional = async (prisma: PrismaService) => {
