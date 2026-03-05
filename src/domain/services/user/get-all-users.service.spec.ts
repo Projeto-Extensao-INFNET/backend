@@ -1,22 +1,30 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '@/infra/database/prisma.service';
-import {
-  IUserRepository,
-  PrismaUserRepository,
-} from '@/core/repositories/prisma-user-repository';
-import { MockPrismaService } from '@/test/mocks/prisma';
+import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
 import { GetAllUsersService } from './get-all-users.service';
-import {
-  generateBirthDate,
-  generateUniqueCPF,
-  generateUniqueEmail,
-  generateUniqueName,
-  generateUUID,
-} from '@/utils';
+import type {
+  PaginationQueryDto,
+  PaginationResultDto,
+} from '@/shared/dto/pagination/pagination.dto';
+import type { UserEntity } from '@/core/entities/user.entity';
+import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER } from '@/shared/constants';
+import { users } from '@/utils/user-list';
+
+const mockUserRepository = {
+  getAllUsers: vi.fn(),
+};
+
+const paginatedUsers: PaginationResultDto<Omit<UserEntity, 'password'>> = {
+  data: users,
+  meta: {
+    total_items: users.length,
+    total_pages: Math.ceil(users.length / DEFAULT_PAGE_LIMIT),
+    page: DEFAULT_PAGE_NUMBER,
+    limit: DEFAULT_PAGE_LIMIT,
+  },
+};
 
 describe('GetAllUsersService', () => {
   let service: GetAllUsersService;
-  const mockPrismaService = MockPrismaService();
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -24,11 +32,7 @@ describe('GetAllUsersService', () => {
         GetAllUsersService,
         {
           provide: IUserRepository,
-          useClass: PrismaUserRepository,
-        },
-        {
-          provide: PrismaService,
-          useValue: mockPrismaService,
+          useValue: mockUserRepository,
         },
       ],
     }).compile();
@@ -41,73 +45,18 @@ describe('GetAllUsersService', () => {
   });
 
   it('should list all users', async () => {
-    const users = [
-      {
-        id: generateUUID(),
-        name: generateUniqueName(),
-        email: generateUniqueEmail(),
-        role: 'PATIENT',
-        document: generateUniqueCPF(),
-        documentType: 'CPF',
-        birthDate: generateBirthDate(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        id: generateUUID(),
-        name: generateUniqueName(),
-        email: generateUniqueEmail(),
-        role: 'PATIENT',
-        document: generateUniqueCPF(),
-        documentType: 'CPF',
-        birthDate: generateBirthDate(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        id: generateUUID(),
-        name: generateUniqueName(),
-        email: generateUniqueEmail(),
-        role: 'PATIENT',
-        document: generateUniqueCPF(),
-        documentType: 'CPF',
-        birthDate: generateBirthDate(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        id: generateUUID(),
-        name: generateUniqueName(),
-        email: generateUniqueEmail(),
-        role: 'PATIENT',
-        document: generateUniqueCPF(),
-        documentType: 'CPF',
-        birthDate: generateBirthDate(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        id: '5',
-        name: generateUniqueName(),
-        email: generateUniqueEmail(),
-        role: 'PATIENT',
-        document: generateUniqueCPF(),
-        documentType: 'CPF',
-        birthDate: new Date('1994-05-05'),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ];
-
-    mockPrismaService.user.findMany.mockResolvedValue(users);
+    mockUserRepository.getAllUsers.mockResolvedValue(paginatedUsers);
 
     // Simula paginação
-    const query = { page: 1, limit: 5 };
-    mockPrismaService.user.count.mockResolvedValue(users.length);
+    const query: PaginationQueryDto = {
+      page: DEFAULT_PAGE_NUMBER,
+      limit: DEFAULT_PAGE_LIMIT,
+    };
 
     const result = await service.execute(query);
+    console.log(`RESULTADO: `, result);
 
-    expect(result.data).toHaveLength(5);
-    expect(result.meta.total_items).toBe(5);
+    expect(result.data).toHaveLength(paginatedUsers.data.length);
+    expect(result.meta.total_items).toBe(paginatedUsers.meta.total_items);
   });
 });
