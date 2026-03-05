@@ -54,7 +54,6 @@ describe('GetAllUsersService', () => {
     };
 
     const result = await service.execute(query);
-    console.log(`RESULTADO: `, result);
 
     expect(result.data).toHaveLength(paginatedUsers.data.length);
     expect(result.meta.total_items).toBe(paginatedUsers.meta.total_items);
