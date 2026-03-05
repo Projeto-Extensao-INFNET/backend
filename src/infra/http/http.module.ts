@@ -34,15 +34,15 @@ import { CancelAppointmentsService } from '@Services/appointments/cancel-appoint
 import {
   IUserRepository,
   PrismaUserRepository,
-} from '@/core/repositories/prisma-user-repository';
+} from '@/infra/database/repositories/prisma-user-repository';
 import {
   IProfessionalsRepository,
   PrismaProfessionalsRepository,
-} from '@/core/repositories/prisma-professionals.repository';
+} from '@/infra/database/repositories/prisma-professionals.repository';
 import {
   IPrismaAppointmentsRepository,
   PrismaAppointmentsRepository,
-} from '@/core/repositories/prisma-appointments.repository';
+} from '@/infra/database/repositories/prisma-appointments.repository';
 
 @Module({
   providers: [
