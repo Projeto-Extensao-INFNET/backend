@@ -1,15 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateAppointmentsService } from './create-appointments.service';
-import { MockPrismaService } from '@/test/mocks/prisma';
-import { PrismaService } from '@/infra/database/prisma.service';
+import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import {
   IPrismaAppointmentsRepository,
   PrismaAppointmentsRepository,
-} from '@/core/repositories/prisma-appointments.repository';
+} from '@/infra/database/repositories/prisma-appointments.repository';
+
+const mockAppointmentsRepository = {
+  createAppointment: vi.fn(),
+};
 
 describe('CreateAppointmentsService', () => {
   let service: CreateAppointmentsService;
-  const mockPrismaService = MockPrismaService();
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,7 +23,7 @@ describe('CreateAppointmentsService', () => {
         },
         {
           provide: PrismaService,
-          useValue: mockPrismaService,
+          useValue: mockAppointmentsRepository,
         },
       ],
     }).compile();
