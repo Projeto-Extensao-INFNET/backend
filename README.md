@@ -1,6 +1,6 @@
 # Backend Projeto Extensão
 
-Este repositório contém o backend do Projeto **FUTURO NOME DO PROJETO**, desenvolvido com NestJS, Prisma e PostgreSQL. O objetivo é fornecer uma API robusta, escalável e de fácil manutenção para aplicações web e mobile.
+Este repositório contém o backend do Projeto **FUTURO NOME DO PROJETO**, desenvolvido com NestJS, Prisma e PostgreSQL seguindo princípios de Clean Architecture. O objetivo é fornecer uma API robusta, escalável e de fácil manutenção para aplicações web e mobile.
 
 ## Tecnologias principais
 
@@ -9,13 +9,15 @@ Este repositório contém o backend do Projeto **FUTURO NOME DO PROJETO**, desen
 - **NestJS** — Framework para aplicações Node.js escaláveis
 - **Prisma ORM** — Mapeamento objeto-relacional para banco de dados
 - **PostgreSQL** — Banco de dados relacional
-- **Vitest** — Testes automatizados (unitários e E2E)
+- **Vitest** — Testes automatizados (unitários e E2E) com coverage
 - **Docker** — Containers para ambientes de desenvolvimento e produção
 - **ESLint + Prettier** — Linting e formatação de código
 - **SWC** — Compilador rápido para TypeScript/JavaScript
 - **Husky + lint-staged + Commitlint** — Garantem padrões de código e mensagens de commit
-- **Terraform (CDKTF)** — Infraestrutura como código
-  
+- **Swagger/OpenAPI** — Documentação interativa da API
+- **JWT + Passport** — Autenticação e autorização
+- **Pulumi** — Infraestrutura como código (AWS)
+
 ## Sobre os arquivos de configuração e ambientes
 
 O projeto utiliza diferentes arquivos `.env` para separar as configurações de cada ambiente:
@@ -31,11 +33,84 @@ Outros arquivos importantes:
 - `docker-compose.dev.yml` e `docker-compose.prod.yml`: orquestram containers para desenvolvimento e produção, garantindo ambientes isolados e reprodutíveis.
 - `Dockerfile.dev` e `Dockerfile.prod`: definem como as imagens são construídas para desenvolvimento e produção.
 - `prisma/`: contém o schema do banco, seeds e migrations, usados pelo Prisma ORM.
-- `terraform/`: configuração de infraestrutura como código usando CDKTF (Cloud Development Kit for Terraform).
+- `pulumi/`: configuração de infraestrutura como código usando Pulumi para deploy na AWS.
 - `.husky/`: hooks de git para automação de tarefas antes de commits/push.
 - `.lintstagedrc.json`: configuração do lint-staged para executar formatação e linting em arquivos staged.
 - `.swcrc`: configuração do SWC para compilação rápida.
 - `vitest.config.ts` e `vitest.config.e2e.ts`: configurações para testes unitários e E2E com Vitest.
+
+## Arquitetura do Projeto
+
+O projeto segue princípios de **Clean Architecture** e **Domain-Driven Design**, com separação clara de responsabilidades:
+
+```
+src/
+├── __tests__/       # Configurações de tests da aplicação
+├── __mocks__/       # Configurações de mocks da aplicação
+├── config/          # Configurações da aplicação
+├── core/            # Entidades do domínio
+├── domain/          # Lógica de negócio (Services)
+│   └── services/    # Services separados por contexto
+│       ├── appointments/
+│       ├── professionals/
+│       ├── specialty/
+│       ├── treatment-type/
+│       ├── upload-avatar/
+│       └── user/
+├── infra/           # Camada de infraestrutura
+│   ├── auth/        # Autenticação JWT, Guards, Strategies
+│   ├── database/    # Prisma, Repositories
+│   │   ├── prisma/  # PrismaService, PrismaModule
+│   │   └── repositories/ # Implementações dos repositórios
+│   ├── http/        # Controllers e rotas HTTP
+│   │   └── controllers/
+│   └── app.module.ts # Modulo principal da aplicação
+│   └── main.ts      # Entry point da aplicação
+├── shared/          # Código compartilhado
+│   ├── constants/   # Constantes da aplicação
+│   ├── decorators/  # Decorators customizados
+│   ├── dto/         # Data Transfer Objects
+│   ├── errors/      # Mensagens de erro
+│   └── types/       # Tipos TypeScript
+└── utils/           # Funções utilitárias
+```
+
+### Padrões Utilizados
+
+- **Repository Pattern**: Abstração da camada de dados
+- **Dependency Injection**: Injeção de dependências do NestJS
+- **DTO Pattern**: Validação e transformação de dados
+- **Guard Pattern**: Proteção de rotas e autorização
+- **Strategy Pattern**: Estratégias de autenticação (JWT)
+
+## Testes
+
+O projeto possui uma cobertura de testes unitários e E2E:
+
+### Testes Unitários
+
+- Todos os services possuem testes unitários
+- Mocks configurados com Vitest
+- Coverage report disponível
+
+### Executar testes:
+
+```bash
+# Testes unitários
+pnpm test
+
+# Testes com watch mode
+pnpm test:watch
+
+# Coverage
+pnpm test:cov
+
+# Testes E2E
+pnpm test:e2e
+
+# Coverage E2E
+pnpm test:cov:e2e
+```
 
 ## Como rodar localmente
 
@@ -89,28 +164,43 @@ Observações para Docker:
    ```sh
    pnpm start:dev
    ```
-  
+
 ## Scripts úteis
 
-- `pnpm start:dev` — Inicia o servidor em modo desenvolvimento
-- `pnpm build` — Compila a aplicação para produção (pasta `dist/`)
-- `pnpm start:prod` — Inicia o servidor em modo de produção (usa `dist/main`)
-- `pnpm test` — Executa os testes automatizados
-- `pnpm test:watch` — Executa os testes automatizados em modo watch
-- `pnpm test:coverage` — Mostra a cobertura dos testes automatizados
-- `pnpm test:e2e` — Executa os testes e2e
-- `pnpm test:coverage:e2e` — Mostra a cobertura dos testes e2e
-- `pnpm format` — Formata o código usando Prettier
-- `pnpm lint` — Roda o linter (ESLint) e corrige problemas automaticamente
-- `pnpm commit` — Roda o commitzen para commits semânticos
-- `pnpm prisma:migrate` — Executa as migrations do banco
-- `pnpm prisma:generate` — Gera o client do Prisma
-- `pnpm prisma:studio` — Abre o Prisma Studio para visualizar/editar dados
-- `pnpm prisma:seed` — Popula o banco de dados
+### Docker
+
 - `pnpm docker:dev` — Sobe os containers para desenvolvimento
 - `pnpm docker:stop:dev` — Para os containers de desenvolvimento
 - `pnpm docker:prod` — Sobe os containers para produção (detached)
 - `pnpm docker:stop:prod` — Para os containers de produção
+
+### Desenvolvimento
+
+- `pnpm start:dev` — Inicia o servidor em modo desenvolvimento com hot-reload
+- `pnpm start:debug` — Inicia o servidor em modo debug
+- `pnpm build` — Compila a aplicação para produção (pasta `dist/`)
+- `pnpm start:prod` — Inicia o servidor em modo de produção
+
+### Testes
+
+- `pnpm test` — Executa os testes unitários
+- `pnpm test:watch` — Executa os testes em modo watch
+- `pnpm test:cov` — Gera relatório de cobertura dos testes unitários
+- `pnpm test:e2e` — Executa os testes E2E
+- `pnpm test:cov:e2e` — Gera relatório de cobertura dos testes E2E
+
+### Qualidade de Código
+
+- `pnpm format` — Formata o código usando Prettier
+- `pnpm lint` — Roda o linter (ESLint) e corrige problemas automaticamente
+- `pnpm commit` — Usa Commitizen para commits semânticos
+
+### Banco de Dados (Prisma)
+
+- `pnpm prisma:migrate` — Executa as migrations do banco
+- `pnpm prisma:generate` — Gera o Prisma Client
+- `pnpm prisma:studio` — Abre o Prisma Studio (GUI para o banco)
+- `pnpm prisma:seed` — Popula o banco de dados com dados iniciais
 
 ## Hooks de Git (Husky) e padrões
 
