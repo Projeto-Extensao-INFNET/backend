@@ -11,14 +11,14 @@
 
 ## Opcional
 
-- [] Criar repositórios e entidades para cada caso de uso?
+- [x] Criar repositórios e entidades para cada caso de uso
 - [] Comentários explicativos nos arquivos de testes (me ajudar a lembrar o que fazem)
-- [] Refatorar para usar Pulumi no lugar do Terraform?
+- [x] Refatorar para usar Pulumi no lugar do Terraform
 
 ## Requisitos do Sistema
 
 - [x] Validação dos dados
-- [ ] Deploy em alguma plataforma (Vercel, fly.io, AWS ou Render)
+- [x] Deploy em alguma plataforma (Vercel, fly.io, AWS ou Render) - Pulumi configurado para AWS
 - [ ] Cache com redis (?)
 - [x] Testes unitários, integração e E2E com vitest + supertest
 
@@ -42,7 +42,7 @@
 - [x] Consultar lista de profissionais
 - [x] Editar somente seu propio perfil ( do usuário logado)
 - [x] Excluir somente seu propio usuario logado
-- [x] Agendar consultas para o seu propio usuario logado
+- [x] Agendar consultas para o seu propio usuario logado (CreateAppointmentsService implementado)
 - [ ] Alterar sua propia consulta para o seu propio usuario logado
 - [ ] Excluir sua propia consulta para o seu propio usuario logado
 - [ ] Pode marcar consultas com base em horários e categorias de atendimento
@@ -61,9 +61,9 @@
 - [x] Se cadastrar
 - [x] Visualizar pacientes que estão agendados com ele
 - [ ] Criar agenda com horários disponíveis
-- [ ] Fazer upload de uma foto de perfil
-- [ ] Editar somente seu propio perfil ( do usuário logado)
-- [ ] Excluir somente seu propio usuario logado
+- [x] Fazer upload de uma foto de perfil
+- [x] Editar somente seu propio perfil ( do usuário logado)
+- [x] Excluir somente seu propio usuario logado
 - [ ] Cadastrar suas categorias de atendimento (ex: psicologia infantil, casais etc)
 - [ ] Se cadastrar em uma categoria de profissional (Psiquiatria ou Psicologia)
 
@@ -119,35 +119,35 @@
 | `GET`    | `/accounts/me`       | Ver próprio perfil           | Próprio usuário     | ✅ **Implementado** |
 | `PATCH`  | `/accounts/me`       | Editar próprio perfil        | Próprio usuário     | ✅ **Implementado** |
 | `DELETE` | `/accounts/me`       | Excluir própria conta        | Próprio usuário     | ✅ **Implementado** |
-| `POST`   | `/appointments`      | Agendar consulta             | Próprio usuário     |
-| `GET`    | `/appointments/me`   | Ver próprios agendamentos    | Próprio usuário     |
-| `PATCH`  | `/appointments/:id`  | Alterar próprio agendamento  | Próprio agendamento |
-| `DELETE` | `/appointments/:id`  | Cancelar próprio agendamento | Próprio agendamento |
-| `GET`    | `/professionals/:id` | Ver detalhes de profissional | Todos pacientes     | ✅ **Implementado** |
+| `POST`   | `/appointments`      | Agendar consulta             | Próprio usuário     | ✅ **Implementado** |
+| `GET`    | `/appointments/me`   | Ver próprios agendamentos    | Próprio usuário     |                     |
+| `PATCH`  | `/appointments/:id`  | Alterar próprio agendamento  | Próprio agendamento |                     |
+| `DELETE` | `/appointments/:id`  | Cancelar próprio agendamento | Próprio agendamento |                     |
+| `GET`    | `/professionals/:id` | Ver detalhes de profissional | Todos pacientes     |                     |
 
 #### 👨‍⚕️ PROFISSIONAL - Rotas
 
 | Método   | Rota                  | Descrição                      | Validação             | Status              |
 | -------- | --------------------- | ------------------------------ | --------------------- | ------------------- |
 | `GET`    | `/accounts/me`        | Ver próprio perfil             | Próprio usuário       | ✅ **Implementado** |
-| `PUT`    | `/accounts/me`        | Editar próprio perfil          | Próprio usuário       |
-| `DELETE` | `/accounts/me`        | Excluir própria conta          | Próprio usuário       |
-| `POST`   | `/schedules`          | Criar horários disponíveis     | Próprio profissional  |
-| `GET`    | `/schedules/me`       | Ver própria agenda             | Próprio profissional  |
-| `PUT`    | `/schedules/:id`      | Editar horário                 | Próprio horário       |
-| `DELETE` | `/schedules/:id`      | Remover horário                | Próprio horário       |
-| `GET`    | `/appointments/me`    | Ver agendamentos com pacientes | Próprios agendamentos |
-| `POST`   | `/accounts/me/avatar` | Upload foto de perfil          | Próprio usuário       |
-| `GET`    | `/patients/me`        | Ver pacientes agendados        | Próprios pacientes    |
+| `PUT`    | `/accounts/me`        | Editar próprio perfil          | Próprio usuário       |                     |
+| `DELETE` | `/accounts/me`        | Excluir própria conta          | Próprio usuário       | ✅ **Implementado** |
+| `POST`   | `/schedules`          | Criar horários disponíveis     | Próprio profissional  | 🚧 **Em Progresso** |
+| `GET`    | `/schedules/me`       | Ver própria agenda             | Próprio profissional  | 🚧 **Em Progresso** |
+| `PUT`    | `/schedules/:id`      | Editar horário                 | Próprio horário       | 🚧 **Em Progresso** |
+| `DELETE` | `/schedules/:id`      | Remover horário                | Próprio horário       | 🚧 **Em Progresso** |
+| `GET`    | `/appointments/me`    | Ver agendamentos com pacientes | Próprios agendamentos | ✅ **Implementado** |
+| `POST`   | `/accounts/me/avatar` | Upload foto de perfil          | Próprio usuário       | ✅ **Implementado** |
+| `GET`    | `/patients/me`        | Ver pacientes agendados        | Próprios pacientes    |                     |
 
 #### 👑 ADMIN - Rotas
 
-| Método   | Rota                   | Descrição                  | Permissão | Status |
-| -------- | ---------------------- | -------------------------- | --------- | ------ |
-| `GET`    | `/accounts`            | Listar todos os usuários   | Admin     |
-| `GET`    | `/accounts/:id`        | Ver usuário específico     | Admin     |
-| `PUT`    | `/accounts/:id`        | Editar qualquer usuário    | Admin     |
-| `DELETE` | `/accounts/:id`        | Excluir qualquer usuário   | Admin     |
+| Método   | Rota                   | Descrição                  | Permissão | Status              |
+| -------- | ---------------------- | -------------------------- | --------- | ------------------- |
+| `GET`    | `/accounts`            | Listar todos os usuários   | Admin     | ✅ **Implementado** |
+| `GET`    | `/accounts/:id`        | Ver usuário específico     | Admin     | ✅ **Implementado** |
+| `PUT`    | `/accounts/:id`        | Editar qualquer usuário    | Admin     | ✅ **Implementado** |
+| `DELETE` | `/accounts/:id`        | Excluir qualquer usuário   | Admin     | ✅ **Implementado** |
 | `PUT`    | `/accounts/:id/role`   | Alterar role do usuário    | Admin     |
 | `PUT`    | `/accounts/:id/status` | Suspender/reativar conta   | Admin     |
 | `GET`    | `/appointments`        | Ver todos os agendamentos  | Admin     |
