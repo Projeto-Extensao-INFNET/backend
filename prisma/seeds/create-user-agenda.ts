@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
-import type { PrismaClient } from '../.././src/infra/database/generated/client';
+import type { PrismaClient } from '../.././src/infra/database/prisma/generated/client';
 
 export const CreateUserAgenda = async (prisma: PrismaClient) => {
   // busca os usuários do tipo paciente

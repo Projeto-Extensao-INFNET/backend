@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
-import { PrismaClient } from '../.././src/infra/database/generated/client';
+import { PrismaClient } from '../.././src/infra/database/prisma/generated/client';
 import { hashPassword } from '../../src/utils';
 
 export const CreatePatientUser = async (prisma: PrismaClient) => {
