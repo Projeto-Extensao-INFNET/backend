@@ -1,4 +1,4 @@
-import type { PrismaService } from '@/infra/database/prisma.service';
+import type { PrismaService } from '../prisma/prisma.service';
 import type { CreateAppointmentDto } from '@/shared/dto/appointments/create-appointment.dto';
 import {
   ERROR_SCHEDULE_ALREADY_BOOKED,

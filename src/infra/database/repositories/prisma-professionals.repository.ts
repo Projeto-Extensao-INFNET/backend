@@ -1,9 +1,9 @@
-import { PaginationResultDto } from './../../shared/dto/pagination/pagination.dto';
-import { PrismaService } from '@/infra/database/prisma.service';
+import { PaginationResultDto } from '@/shared/dto/pagination/pagination.dto';
+import { PrismaService } from '../prisma/prisma.service';
 import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER } from '@/shared/constants';
 import type { PaginationQueryDto } from '@/shared/dto/pagination/pagination.dto';
 import { Injectable } from '@nestjs/common';
-import type { ProfessionalEntity } from '../entities/professional.entity';
+import type { ProfessionalEntity } from '@/core/entities/professional.entity';
 
 export abstract class IProfessionalsRepository {
   abstract listProfessionals(
