@@ -1,4 +1,3 @@
-import { MockPrismaService } from '@/test/mocks/prisma';
 import { DeleteUserProfileService } from './delete-user-profile.service';
 import { nonExistentUserId } from '@/utils';
 import { NotFoundException } from '@nestjs/common';
@@ -6,14 +5,17 @@ import { Test, type TestingModule } from '@nestjs/testing';
 import {
   IUserRepository,
   PrismaUserRepository,
-} from '@/core/repositories/prisma-user-repository';
-import { PrismaService } from '@/infra/database/prisma.service';
-import { CreateMockUser } from '@/test/mocks/create-mock-user/create-mock-user';
+} from '@/infra/database/repositories/prisma-user-repository';
+import { CreateMockUser } from '@/__mocks__/create-mock-user/create-mock-user';
 import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
+
+const mockUserRepository = {
+  findById: vi.fn(),
+  deleteProfile: vi.fn(),
+};
 
 describe('deleteAccount ', () => {
   let service: DeleteUserProfileService;
-  const mockPrismaService = MockPrismaService();
 
   const userMock = CreateMockUser;
 
@@ -23,11 +25,7 @@ describe('deleteAccount ', () => {
         DeleteUserProfileService,
         {
           provide: IUserRepository,
-          useClass: PrismaUserRepository,
-        },
-        {
-          provide: PrismaService,
-          useValue: mockPrismaService,
+          useValue: mockUserRepository,
         },
       ],
     }).compile();
@@ -38,15 +36,15 @@ describe('deleteAccount ', () => {
   it('should delete user profile', async () => {
     const user = userMock;
 
-    mockPrismaService.user.delete.mockResolvedValue(user);
+    mockUserRepository.deleteProfile.mockResolvedValue(user);
 
-    mockPrismaService.user.findUnique
+    mockUserRepository.findById
       .mockResolvedValueOnce(user) // 1ª chamada: retorna o usuário
       .mockResolvedValueOnce(null); // 2ª chamada: retorna null
 
     await service.execute(user.id);
 
-    const result = await mockPrismaService.user.findUnique({
+    const result = await mockUserRepository.findById({
       where: {
         id: user.id,
       },
@@ -56,7 +54,7 @@ describe('deleteAccount ', () => {
   });
 
   it('it should throw NotFoundException when user not found', async () => {
-    mockPrismaService.user.delete.mockRejectedValue(
+    mockUserRepository.deleteProfile.mockRejectedValue(
       new NotFoundException(ERROR_USER_NOT_FOUND),
     );
 
