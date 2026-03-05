@@ -19,14 +19,23 @@ import {
   hashPassword,
 } from '@/utils';
 import { AuthService } from '@/infra/auth/auth.service';
-import { PrismaService } from '@/infra/database/prisma.service';
-import { JWTMockService } from '@/test/mocks/jwt';
-import { MockPrismaService } from '@/test/mocks/prisma';
-import { CreateMockUser } from '@/test/mocks/create-mock-user/create-mock-user';
+import { PrismaService } from '@/infra/database/prisma/prisma.service';
+import { JWTMockService } from '@/__mocks__/jwt';
+import { CreateMockUser } from '@/__mocks__/create-mock-user/create-mock-user';
+
+const mockPrisma = {
+  user: {
+    findUnique: vi.fn(),
+    create: vi.fn(),
+  },
+};
+
+vi.mock('@prisma/client', () => ({
+  PrismaClient: vi.fn().mockImplementation(() => mockPrisma),
+}));
 
 describe('AuthService', () => {
   let service: AuthService;
-  const mockPrismaService = MockPrismaService();
   const mockJwtService = JWTMockService();
 
   beforeEach(async () => {
@@ -35,7 +44,7 @@ describe('AuthService', () => {
         AuthService,
         {
           provide: PrismaService,
-          useValue: mockPrismaService,
+          useValue: mockPrisma,
         },
         {
           provide: JwtService,
@@ -57,7 +66,7 @@ describe('AuthService', () => {
       const userSignUpData = CreateMockUser;
 
       // verifica se credenciais (email) já estão em uso
-      mockPrismaService.user.findUnique.mockResolvedValue(null);
+      mockPrisma.user.findUnique.mockResolvedValue(null);
 
       // simula dados que serão enviados pro Prisma
       const created_user = {
@@ -73,7 +82,7 @@ describe('AuthService', () => {
       };
 
       // cria um usuario no Prisma com os dados mockados
-      mockPrismaService.user.create.mockResolvedValue(created_user);
+      mockPrisma.user.create.mockResolvedValue(created_user);
 
       // chama o serviço real com os dados de signUp mockados
       const result = await service.SignUp(userSignUpData);
@@ -95,21 +104,21 @@ describe('AuthService', () => {
       });
 
       // verifica se email  já existe antes de criar
-      expect(mockPrismaService.user.findUnique).toHaveBeenCalledWith({
+      expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
         where: {
           email: userSignUpData.email,
         },
       });
 
       // verifica se documento já existe antes de criar
-      expect(mockPrismaService.user.findUnique).toHaveBeenCalledWith({
+      expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
         where: {
           document: userSignUpData.document,
         },
       });
 
       // verifica se o usuario foi criado apenas 1 vez
-      expect(mockPrismaService.user.create).toHaveBeenCalledTimes(1);
+      expect(mockPrisma.user.create).toHaveBeenCalledTimes(1);
     });
 
     it('should hash password', async () => {
@@ -125,9 +134,9 @@ describe('AuthService', () => {
         document: generateUniqueCPF(),
       };
 
-      mockPrismaService.user.findUnique.mockResolvedValue(null);
+      mockPrisma.user.findUnique.mockResolvedValue(null);
 
-      mockPrismaService.user.create.mockResolvedValue({
+      mockPrisma.user.create.mockResolvedValue({
         id: 'user-id',
         ...userSignUpData,
         password: 'hashed_password',
@@ -137,7 +146,7 @@ describe('AuthService', () => {
 
       await service.SignUp(userSignUpData);
 
-      expect(mockPrismaService.user.create).toHaveBeenCalledWith(
+      expect(mockPrisma.user.create).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({
             password: expect.not.stringMatching(plainPassword),
@@ -157,7 +166,7 @@ describe('AuthService', () => {
         document: generateUniqueCPF(),
       };
 
-      mockPrismaService.user.findUnique.mockResolvedValue({
+      mockPrisma.user.findUnique.mockResolvedValue({
         id: 'user-id',
         email: userSignUpData.email,
       });
@@ -178,7 +187,7 @@ describe('AuthService', () => {
         document: generateUniqueCPF(),
       };
 
-      mockPrismaService.user.findUnique.mockResolvedValue(null);
+      mockPrisma.user.findUnique.mockResolvedValue(null);
 
       await expect(service.SignUp(invalidData)).rejects.toThrow(
         new BadRequestException(ERROR_REQUIRED_FIELDS),
@@ -190,7 +199,7 @@ describe('AuthService', () => {
     it('should sign-in and return JWT token', async () => {
       const hashedPassword = await hashPassword('12345667');
 
-      mockPrismaService.user.findUnique.mockResolvedValue({
+      mockPrisma.user.findUnique.mockResolvedValue({
         id: 'user-id',
         email: 'test@acme.com',
         password: hashedPassword,
@@ -211,7 +220,7 @@ describe('AuthService', () => {
     });
 
     it('should throw unauthorized exception when email is incorrect', async () => {
-      mockPrismaService.user.findUnique.mockResolvedValue(null);
+      mockPrisma.user.findUnique.mockResolvedValue(null);
 
       await expect(
         service.SignIn({
@@ -224,7 +233,7 @@ describe('AuthService', () => {
     it('should throw unauthorized exception when password is incorrect', async () => {
       const hashedPassword = await hashPassword('deve_ser_hashed_123');
 
-      mockPrismaService.user.findUnique.mockResolvedValue({
+      mockPrisma.user.findUnique.mockResolvedValue({
         id: 'user-id',
         email: 'test@acme.com',
         password: hashedPassword,
