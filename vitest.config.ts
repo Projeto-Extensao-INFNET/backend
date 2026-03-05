@@ -15,7 +15,7 @@ export default defineConfig({
     clearMocks: true,
     testTimeout: 10000,
 
-    // UI (não está funcionando no WSL)
+    // UI
     // ui: true,
     // open: true,
 
