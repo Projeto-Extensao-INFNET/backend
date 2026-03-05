@@ -2,8 +2,8 @@ import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '../../../app.module';
-import { PrismaService } from '@/infra/database/prisma.service';
-import { makeAuthenticate, makeUser } from '@/test/factories';
+import { PrismaService } from '@/infra/database/prisma/prisma.service';
+import { makeAuthenticate, makeUser } from '@/shared/factories';
 
 describe('Get User Profile (E2E)', () => {
   let app: INestApplication;

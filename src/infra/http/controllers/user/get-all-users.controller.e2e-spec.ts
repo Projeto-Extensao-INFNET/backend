@@ -2,9 +2,9 @@ import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '../../../app.module';
-import { PrismaService } from '@/infra/database/prisma.service';
-import { makeAuthenticate } from '@/test/factories';
-import { makeCreateAdminUser } from '@/test/factories/makeCreateAdminUser';
+import { PrismaService } from '@/infra/database/prisma/prisma.service';
+import { makeAuthenticate } from '@/shared/factories';
+import { makeCreateAdminUser } from '@/shared/factories/makeCreateAdminUser';
 
 describe('GetAllUsersController (E2E)', () => {
   let app: INestApplication;

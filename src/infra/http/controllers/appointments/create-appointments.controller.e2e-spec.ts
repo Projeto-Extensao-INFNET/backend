@@ -1,7 +1,7 @@
 import type { INestApplication } from '@nestjs/common';
 import { CreateAppointmentsController } from './create-appointments.controller';
 import { Test } from '@nestjs/testing';
-import { PrismaService } from '@/infra/database/prisma.service';
+import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { AppModule } from '../../../app.module';
 
 describe('Create Appointments (E2E)', () => {
