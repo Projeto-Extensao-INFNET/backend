@@ -1,16 +1,16 @@
-import { CreateMockUser } from '@/test/mocks/create-mock-user/create-mock-user';
+import { CreateMockUser } from '@/__mocks__/create-mock-user/create-mock-user';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { EditUserProfileService } from './edit-user-profile.service';
-import {
-  IUserRepository,
-  PrismaUserRepository,
-} from '@/core/repositories/prisma-user-repository';
-import { PrismaService } from '@/infra/database/prisma.service';
-import { MockPrismaService } from '@/test/mocks/prisma';
+import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
+import type { EditProfileDto } from '@/shared/dto/user/edit-profile.dto';
+
+const mockUserRepository = {
+  editProfile: vi.fn(),
+  findById: vi.fn(),
+};
 
 describe('editProfile', () => {
   let service: EditUserProfileService;
-  const mockPrismaService = MockPrismaService();
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -18,11 +18,7 @@ describe('editProfile', () => {
         EditUserProfileService,
         {
           provide: IUserRepository,
-          useClass: PrismaUserRepository,
-        },
-        {
-          provide: PrismaService,
-          useValue: mockPrismaService,
+          useValue: mockUserRepository,
         },
       ],
     }).compile();
@@ -31,27 +27,27 @@ describe('editProfile', () => {
   });
 
   it('should edit user profile', async () => {
+    // usuário que será usado para editar o perfil
     const user = CreateMockUser;
 
-    const dto = { name: 'Novo nome' }; // dados que serão usados na edição do perfil
+    // dados que serão usados na edição do perfil
+    const dto = { name: 'Novo nome' };
 
     // primeiro valida se o usuario existe
-    mockPrismaService.user.findUnique.mockResolvedValue(user);
+    mockUserRepository.findById(user);
 
     // simula o retorno do update
-    mockPrismaService.user.update.mockResolvedValue({
+    mockUserRepository.editProfile.mockResolvedValue({
       ...user,
       ...dto,
     });
 
     // executa o método de editProfile no service
-    const result = await service.execute(user.id, dto);
+    const result: EditProfileDto = await service.execute(user.id, dto);
 
     // verifica se o update foi chamado com os dados corretos (vindos do DTO)
-
-    expect(mockPrismaService.user.update).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { id: user.id }, data: dto }),
-    );
-    expect(result.name).toBe(dto.name); // verifica se o novo campo editado aparece corretamente
+    expect(mockUserRepository.editProfile).toHaveBeenCalledWith(user.id, dto);
+    // verifica se o novo campo editado aparece corretamente
+    expect(result.name).toBe(dto.name);
   });
 });
