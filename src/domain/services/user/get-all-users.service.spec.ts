@@ -7,7 +7,7 @@ import type {
 } from '@/shared/dto/pagination/pagination.dto';
 import type { UserEntity } from '@/core/entities/user.entity';
 import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER } from '@/shared/constants';
-import { users } from '@/utils/user-list';
+import { users } from '@/utils';
 
 const mockUserRepository = {
   getAllUsers: vi.fn(),
