@@ -1,11 +1,20 @@
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { MockPrismaService } from '@/test/mocks/prisma';
 import { PrismaService } from './prisma.service';
+
+const mockPrisma = {
+  $connect: vi.fn(),
+  $disconnect: vi.fn(),
+  onModuleInit: vi.fn(),
+  onModuleDestroy: vi.fn(),
+};
+
+vi.mock('@prisma/client', () => ({
+  PrismaClient: vi.fn().mockImplementation(() => mockPrisma),
+}));
 
 describe('PrismaService', () => {
   let service: PrismaService;
-  const mockPrismaService = MockPrismaService();
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -13,7 +22,7 @@ describe('PrismaService', () => {
       providers: [
         {
           provide: PrismaService,
-          useValue: mockPrismaService,
+          useValue: mockPrisma,
         },
       ],
     }).compile();
@@ -30,8 +39,8 @@ describe('PrismaService', () => {
   });
 
   it('should call $connect', async () => {
-    mockPrismaService.onModuleInit.mockImplementation(() => {
-      mockPrismaService.$connect();
+    mockPrisma.onModuleInit.mockImplementation(() => {
+      mockPrisma.$connect();
     });
 
     await service.onModuleInit();
@@ -39,8 +48,8 @@ describe('PrismaService', () => {
     expect(service.$connect).toHaveBeenCalledTimes(1);
   });
   it('should call $disconnect', async () => {
-    mockPrismaService.onModuleDestroy.mockImplementation(() => {
-      mockPrismaService.$disconnect();
+    mockPrisma.onModuleDestroy.mockImplementation(() => {
+      mockPrisma.$disconnect();
     });
 
     await service.onModuleDestroy();
