@@ -8,8 +8,8 @@ import {
   generateUniqueEmail,
   generateUniqueName,
 } from '@/utils';
-import { PrismaService } from '@/infra/database/prisma.service';
-import { makeAuthenticate, makeUser } from '@/test/factories';
+import { PrismaService } from '@/infra/database/prisma/prisma.service';
+import { makeAuthenticate, makeUser } from '@/shared/factories';
 import type { DOCUMENT_TYPE, ROLE } from '@/shared/types';
 
 describe('AuthController (E2E)', () => {
