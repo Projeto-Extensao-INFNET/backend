@@ -15,6 +15,7 @@ import { HealthController } from './controllers/health/health.controller';
 
 // Modules
 import { Module } from '@nestjs/common';
+import { CacheModule } from '@/infra/cache/cache.module';
 
 // Services
 import { AvatarUploadService } from '@/domain/services/upload-avatar/avatar-upload.service';
@@ -45,6 +46,7 @@ import {
 } from '@/infra/database/repositories/prisma-appointments.repository';
 
 @Module({
+  imports: [CacheModule],
   providers: [
     AvatarUploadService,
     ListProfessionalsService,
