@@ -18,6 +18,7 @@ import {
   ApiQuery,
   ApiResponse,
 } from '@nestjs/swagger';
+import { ERROR_USERS_NOT_FOUND } from '@/shared/errors';
 
 @Controller('/accounts')
 @ApiTags('Accounts')
@@ -31,7 +32,7 @@ export class GetAllUsersController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Get all users (paginated)',
-    operationId: 'getUsers',
+    operationId: 'listUsers',
   })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
@@ -67,6 +68,10 @@ export class GetAllUsersController {
         },
       },
     },
+  })
+  @ApiResponse({
+    status: 404,
+    description: ERROR_USERS_NOT_FOUND,
   })
   async getAllUsers(@Query() query: PaginationQueryDto) {
     return await this.getAllUsersService.execute(query);
