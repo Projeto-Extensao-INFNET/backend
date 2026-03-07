@@ -29,7 +29,7 @@ export class GetUserProfileController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Get authenticated user profile',
-    operationId: 'getProfile',
+    operationId: 'userProfile',
   })
   @ApiResponse({
     status: 200,
