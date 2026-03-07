@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserEntity } from '@/core/entities/user.entity';
 import { EditProfileDto } from '@/shared/dto/user/edit-profile.dto';
-import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
+import { ERROR_USER_NOT_FOUND, ERROR_USERS_NOT_FOUND } from '@/shared/errors';
 import type {
   PaginationQueryDto,
   PaginationResultDto,
@@ -56,9 +56,7 @@ export class PrismaUserRepository implements IUserRepository {
       },
     });
 
-    if (!user) {
-      throw new NotFoundException(ERROR_USER_NOT_FOUND);
-    }
+    if (!user) throw new NotFoundException(ERROR_USER_NOT_FOUND);
 
     return user;
   }
@@ -90,6 +88,8 @@ export class PrismaUserRepository implements IUserRepository {
         createdAt: 'desc',
       },
     });
+
+    if (!users) throw new NotFoundException(ERROR_USERS_NOT_FOUND);
 
     const total = await this.prismaService.user.count();
     const totalPages = Math.ceil(total / take);
@@ -125,9 +125,7 @@ export class PrismaUserRepository implements IUserRepository {
       },
     });
 
-    if (!user) {
-      throw new NotFoundException(ERROR_USER_NOT_FOUND);
-    }
+    if (!user) throw new NotFoundException(ERROR_USER_NOT_FOUND);
 
     return {
       id: user.id,
