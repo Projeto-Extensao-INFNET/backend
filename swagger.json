@@ -1,0 +1,853 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/auth/signup": {
+      "post": {
+        "operationId": "SignUp",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignUpDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignUpResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Campos obrigatórios não preenchidos"
+          },
+          "409": {
+            "description": "Credenciais já em uso"
+          }
+        },
+        "summary": "Create a new user account",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/signin": {
+      "post": {
+        "operationId": "SignIn",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Authenticated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessTokenResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas"
+          }
+        },
+        "summary": "Authenticate and receive access token",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/accounts/me": {
+      "get": {
+        "operationId": "userProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User profile retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserProfileResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Get authenticated user profile",
+        "tags": [
+          "Accounts"
+        ]
+      },
+      "patch": {
+        "operationId": "editProfile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "User profile data to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserProfileResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Edit authenticated user profile",
+        "tags": [
+          "Accounts"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteProfile",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "User account deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Delete authenticated user account",
+        "tags": [
+          "Accounts"
+        ]
+      }
+    },
+    "/accounts/users": {
+      "get": {
+        "operationId": "listUsers",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of users (paginated)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string",
+                            "format": "email"
+                          },
+                          "birthDate": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "avatar": {
+                            "type": "string"
+                          },
+                          "role": {
+                            "type": "string"
+                          },
+                          "document": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "total_items": {
+                          "type": "number"
+                        },
+                        "total_pages": {
+                          "type": "number"
+                        },
+                        "page": {
+                          "type": "number"
+                        },
+                        "limit": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuários não encontrados"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Get all users (paginated)",
+        "tags": [
+          "Accounts"
+        ]
+      }
+    },
+    "/professionals": {
+      "get": {
+        "operationId": "listProfessionals",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of professionals (paginated)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string",
+                            "format": "email"
+                          },
+                          "birthDate": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "avatar": {
+                            "type": "string"
+                          },
+                          "role": {
+                            "type": "string"
+                          },
+                          "document": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "total_items": {
+                          "type": "number"
+                        },
+                        "total_pages": {
+                          "type": "number"
+                        },
+                        "page": {
+                          "type": "number"
+                        },
+                        "limit": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "List available professionals",
+        "tags": [
+          "Professionals"
+        ]
+      }
+    },
+    "/appointments": {
+      "get": {
+        "operationId": "getAppointment",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of appointments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "scheduleId": {
+                        "type": "string"
+                      },
+                      "userId": {
+                        "type": "string"
+                      },
+                      "specialtyId": {
+                        "type": "string"
+                      },
+                      "typeOfTreatmentId": {
+                        "type": "string"
+                      },
+                      "isAvailable": {
+                        "type": "boolean"
+                      },
+                      "isConfirmed": {
+                        "type": "boolean"
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get appointments",
+        "tags": [
+          "Appointments"
+        ]
+      },
+      "put": {
+        "operationId": "updateAppointment",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Appointment updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "scheduleId": {
+                      "type": "string"
+                    },
+                    "userId": {
+                      "type": "string"
+                    },
+                    "specialtyId": {
+                      "type": "string"
+                    },
+                    "typeOfTreatmentId": {
+                      "type": "string"
+                    },
+                    "isAvailable": {
+                      "type": "boolean"
+                    },
+                    "isConfirmed": {
+                      "type": "boolean"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Update appointment",
+        "tags": [
+          "Appointments"
+        ]
+      },
+      "patch": {
+        "operationId": "cancelAppointment",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Appointment cancelled successfully"
+          }
+        },
+        "summary": "Cancel appointment",
+        "tags": [
+          "Appointments"
+        ]
+      }
+    },
+    "/appointments/create": {
+      "post": {
+        "operationId": "createAppointment",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Appointment data to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAppointmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Appointment created successfully"
+          },
+          "400": {
+            "description": "Bad request - Invalid appointment data"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          },
+          "409": {
+            "description": "Agendamento não disponível"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Create an appointment (patient only)",
+        "tags": [
+          "Appointments"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "healthCheck",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Health check",
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/accounts/me/avatar": {
+      "post": {
+        "operationId": "uploadAvatar",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Avatar file to upload (JPEG, PNG, JPG)",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Avatar image file"
+                  }
+                },
+                "required": [
+                  "avatar"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Avatar uploaded successfully"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          },
+          "422": {
+            "description": "Unprocessable entity - file validation failed"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Upload avatar for authenticated user",
+        "tags": [
+          "Accounts"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "API Projeto de Extensao",
+    "description": "API do Projeto de Extensão - documentação Swagger",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "authorization": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "SignUpDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "john@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123"
+          },
+          "birthDate": {
+            "format": "date-time",
+            "type": "string",
+            "example": "1990-01-01"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "PATIENT",
+              "PROFESSIONAL",
+              "ADMIN"
+            ],
+            "example": "PATIENT"
+          },
+          "documentType": {
+            "type": "string",
+            "enum": [
+              "CPF",
+              "RG"
+            ],
+            "example": "CPF"
+          },
+          "document": {
+            "type": "string",
+            "example": "12345678901"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password",
+          "birthDate",
+          "role",
+          "documentType",
+          "document"
+        ]
+      },
+      "SignUpResponseDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "john@example.com"
+          },
+          "birthDate": {
+            "format": "date-time",
+            "type": "string",
+            "example": "1990-01-01"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "PATIENT",
+              "PROFESSIONAL",
+              "ADMIN"
+            ],
+            "example": "PATIENT"
+          },
+          "documentType": {
+            "type": "string",
+            "enum": [
+              "CPF",
+              "RG"
+            ],
+            "example": "CPF"
+          },
+          "document": {
+            "type": "string",
+            "example": "12345678901"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "birthDate",
+          "role",
+          "documentType",
+          "document"
+        ]
+      },
+      "SignInDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "AccessTokenResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          }
+        },
+        "required": [
+          "accessToken"
+        ]
+      },
+      "GetUserProfileResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "john@example.com"
+          },
+          "birthDate": {
+            "format": "date-time",
+            "type": "string",
+            "example": "1990-01-01T00:00:00Z"
+          },
+          "avatar": {
+            "type": "string",
+            "example": "data:image/jpeg;base64,..."
+          },
+          "role": {
+            "type": "string",
+            "example": "PATIENT"
+          },
+          "document": {
+            "type": "string",
+            "example": "12345678901"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "birthDate",
+          "avatar",
+          "role",
+          "document"
+        ]
+      },
+      "EditProfileDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "avatar": {
+            "type": "string",
+            "example": "data:image/jpeg;base64,..."
+          }
+        }
+      },
+      "CreateAppointmentDto": {
+        "type": "object",
+        "properties": {
+          "scheduleId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+          },
+          "specialtyId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+          },
+          "typeOfTreatmentId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+          },
+          "isAvailable": {
+            "type": "boolean",
+            "example": true
+          },
+          "isConfirmed": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "scheduleId",
+          "userId",
+          "specialtyId",
+          "typeOfTreatmentId",
+          "isAvailable",
+          "isConfirmed"
+        ]
+      }
+    }
+  }
+}
