@@ -1,9 +1,12 @@
-import type { INestApplication } from '@nestjs/common';
+import { Logger, type INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { env } from '../env';
+import { resolve } from 'node:path';
+import { writeFile } from 'node:fs/promises';
 
 export const setupSwagger = (app: INestApplication) => {
   const config = new DocumentBuilder()
-    .setTitle('API Projeto de Extensão')
+    .setTitle('API Projeto de Extensao')
     .setDescription('API do Projeto de Extensão - documentação Swagger')
     .setVersion('1.0.0')
     .addBearerAuth(
@@ -12,6 +15,15 @@ export const setupSwagger = (app: INestApplication) => {
     )
     .build();
 
-  const document = () => SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+
+  if (env.NODE_ENV === 'development') {
+    const specFile = resolve(__dirname, '../../../swagger.json');
+    const spec = JSON.stringify(document, null, 2);
+
+    writeFile(specFile, spec).then(() => {
+      Logger.log('Swagger spec generated!');
+    });
+  }
 };
