@@ -59,7 +59,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TokenResponse"
+                  "$ref": "#/components/schemas/AccessTokenResponse"
                 }
               }
             }
@@ -81,7 +81,14 @@
         "parameters": [],
         "responses": {
           "201": {
-            "description": ""
+            "description": "Token refreshed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessTokenResponse"
+                }
+              }
+            }
           },
           "401": {
             "description": "Refresh token inválido"
@@ -100,7 +107,14 @@
         "parameters": [],
         "responses": {
           "201": {
-            "description": "Logged out"
+            "description": "Logged out successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponse"
+                }
+              }
+            }
           },
           "401": {
             "description": "Credenciais inválidas"
@@ -782,21 +796,28 @@
           "password"
         ]
       },
-      "TokenResponse": {
+      "AccessTokenResponse": {
         "type": "object",
         "properties": {
           "accessToken": {
             "type": "string",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-          },
-          "refreshToken": {
-            "type": "string",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
           }
         },
         "required": [
-          "accessToken",
-          "refreshToken"
+          "accessToken"
+        ]
+      },
+      "LogoutResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Logged out"
+          }
+        },
+        "required": [
+          "message"
         ]
       },
       "GetUserProfileResponse": {
