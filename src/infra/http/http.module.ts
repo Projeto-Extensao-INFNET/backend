@@ -12,6 +12,8 @@ import { GetAppointmentsController } from '@Controllers/appointments/get-appoint
 import { CreateAppointmentsController } from '@Controllers/appointments/create-appointments.controller';
 import { CancelAppointmentsController } from '@Controllers/appointments/cancel-appointments.controller';
 import { HealthController } from './controllers/health/health.controller';
+import { RefreshTokenController } from '@/infra/auth/controllers/refresh-token.controller';
+import { LogoutController } from '../auth/controllers/logout.controller';
 
 // Modules
 import { Module } from '@nestjs/common';
@@ -30,6 +32,7 @@ import { GetAppointmentsService } from '@/domain/services/appointments/get-appoi
 import { CreateAppointmentsService } from '@/domain/services/appointments/create-appointments.service';
 import { UpdateAppointmentsService } from '@/domain/services/appointments/update-appointments.service';
 import { CancelAppointmentsService } from '@Services/appointments/cancel-appointments.service';
+import { RefreshTokenService } from '@/infra/auth/services/refresh-token.service';
 
 // Repositories
 import {
@@ -60,6 +63,7 @@ import {
     CancelAppointmentsService,
     CreateAppointmentsService,
     UpdateAppointmentsService,
+    RefreshTokenService,
     {
       provide: IUserRepository,
       useClass: PrismaUserRepository,
@@ -87,6 +91,8 @@ import {
     CancelAppointmentsController,
     HealthController,
     UploadAvatarController,
+    RefreshTokenController,
+    LogoutController,
   ],
 })
 export class HttpModule {}
