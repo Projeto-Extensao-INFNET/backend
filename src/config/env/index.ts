@@ -18,6 +18,7 @@ export const envSchema = z.object({
     .default('development'),
   DATABASE_URL: z.url().startsWith('postgresql://'),
   JWT_SECRET: z.string(),
+  JWT_REFRESH_SECRET: z.string(),
   PORT: z.coerce.number().optional().default(PORT),
   REDIS_HOST: z.string().optional().default(REDIS_HOST),
   REDIS_PORT: z.coerce.number().default(REDIS_PORT),
