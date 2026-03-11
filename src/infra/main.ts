@@ -10,6 +10,7 @@ async function bootstrap() {
     origin: env.DEV_CORS_ORIGIN ?? '*',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
   });
 
   setupSwagger(app);
