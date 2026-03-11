@@ -11,7 +11,7 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { ERROR_INVALID_CREDENTIALS } from '@/shared/errors';
-import { LogoutResponse } from '@/shared/dto/auth/token-response';
+import { LogoutResponse } from '@/shared/dto/auth/logout';
 
 @ApiTags('Auth')
 @ApiBearerAuth()
