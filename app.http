@@ -1,6 +1,10 @@
 @baseUrl = http://localhost:3333
 @token = {{SignIn.response.body.$.accessToken}}
 
+# !! Pega só o primeiro refreshToken,
+# !! se tentar novamente da 401.
+# !! No front não tem esse problema
+@refreshToken = {{SignIn.response.headers.set-cookie}}
 
 # @name Health
 GET {{baseUrl}}/health
@@ -23,7 +27,7 @@ Content-Type: application/json
 
 ###
 
-# @name SignIn
+# @name SignIn 
 POST {{baseUrl}}/auth/signin
 Content-Type: application/json
 
@@ -31,6 +35,18 @@ Content-Type: application/json
   "email":"nathanrodriguesvieira99@gmail.com",
   "password":"12345678"
 }
+
+###
+
+# @name refresh
+POST {{baseUrl}}/auth/refresh
+Cookie: {{refreshToken}}
+
+###
+
+# @name logout
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{token}}
 
 ###
 
