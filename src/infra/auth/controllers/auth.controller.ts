@@ -28,7 +28,7 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Create a new user account',
-    operationId: 'SignUp',
+    operationId: 'signUp',
   })
   @ApiBody({ type: SignUpDto })
   @ApiResponse({
@@ -46,7 +46,7 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Authenticate and receive access token',
-    operationId: 'SignIn',
+    operationId: 'signIn',
   })
   @ApiBody({ type: SignInDto })
   @ApiResponse({

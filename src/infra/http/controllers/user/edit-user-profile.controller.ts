@@ -33,7 +33,7 @@ export class EditUserProfileController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Edit authenticated user profile',
-    operationId: 'editProfile',
+    operationId: 'updateUserProfile',
   })
   @ApiBody({
     description: 'User profile data to update',

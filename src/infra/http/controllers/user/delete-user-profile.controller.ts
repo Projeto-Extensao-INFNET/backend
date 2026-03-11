@@ -29,7 +29,7 @@ export class DeleteUserProfileController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
     summary: 'Delete authenticated user account',
-    operationId: 'deleteProfile',
+    operationId: 'deleteUserProfile',
   })
   @ApiResponse({
     status: 204,

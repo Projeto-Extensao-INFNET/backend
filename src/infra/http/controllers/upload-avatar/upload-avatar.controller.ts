@@ -42,7 +42,7 @@ export class UploadAvatarController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Upload avatar for authenticated user',
-    operationId: 'uploadAvatar',
+    operationId: 'uploadUserAvatar',
   })
   @ApiConsumes('multipart/form-data')
   @ApiBody({

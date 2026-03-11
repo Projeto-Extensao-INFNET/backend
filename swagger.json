@@ -3,7 +3,7 @@
   "paths": {
     "/auth/signup": {
       "post": {
-        "operationId": "SignUp",
+        "operationId": "signUp",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -41,7 +41,7 @@
     },
     "/auth/signin": {
       "post": {
-        "operationId": "SignIn",
+        "operationId": "signIn",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -77,7 +77,7 @@
     "/auth/refresh": {
       "post": {
         "description": "Reads the refresh token from the HttpOnly cookie, validates it, and returns a new access token. A new refresh token is also set as a cookie.",
-        "operationId": "RefreshTokenController_refresh",
+        "operationId": "refreshToken",
         "parameters": [],
         "responses": {
           "201": {
@@ -103,7 +103,7 @@
     "/auth/logout": {
       "post": {
         "description": "Invalidates the refresh token in the database and clears the refresh token cookie.",
-        "operationId": "LogoutController_logout",
+        "operationId": "logout",
         "parameters": [],
         "responses": {
           "201": {
@@ -133,7 +133,7 @@
     },
     "/accounts/me": {
       "get": {
-        "operationId": "userProfile",
+        "operationId": "getUserProfile",
         "parameters": [],
         "responses": {
           "200": {
@@ -164,7 +164,7 @@
         ]
       },
       "patch": {
-        "operationId": "editProfile",
+        "operationId": "updateUserProfile",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -203,7 +203,7 @@
         ]
       },
       "delete": {
-        "operationId": "deleteProfile",
+        "operationId": "deleteUserProfile",
         "parameters": [],
         "responses": {
           "204": {
@@ -309,6 +309,9 @@
               }
             }
           },
+          "401": {
+            "description": "Credenciais inválidas"
+          },
           "404": {
             "description": "Usuários não encontrados"
           }
@@ -408,6 +411,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Credenciais inválidas"
           }
         },
         "security": [
@@ -617,7 +623,7 @@
     },
     "/accounts/me/avatar": {
       "post": {
-        "operationId": "uploadAvatar",
+        "operationId": "uploadUserAvatar",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -643,6 +649,9 @@
         "responses": {
           "201": {
             "description": "Avatar uploaded successfully"
+          },
+          "401": {
+            "description": "Credenciais inválidas"
           },
           "404": {
             "description": "Usuário não encontrado"
