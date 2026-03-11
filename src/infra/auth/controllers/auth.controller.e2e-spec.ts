@@ -11,7 +11,6 @@ import {
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { makeAuthenticate, makeUser } from '@/shared/factories';
 import type { DOCUMENT_TYPE, ROLE } from '@/shared/types';
-import type { TokenResponse } from '@/shared/dto/auth/token-response';
 
 describe('AuthController (E2E)', () => {
   let app: INestApplication;
