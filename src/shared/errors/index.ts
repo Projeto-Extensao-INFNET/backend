@@ -6,3 +6,6 @@ export const ERROR_USERS_NOT_FOUND = 'Usuários não encontrados';
 export const ERROR_SCHEDULE_NOT_FOUND = 'Agendamento não encontrado';
 export const ERROR_SCHEDULE_NOT_AVAILABLE = 'Agendamento não disponível';
 export const ERROR_SCHEDULE_ALREADY_BOOKED = 'Agendamento já reservado';
+export const ERROR_INSUFFICIENT_PERMISSIONS = 'Permissões insuficientes';
+export const ERROR_INVALID_TOKEN_TYPE = 'Tipo de token inválido';
+export const ERROR_INVALID_REFRESH_TOKEN = 'Refresh token inválido';
