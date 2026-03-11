@@ -18,6 +18,7 @@ import { SignUpDto, SignUpResponseDto } from '@/shared/dto/auth/signUp.dto';
 import { SignInDto } from '@/shared/dto/auth/signIn.dto';
 import { AccessTokenResponse } from '@/shared/dto/auth/token-response';
 import { COOKIES_MAX_AGE } from '@/shared/constants';
+import { env } from '@/config/env';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -64,8 +65,8 @@ export class AuthController {
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       sameSite: 'strict',
-      path: '/refresh',
-      secure: true,
+      path: '/auth/refresh',
+      secure: env.NODE_ENV === 'production',
       maxAge: COOKIES_MAX_AGE,
     });
 

@@ -11,6 +11,7 @@ import { RefreshTokenService } from '../services/refresh-token.service';
 import { COOKIES_MAX_AGE } from '@/shared/constants';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AccessTokenResponse } from '@/shared/dto/auth/token-response';
+import { env } from '@/config/env';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -45,7 +46,7 @@ export class RefreshTokenController {
     res.cookie('refreshToken', newRefreshToken, {
       httpOnly: true,
       sameSite: 'strict',
-      secure: true,
+      secure: env.NODE_ENV === 'production',
       path: '/auth/refresh',
       maxAge: COOKIES_MAX_AGE,
     });
