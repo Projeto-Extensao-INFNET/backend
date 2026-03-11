@@ -25,13 +25,12 @@
     "test:e2e": "dotenv -e .env.test -- vitest run --config ./vitest.config.e2e.ts",
     "test:cov:e2e": "dotenv -e .env.test -- vitest run --config vitest.config.e2e.ts --coverage",
     "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:generate": "prisma generate",
     "prisma:studio": "prisma studio",
     "prisma:seed": "pnpm prisma db seed",
-    "docker:dev": "docker compose -f docker-compose.dev.yml up --build",
-    "docker:stop:dev": "docker compose -f docker-compose.dev.yml stop",
-    "docker:prod": "docker compose -f docker-compose.prod.yml up --build -d",
-    "docker:stop:prod": "docker compose -f docker-compose.prod.yml stop"
+    "docker:dev": "docker compose  up --build",
+    "docker:stop:dev": "docker compose  stop"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.12",
@@ -46,6 +45,7 @@
     "bcryptjs": "^3.0.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
+    "cookie-parser": "^1.4.7",
     "dayjs": "^1.11.19",
     "ioredis": "^5.10.0",
     "multer": "^2.0.2",
@@ -71,6 +71,7 @@
     "@nestjs/testing": "^11.1.12",
     "@swc/cli": "^0.6.0",
     "@swc/core": "^1.15.10",
+    "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
     "@types/jest": "^29.5.14",
     "@types/multer": "^2.0.0",
