@@ -22,6 +22,10 @@ import { AuthService } from '@/infra/auth/services/auth.service';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { JWTMockService } from '@/__mocks__/jwt';
 import { CreateMockUser } from '@/__mocks__/create-mock-user/create-mock-user';
+import {
+  JWT_ACCESS_TOKEN_EXPIRATION,
+  JWT_REFRESH_TOKEN_EXPIRATION,
+} from '@/shared/constants';
 
 const mockPrisma = {
   user: {
@@ -235,14 +239,14 @@ describe('AuthService', () => {
           ...payload,
           type: 'access',
         },
-        { expiresIn: '1h' },
+        { expiresIn: JWT_ACCESS_TOKEN_EXPIRATION },
       );
       expect(mockJwtService.sign).toHaveBeenCalledWith(
         {
           ...payload,
           type: 'refresh',
         },
-        { expiresIn: '24h' },
+        { expiresIn: JWT_REFRESH_TOKEN_EXPIRATION },
       );
     });
 
