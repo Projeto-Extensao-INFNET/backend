@@ -18,7 +18,10 @@ import {
   ApiQuery,
   ApiResponse,
 } from '@nestjs/swagger';
-import { ERROR_USERS_NOT_FOUND } from '@/shared/errors';
+import {
+  ERROR_INVALID_CREDENTIALS,
+  ERROR_USERS_NOT_FOUND,
+} from '@/shared/errors';
 
 @Controller('/accounts')
 @ApiTags('Accounts')
@@ -69,6 +72,7 @@ export class GetAllUsersController {
       },
     },
   })
+  @ApiResponse({ status: 401, description: ERROR_INVALID_CREDENTIALS })
   @ApiResponse({
     status: 404,
     description: ERROR_USERS_NOT_FOUND,

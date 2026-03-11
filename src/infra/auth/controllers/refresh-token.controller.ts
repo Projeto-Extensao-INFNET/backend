@@ -10,6 +10,7 @@ import type { Request, Response } from 'express';
 import { RefreshTokenService } from '../services/refresh-token.service';
 import { COOKIES_MAX_AGE } from '@/shared/constants';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { AccessTokenResponse } from '@/shared/dto/auth/token-response';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -19,10 +20,15 @@ export class RefreshTokenController {
   @Post('refresh')
   @ApiOperation({
     summary: 'Refresh access token using the refresh token cookie',
+    operationId: 'refreshToken',
     description:
       'Reads the refresh token from the HttpOnly cookie, validates it, and returns a new access token. A new refresh token is also set as a cookie.',
   })
-  @ApiResponse({ status: 201 })
+  @ApiResponse({
+    status: 201,
+    description: 'Token refreshed successfully',
+    type: AccessTokenResponse,
+  })
   @ApiResponse({ status: 401, description: ERROR_INVALID_REFRESH_TOKEN })
   async refresh(
     @Req() req: Request,
@@ -40,7 +46,7 @@ export class RefreshTokenController {
       httpOnly: true,
       sameSite: 'strict',
       secure: true,
-      path: '/refresh',
+      path: '/auth/refresh',
       maxAge: COOKIES_MAX_AGE,
     });
 

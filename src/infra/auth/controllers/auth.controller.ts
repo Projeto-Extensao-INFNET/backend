@@ -16,7 +16,7 @@ import {
 } from '@/shared/errors';
 import { SignUpDto, SignUpResponseDto } from '@/shared/dto/auth/signUp.dto';
 import { SignInDto } from '@/shared/dto/auth/signIn.dto';
-import { TokenResponse } from '@/shared/dto/auth/token-response';
+import { AccessTokenResponse } from '@/shared/dto/auth/token-response';
 import { COOKIES_MAX_AGE } from '@/shared/constants';
 
 @ApiTags('Auth')
@@ -52,7 +52,7 @@ export class AuthController {
   @ApiResponse({
     status: 201,
     description: 'Authenticated successfully',
-    type: TokenResponse,
+    type: AccessTokenResponse,
   })
   @ApiResponse({ status: 401, description: ERROR_INVALID_CREDENTIALS })
   async signIn(

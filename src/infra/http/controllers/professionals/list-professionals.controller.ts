@@ -10,6 +10,7 @@ import {
   ApiQuery,
   ApiResponse,
 } from '@nestjs/swagger';
+import { ERROR_INVALID_CREDENTIALS } from '@/shared/errors';
 
 @Controller('/professionals')
 @ApiTags('Professionals')
@@ -26,6 +27,7 @@ export class ListProfessionalsController {
   })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
+  @ApiResponse({ status: 401, description: ERROR_INVALID_CREDENTIALS })
   @ApiResponse({
     status: 200,
     description: 'List of professionals (paginated)',

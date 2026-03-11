@@ -23,7 +23,10 @@ import {
   ApiOperation,
   ApiResponse,
 } from '@nestjs/swagger';
-import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
+import {
+  ERROR_INVALID_CREDENTIALS,
+  ERROR_USER_NOT_FOUND,
+} from '@/shared/errors';
 import { CurrentUser } from '@/infra/auth/decorators/current-user.decorator';
 
 @ApiTags('Accounts')
@@ -60,6 +63,7 @@ export class UploadAvatarController {
     status: 201,
     description: 'Avatar uploaded successfully',
   })
+  @ApiResponse({ status: 401, description: ERROR_INVALID_CREDENTIALS })
   @ApiResponse({
     status: 422,
     description: 'Unprocessable entity - file validation failed',
