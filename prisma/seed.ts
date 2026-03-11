@@ -17,7 +17,7 @@ const seed = async () => {
   await prisma.userAgenda.deleteMany();
   await prisma.schedule.deleteMany();
   await prisma.professional.deleteMany();
-  // await prisma.user.deleteMany(); evitar para nao excluir meu usuário ADM
+  await prisma.user.deleteMany();
   await prisma.specialty.deleteMany();
   await prisma.typesOfTreatment.deleteMany();
 

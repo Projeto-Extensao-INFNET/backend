@@ -30,6 +30,7 @@ model User {
   email        String       @unique
   avatar       String?
   password     String
+  refreshToken String?      @map("refresh_token")
   birthDate    DateTime     @map("birth_date")
   role         ROLE
   documentType DocumentType @default(CPF) @map("document_type")
