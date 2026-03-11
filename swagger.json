@@ -59,7 +59,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AccessTokenResponse"
+                  "$ref": "#/components/schemas/TokenResponse"
                 }
               }
             }
@@ -69,6 +69,49 @@
           }
         },
         "summary": "Authenticate and receive access token",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "description": "Reads the refresh token from the HttpOnly cookie, validates it, and returns a new access token. A new refresh token is also set as a cookie.",
+        "operationId": "RefreshTokenController_refresh",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          },
+          "401": {
+            "description": "Refresh token inválido"
+          }
+        },
+        "summary": "Refresh access token using the refresh token cookie",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "description": "Invalidates the refresh token in the database and clears the refresh token cookie.",
+        "operationId": "LogoutController_logout",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Logged out"
+          },
+          "401": {
+            "description": "Credenciais inválidas"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Logout the current user",
         "tags": [
           "Auth"
         ]
@@ -739,16 +782,21 @@
           "password"
         ]
       },
-      "AccessTokenResponse": {
+      "TokenResponse": {
         "type": "object",
         "properties": {
           "accessToken": {
             "type": "string",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "refreshToken": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
           }
         },
         "required": [
-          "accessToken"
+          "accessToken",
+          "refreshToken"
         ]
       },
       "GetUserProfileResponse": {
