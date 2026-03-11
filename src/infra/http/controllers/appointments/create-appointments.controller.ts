@@ -1,4 +1,4 @@
-import { Roles } from '@/shared/decorators/roles.decorator';
+import { Roles } from '@/infra/auth/decorators/roles.decorator';
 import type { ROLE } from '@/shared/types';
 import { CreateAppointmentsService } from '@/domain/services/appointments/create-appointments.service';
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';

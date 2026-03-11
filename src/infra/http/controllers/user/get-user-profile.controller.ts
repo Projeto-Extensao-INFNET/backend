@@ -3,11 +3,10 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  Request,
   UseGuards,
 } from '@nestjs/common';
 import { GetUserProfileService } from '@/domain/services/user/get-user-profile.service';
-import { JwtAuthGuard } from '../../../auth/auth.guard';
+import { JwtAuthGuard } from '../../../auth/guards/auth.guard';
 import type { AuthenticatedUserResponse } from '@/shared/dto/auth/auth-user';
 import {
   ApiTags,
@@ -17,6 +16,7 @@ import {
 } from '@nestjs/swagger';
 import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
 import { GetUserProfileResponse } from '@/shared/dto/user/get-user.dto';
+import { CurrentUser } from '@/infra/auth/decorators/current-user.decorator';
 
 @Controller('/accounts')
 @ApiTags('Accounts')
@@ -39,7 +39,7 @@ export class GetUserProfileController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: ERROR_USER_NOT_FOUND })
   async getUserProfile(
-    @Request() req: AuthenticatedUserResponse,
+    @CurrentUser() req: AuthenticatedUserResponse,
   ): Promise<GetUserProfileResponse> {
     const userId = req.user.userId;
     return await this.getUserProfileService.execute(userId);

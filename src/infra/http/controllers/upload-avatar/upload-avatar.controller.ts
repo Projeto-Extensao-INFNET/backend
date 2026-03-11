@@ -1,7 +1,7 @@
 import { MAX_FILE_SIZE } from '@/shared/constants';
 import { AvatarUploadService } from '@/domain/services/upload-avatar/avatar-upload.service';
-import { JwtAuthGuard } from '@/infra/auth/auth.guard';
-import { Roles } from '@/shared/decorators/roles.decorator';
+import { JwtAuthGuard } from '@/infra/auth/guards/auth.guard';
+import { Roles } from '@/infra/auth/decorators/roles.decorator';
 import type { AuthenticatedUserResponse } from '@/shared/dto/auth/auth-user';
 import type { ROLE } from '@/shared/types';
 import {
@@ -10,7 +10,6 @@ import {
   HttpStatus,
   ParseFilePipeBuilder,
   Post,
-  Request,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -25,6 +24,7 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
+import { CurrentUser } from '@/infra/auth/decorators/current-user.decorator';
 
 @ApiTags('Accounts')
 @ApiBearerAuth('authorization')
@@ -66,7 +66,7 @@ export class UploadAvatarController {
   })
   @ApiResponse({ status: 404, description: ERROR_USER_NOT_FOUND })
   async exec(
-    @Request() req: AuthenticatedUserResponse,
+    @CurrentUser() req: AuthenticatedUserResponse,
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addFileTypeValidator({ fileType: 'jpeg|png|jpg' })
