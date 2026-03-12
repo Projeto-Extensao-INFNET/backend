@@ -48,9 +48,13 @@ import {
   PrismaAppointmentsRepository,
 } from '@/infra/database/repositories/prisma-appointments.repository';
 
+// functions
+import { GetTokens } from '../auth/jwt/generate-jwt-tokens';
+
 @Module({
   imports: [CacheModule],
   providers: [
+    GetTokens,
     AvatarUploadService,
     ListProfessionalsService,
     SpecialtyService,
