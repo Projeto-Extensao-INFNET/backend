@@ -4,8 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { comparePassword, hashPassword, hashRefreshToken } from '@/utils';
+import { comparePassword, hashPassword } from '@/utils';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import type {
   SignUpDto,
@@ -17,18 +16,16 @@ import {
   ERROR_INVALID_CREDENTIALS,
   ERROR_REQUIRED_FIELDS,
 } from '@/shared/errors';
-import type { TokenResponse } from '@/shared/dto/auth/token-response';
-import {
-  JWT_ACCESS_TOKEN_EXPIRATION,
-  JWT_REFRESH_TOKEN_EXPIRATION,
-} from '@/shared/constants';
-import { createHash } from 'node:crypto';
+import type { AuthResponse } from '@/shared/dto/auth/auth-user';
+import { GetTokens } from '../jwt/generate-jwt-tokens';
+import { hash } from 'bcryptjs';
+import { SALT_ROUNDS } from '@/shared/constants';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly jwtService: JwtService,
+    private readonly getTokens: GetTokens,
   ) {}
 
   // Cadastro
@@ -87,7 +84,7 @@ export class AuthService {
   }
 
   // Login
-  async SignIn(data: SignInDto): Promise<TokenResponse> {
+  async SignIn(data: SignInDto): Promise<AuthResponse> {
     const user = await this.prismaService.user.findUnique({
       where: {
         email: data.email,
@@ -100,54 +97,39 @@ export class AuthService {
       },
     });
 
-    if (!user) {
-      throw new UnauthorizedException(ERROR_INVALID_CREDENTIALS);
-    }
+    if (!user) throw new UnauthorizedException(ERROR_INVALID_CREDENTIALS);
 
     const isPasswordHashed = await comparePassword(
       data.password,
       user.password,
     );
 
-    if (!isPasswordHashed) {
+    if (!isPasswordHashed)
       throw new UnauthorizedException(ERROR_INVALID_CREDENTIALS);
-    }
 
-    // dados que vão para o jwt
+    // dados que vão para o JWT
     const payload = {
       username: user.email,
       sub: user.id,
       role: user.role,
     };
 
-    // cria o access token
-    const accessToken = this.jwtService.sign(
-      {
-        ...payload,
-        type: 'access',
-      },
-      { expiresIn: JWT_ACCESS_TOKEN_EXPIRATION },
-    );
+    // gera os tokens JWT com os dados do payload
+    const tokens = await this.getTokens.exec(payload);
 
-    // cria o refresh token
-    const refreshToken = this.jwtService.sign(
-      {
-        ...payload,
-        type: 'refresh',
-      },
-      { expiresIn: JWT_REFRESH_TOKEN_EXPIRATION },
-    );
+    // faz o hash do refreshToken
+    const hashedRefreshToken = await hash(tokens.refreshToken, SALT_ROUNDS);
 
-    // atualiza o refresh token do usuário no banco de dados
+    // atualiza o refreshToken no banco de dados
     await this.prismaService.user.update({
       where: {
         id: user.id,
       },
       data: {
-        refreshToken: hashRefreshToken(refreshToken),
+        refreshToken: hashedRefreshToken,
       },
     });
 
-    return { accessToken, refreshToken };
+    return tokens;
   }
 }
