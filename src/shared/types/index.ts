@@ -11,3 +11,9 @@ export type PAYMENT_METHOD = 'PIX' | 'CREDIT_CARD';
 export type GENDER = 'MALE' | 'FEMALE' | 'TRANSGENDER' | 'NON_BINARY';
 
 export type QUERY_STATUS = 'CANCELED' | 'COMPLETED' | 'SCHEDULED';
+
+export type Payload = {
+  username: string;
+  sub: string;
+  role: ROLE;
+};
