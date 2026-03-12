@@ -4,6 +4,7 @@ import {
   HttpCode,
   HttpStatus,
   Patch,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import type { AuthenticatedUserResponse } from '@/shared/dto/auth/auth-user';
@@ -18,7 +19,6 @@ import {
 } from '@nestjs/swagger';
 import { EditProfileDto } from '@/shared/dto/user/edit-profile.dto';
 import { GetUserProfileResponse } from '@/shared/dto/user/get-user.dto';
-import { CurrentUser } from '@/infra/auth/decorators/current-user.decorator';
 
 @Controller('/accounts')
 @ApiTags('Accounts')
@@ -49,10 +49,10 @@ export class EditUserProfileController {
     description: 'Unauthorized',
   })
   async editProfile(
-    @CurrentUser() req: AuthenticatedUserResponse,
+    @Req() req: AuthenticatedUserResponse,
     @Body() dto: EditProfileDto,
   ) {
-    const userId = req.user.userId;
+    const userId = req.user.sub;
     return await this.editUserProfileService.execute(userId, dto);
   }
 }

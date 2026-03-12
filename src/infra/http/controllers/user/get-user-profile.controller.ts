@@ -3,6 +3,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { GetUserProfileService } from '@/domain/services/user/get-user-profile.service';
@@ -16,7 +17,6 @@ import {
 } from '@nestjs/swagger';
 import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
 import { GetUserProfileResponse } from '@/shared/dto/user/get-user.dto';
-import { CurrentUser } from '@/infra/auth/decorators/current-user.decorator';
 
 @Controller('/accounts')
 @ApiTags('Accounts')
@@ -39,9 +39,9 @@ export class GetUserProfileController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: ERROR_USER_NOT_FOUND })
   async getUserProfile(
-    @CurrentUser() req: AuthenticatedUserResponse,
+    @Req() req: AuthenticatedUserResponse,
   ): Promise<GetUserProfileResponse> {
-    const userId = req.user.userId;
+    const userId = req.user.sub;
     return await this.getUserProfileService.execute(userId);
   }
 }

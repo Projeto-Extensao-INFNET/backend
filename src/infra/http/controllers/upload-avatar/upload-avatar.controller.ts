@@ -10,6 +10,7 @@ import {
   HttpStatus,
   ParseFilePipeBuilder,
   Post,
+  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -27,7 +28,6 @@ import {
   ERROR_INVALID_CREDENTIALS,
   ERROR_USER_NOT_FOUND,
 } from '@/shared/errors';
-import { CurrentUser } from '@/infra/auth/decorators/current-user.decorator';
 
 @ApiTags('Accounts')
 @ApiBearerAuth('authorization')
@@ -70,7 +70,7 @@ export class UploadAvatarController {
   })
   @ApiResponse({ status: 404, description: ERROR_USER_NOT_FOUND })
   async exec(
-    @CurrentUser() req: AuthenticatedUserResponse,
+    @Req() req: AuthenticatedUserResponse,
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addFileTypeValidator({ fileType: 'jpeg|png|jpg' })

@@ -4,6 +4,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { DeleteUserProfileService } from '@Services/user/delete-user-profile.service';
@@ -14,7 +15,6 @@ import {
   ApiOperation,
   ApiResponse,
 } from '@nestjs/swagger';
-import { CurrentUser } from '@/infra/auth/decorators/current-user.decorator';
 
 @Controller('/accounts')
 @ApiTags('Accounts')
@@ -37,9 +37,9 @@ export class DeleteUserProfileController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async deleteUserProfile(
-    @CurrentUser() req: AuthenticatedUserResponse,
+    @Req() req: AuthenticatedUserResponse,
   ): Promise<void> {
-    const userId = req.user.userId;
+    const userId = req.user.sub;
     await this.deleteUserProfileService.execute(userId);
   }
 }
