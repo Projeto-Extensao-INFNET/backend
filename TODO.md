@@ -6,8 +6,16 @@
 - [ ] Adicionar paginação
 - [x] Adicionar Swagger
 - [x] Usar o Dockerfile(talvez refatorar o de deploy ou criar um de dev) no docker-compose para rodar o app direto no docker
-- [ ] criar docker-compose para produção
-- [ ] Corrigir erro nos seeds do banco de dados
+- [x] Corrigir erro nos seeds do banco de dados
+
+## JWT
+
+[x] - Criar função strategy de criar o refresh token e renomear a que gera o access token e registrar nos providers do AuthModule
+[x] - Validar os tempos de expiration dos tokens
+[x] - Passar os valores das constants pro .env, validar no env schema e repassar pro index.ts das constants
+[x] - Validar a tipagem do payload recebido pelas funções que geram os tokens e comparar o token com o DTO de Auth
+[x] - Receber os tokens no AuthService (via construtor? ou via params numa função async?)
+[x] - Melhorar a validação do envio/recebimento dos tokens presente nos cookies nos controllers (Refresh e SignIn)
 
 ## Opcional
 
@@ -19,7 +27,7 @@
 
 - [x] Validação dos dados
 - [x] Deploy em alguma plataforma (Vercel, fly.io, AWS ou Render) - Pulumi configurado para AWS
-- [ ] Cache com redis (?)
+- [x] Cache com redis (?)
 - [x] Testes unitários, integração e E2E com vitest + supertest
 
 ## Regras Gerais do Sistema
@@ -148,15 +156,15 @@
 | `GET`    | `/accounts/:id`        | Ver usuário específico     | Admin     | ✅ **Implementado** |
 | `PUT`    | `/accounts/:id`        | Editar qualquer usuário    | Admin     | ✅ **Implementado** |
 | `DELETE` | `/accounts/:id`        | Excluir qualquer usuário   | Admin     | ✅ **Implementado** |
-| `PUT`    | `/accounts/:id/role`   | Alterar role do usuário    | Admin     |
-| `PUT`    | `/accounts/:id/status` | Suspender/reativar conta   | Admin     |
-| `GET`    | `/appointments`        | Ver todos os agendamentos  | Admin     |
-| `POST`   | `/specialty`           | Criar especialidade        | Admin     |
-| `PUT`    | `/specialty/:id`       | Editar especialidade       | Admin     |
-| `DELETE` | `/specialty/:id`       | Excluir especialidade      | Admin     |
-| `POST`   | `/treatment-type`      | Criar tipo de tratamento   | Admin     |
-| `PUT`    | `/treatment-type/:id`  | Editar tipo de tratamento  | Admin     |
-| `DELETE` | `/treatment-type/:id`  | Excluir tipo de tratamento | Admin     |
+| `PUT`    | `/accounts/:id/role`   | Alterar role do usuário    | Admin     |                     |
+| `PUT`    | `/accounts/:id/status` | Suspender/reativar conta   | Admin     |                     |
+| `GET`    | `/appointments`        | Ver todos os agendamentos  | Admin     |                     |
+| `POST`   | `/specialty`           | Criar especialidade        | Admin     |                     |
+| `PUT`    | `/specialty/:id`       | Editar especialidade       | Admin     |                     |
+| `DELETE` | `/specialty/:id`       | Excluir especialidade      | Admin     |                     |
+| `POST`   | `/treatment-type`      | Criar tipo de tratamento   | Admin     |                     |
+| `PUT`    | `/treatment-type/:id`  | Editar tipo de tratamento  | Admin     |                     |
+| `DELETE` | `/treatment-type/:id`  | Excluir tipo de tratamento | Admin     |                     |
 
 ### 🛡️ Regras de Autorização
 
