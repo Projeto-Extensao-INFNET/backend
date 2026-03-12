@@ -6,11 +6,11 @@ import {
   Res,
   UnauthorizedException,
 } from '@nestjs/common';
-import type { Request, Response } from 'express';
 import { RefreshTokenService } from '../services/refresh-token.service';
-import { COOKIES_MAX_AGE } from '@/shared/constants';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { AccessTokenResponse } from '@/shared/dto/auth/token-response';
+import { AuthResponse } from '@/shared/dto/auth/auth-user';
+import type { Request, Response } from 'express';
+import { COOKIES_MAX_AGE } from '@/shared/constants';
 import { env } from '@/config/env';
 
 @ApiTags('Auth')
@@ -28,26 +28,29 @@ export class RefreshTokenController {
   @ApiResponse({
     status: 201,
     description: 'Token refreshed successfully',
-    type: AccessTokenResponse,
+    type: AuthResponse,
   })
   @ApiResponse({ status: 401, description: ERROR_INVALID_REFRESH_TOKEN })
   async refresh(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
+    // busca o refreshToken nos cookies da requisição
     const refreshToken = req.cookies?.refreshToken;
 
     if (!refreshToken)
       throw new UnauthorizedException(ERROR_INVALID_REFRESH_TOKEN);
 
+    // repassa o novo refreshToken para o service
     const { accessToken, refreshToken: newRefreshToken } =
       await this.refreshTokenService.exec(refreshToken);
 
+    // atualiza os cookies com o novo refreshToken
     res.cookie('refreshToken', newRefreshToken, {
       httpOnly: true,
       sameSite: 'strict',
-      secure: env.NODE_ENV === 'production',
       path: '/auth/refresh',
+      secure: env.NODE_ENV === 'production',
       maxAge: COOKIES_MAX_AGE,
     });
 
