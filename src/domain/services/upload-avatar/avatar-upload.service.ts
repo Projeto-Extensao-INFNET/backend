@@ -10,7 +10,7 @@ export class AvatarUploadService {
     @Request() req: AuthenticatedUserResponse,
     avatarFile: Express.Multer.File,
   ): Promise<void> {
-    const userId = req.user.userId;
+    const userId = req.user.sub;
 
     if (!avatarFile) {
       // TODO - lançar erro
