@@ -1,6 +1,5 @@
-import { Controller, Post, Res, UseGuards } from '@nestjs/common';
+import { Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import type { Response } from 'express';
-import { CurrentUser } from '../decorators/current-user.decorator';
 import type { AuthenticatedUserResponse } from '@/shared/dto/auth/auth-user';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { JwtAuthGuard } from '../guards/auth.guard';
@@ -21,6 +20,7 @@ export class LogoutController {
   constructor(private readonly prisma: PrismaService) {}
 
   @Post('logout')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Logout the current user',
     operationId: 'logout',
@@ -35,18 +35,25 @@ export class LogoutController {
   @ApiResponse({ status: 401, description: ERROR_INVALID_CREDENTIALS })
   async logout(
     @Res({ passthrough: true }) res: Response,
-    @CurrentUser() req: AuthenticatedUserResponse,
+    @Req() req: AuthenticatedUserResponse,
   ) {
+    // limpa o refreshToken do banco
     await this.prisma.user.update({
       where: {
-        id: req.user.userId,
+        id: req.user.sub,
       },
       data: {
         refreshToken: null,
       },
     });
 
-    res.clearCookie('refreshToken', { path: '/auth/refresh' });
+    // limpa o refreshToken dos Cookies
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      sameSite: 'strict',
+      secure: process.env.NODE_ENV === 'production',
+      path: '/auth/refresh',
+    });
 
     return { message: 'Logged out' };
   }
