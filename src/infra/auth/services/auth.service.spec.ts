@@ -10,7 +10,7 @@ import {
 } from '@/shared/errors';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import type { DOCUMENT_TYPE, ROLE } from '@/shared/types';
+import type { DOCUMENT_TYPE, Payload, ROLE } from '@/shared/types';
 import {
   generateBirthDate,
   generateUniqueCPF,
@@ -24,8 +24,11 @@ import { JWTMockService } from '@/__mocks__/jwt';
 import { CreateMockUser } from '@/__mocks__/create-mock-user/create-mock-user';
 import {
   JWT_ACCESS_TOKEN_EXPIRATION,
+  JWT_REFRESH_SECRET,
   JWT_REFRESH_TOKEN_EXPIRATION,
+  JWT_SECRET,
 } from '@/shared/constants';
+import { GetTokens } from '../jwt/generate-jwt-tokens';
 
 const mockPrisma = {
   user: {
@@ -47,6 +50,7 @@ describe('AuthService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
+        GetTokens,
         {
           provide: PrismaService,
           useValue: mockPrisma,
@@ -211,7 +215,7 @@ describe('AuthService', () => {
         role: 'PATIENT' as ROLE,
       });
 
-      const payload = {
+      const payload: Payload = {
         username: 'test@acme.com',
         sub: 'user-id',
         role: 'PATIENT',
@@ -233,20 +237,18 @@ describe('AuthService', () => {
         refreshToken: 'fake-jwt-refresh-token',
       });
 
-      // espera que os tokens sejam gerados com o payload + tipo do token + o expiresIn
+      // espera que os tokens sejam gerados com o payload +  expiresIn + secret
       expect(mockJwtService.sign).toHaveBeenCalledWith(
         {
           ...payload,
-          type: 'access',
         },
-        { expiresIn: JWT_ACCESS_TOKEN_EXPIRATION },
+        { expiresIn: JWT_ACCESS_TOKEN_EXPIRATION, secret: JWT_SECRET },
       );
       expect(mockJwtService.sign).toHaveBeenCalledWith(
         {
           ...payload,
-          type: 'refresh',
         },
-        { expiresIn: JWT_REFRESH_TOKEN_EXPIRATION },
+        { expiresIn: JWT_REFRESH_TOKEN_EXPIRATION, secret: JWT_REFRESH_SECRET },
       );
     });
 
