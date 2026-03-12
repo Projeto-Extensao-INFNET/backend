@@ -59,7 +59,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AccessTokenResponse"
+                  "$ref": "#/components/schemas/AuthResponse"
                 }
               }
             }
@@ -85,7 +85,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AccessTokenResponse"
+                  "$ref": "#/components/schemas/AuthResponse"
                 }
               }
             }
@@ -805,16 +805,21 @@
           "password"
         ]
       },
-      "AccessTokenResponse": {
+      "AuthResponse": {
         "type": "object",
         "properties": {
           "accessToken": {
             "type": "string",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "refreshToken": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
           }
         },
         "required": [
-          "accessToken"
+          "accessToken",
+          "refreshToken"
         ]
       },
       "LogoutResponse": {
