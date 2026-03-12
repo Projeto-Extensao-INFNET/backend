@@ -1,9 +1,7 @@
 @baseUrl = http://localhost:3333
 @token = {{SignIn.response.body.$.accessToken}}
 
-# !! Pega só o primeiro refreshToken,
-# !! se tentar novamente da 401.
-# !! No front não tem esse problema
+# !! Pega só o primeiro refreshToken, se tentar dnv da 401
 @refreshToken = {{SignIn.response.headers.set-cookie}}
 
 # @name Health
