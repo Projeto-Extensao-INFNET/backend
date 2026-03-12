@@ -1,11 +1,11 @@
 import { env } from '@/config/env';
-import { ERROR_INVALID_TOKEN_TYPE } from '@/shared/errors';
+import type { Payload } from '@/shared/types';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor() {
     super({
       secretOrKey: env.JWT_SECRET,
@@ -15,14 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: any) {
-    if (payload.type !== 'access')
-      throw new UnauthorizedException(ERROR_INVALID_TOKEN_TYPE);
-
-    return {
-      userId: payload.sub,
-      username: payload.username,
-      role: payload.role,
-    };
+  async validate(payload: Payload) {
+    return payload;
   }
 }
