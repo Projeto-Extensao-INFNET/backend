@@ -1,11 +1,4 @@
 import { loadEnvFile } from 'node:process';
-import {
-  DEV_CORS_ORIGIN,
-  PORT,
-  REDIS_DB,
-  REDIS_HOST,
-  REDIS_PORT,
-} from '../../shared/constants';
 import z from 'zod';
 
 // Carrega o arquivo .env
@@ -19,20 +12,24 @@ export const envSchema = z.object({
   DATABASE_URL: z.url().startsWith('postgresql://'),
   JWT_SECRET: z.string(),
   JWT_REFRESH_SECRET: z.string(),
-  PORT: z.coerce.number().optional().default(PORT),
-  REDIS_HOST: z.string().optional().default(REDIS_HOST),
-  REDIS_PORT: z.coerce.number().default(REDIS_PORT),
-  REDIS_DB: z.coerce.number().default(REDIS_DB),
-  DEV_CORS_ORIGIN: z.url().startsWith(DEV_CORS_ORIGIN),
+  JWT_ACCESS_TOKEN_EXPIRATION: z.coerce.number(),
+  JWT_REFRESH_TOKEN_EXPIRATION: z.coerce.number(),
+  PORT: z.coerce.number(),
+  REDIS_PORT: z.coerce.number(),
+  REDIS_HOST: z.string().optional(),
+  REDIS_DB: z.coerce.number(),
+  DEV_CORS_ORIGIN: z.url().startsWith('http://localhost:'),
 });
 
-// VALIDA O process.env COM Zod
-
+// Valida o process.env com Zod
 const _env = envSchema.safeParse(process.env);
 
 if (_env.success === false) {
   if (process.env.NODE_ENV === 'development') {
-    console.error('❌ Erro ao validar variáveis de ambiente!');
+    console.error(
+      '❌ Erro ao validar variáveis de ambiente!',
+      z.treeifyError(_env.error),
+    );
   }
   throw new Error('❌ Variáveis de ambiente inválidas!');
 }
