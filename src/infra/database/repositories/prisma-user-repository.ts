@@ -15,7 +15,7 @@ export abstract class IUserRepository {
   abstract uploadAvatar(userId: string, avatarUrl: string): Promise<void>;
   abstract getProfile(userId: string): Promise<GetUserProfileResponse>;
   abstract findById(id: string): Promise<Omit<UserEntity, 'password'>>;
-  abstract deleteProfile(id: string): Promise<void>;
+  abstract deleteProfile(id: string): Promise<{}>;
   abstract editProfile(
     id: string,
     dto: EditProfileDto,
@@ -138,12 +138,14 @@ export class PrismaUserRepository implements IUserRepository {
     };
   }
 
-  async deleteProfile(id: string): Promise<void> {
+  async deleteProfile(id: string) {
     await this.prismaService.user.delete({
       where: {
         id,
       },
     });
+
+    return { message: 'Usuário removido com sucesso!' };
   }
 
   async editProfile(id: string, dto: EditProfileDto): Promise<EditProfileDto> {
