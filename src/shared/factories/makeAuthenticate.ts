@@ -10,5 +10,9 @@ export const makeAuthenticate = async (
     .post('/auth/signin')
     .send({ email, password });
 
-  return response.body?.accessToken as string;
+  const cookies = response.headers['set-cookie'];
+
+  return {
+    cookies,
+  };
 };
