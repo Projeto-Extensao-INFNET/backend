@@ -6,7 +6,7 @@ export const MIN_PASSWORD_LENGTH = 8;
 
 export const PORT = env.PORT;
 
-export const COOKIES_MAX_AGE = 24 * 60 * 60 * 1000; // 24h
+export const COOKIES_MAX_AGE = 60 * 15; // 15 min
 
 export const REDIS_PORT = env.REDIS_PORT;
 export const REDIS_DB = env.REDIS_DB;
