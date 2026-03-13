@@ -1,6 +1,10 @@
-import { ERROR_INVALID_REFRESH_TOKEN } from '@/shared/errors';
+import {
+  ERROR_INVALID_REFRESH_TOKEN,
+  ERROR_INVALID_TOKEN_TYPE,
+} from '@/shared/errors';
 import {
   Controller,
+  HttpStatus,
   Post,
   Req,
   Res,
@@ -35,25 +39,41 @@ export class RefreshTokenController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    // busca o refreshToken nos cookies da requisição
+    // busca o refreshToken e accessToken nos cookies da requisição
     const refreshToken = req.cookies?.refreshToken;
+    const accessToken = req.cookies?.accessToken;
 
-    if (!refreshToken)
-      throw new UnauthorizedException(ERROR_INVALID_REFRESH_TOKEN);
+    if (!refreshToken || !accessToken)
+      throw new UnauthorizedException(ERROR_INVALID_TOKEN_TYPE);
 
-    // repassa o novo refreshToken para o service
-    const { accessToken, refreshToken: newRefreshToken } =
+    // repassa o novo accessToken e refreshToken  para o service
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
       await this.refreshTokenService.exec(refreshToken);
 
-    // atualiza os cookies com o novo refreshToken
+    const isProd = env.NODE_ENV === 'production';
+
+    // atualiza os cookies com o novo refreshToken e accessToken
     res.cookie('refreshToken', newRefreshToken, {
       httpOnly: true,
-      sameSite: 'strict',
       path: '/auth/refresh',
-      secure: env.NODE_ENV === 'production',
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
       maxAge: COOKIES_MAX_AGE,
+      domain: isProd ? 'FUTURO_DOMÍNIO_DE_PROD' : 'localhost',
     });
 
-    return { accessToken };
+    res.cookie('accessToken', newAccessToken, {
+      httpOnly: true,
+      path: '/auth/refresh',
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
+      maxAge: COOKIES_MAX_AGE,
+      domain: isProd ? 'FUTURO_DOMÍNIO_DE_PROD' : 'localhost',
+    });
+
+    return {
+      status: HttpStatus.CREATED,
+      message: 'Refresh Token e Access Token criados com sucesso!',
+    };
   }
 }
