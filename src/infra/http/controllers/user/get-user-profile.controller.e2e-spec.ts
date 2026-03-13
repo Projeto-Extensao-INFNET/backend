@@ -22,11 +22,12 @@ describe('Get User Profile (E2E)', () => {
 
   it('[GET] /accounts/me', async () => {
     const user = await makeUser(prisma);
-    const token = await makeAuthenticate(app, user.email);
+
+    const { cookies } = await makeAuthenticate(app, user.email);
 
     const getUser = await request(app.getHttpServer())
       .get('/accounts/me')
-      .set('Authorization', `Bearer ${token}`);
+      .set('Cookie', cookies);
 
     expect(getUser.statusCode).toBe(200);
     expect(getUser.body).toMatchObject({

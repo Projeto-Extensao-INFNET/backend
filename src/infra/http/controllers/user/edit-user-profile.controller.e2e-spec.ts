@@ -23,17 +23,17 @@ describe('Edit User Profile (E2E)', () => {
 
   it('[PATCH] /accounts/me', async () => {
     const user = await makeUser(prisma);
-    const token = await makeAuthenticate(app, user.email);
+    const { cookies } = await makeAuthenticate(app, user.email);
     const uniqueEmail = faker.internet.email(); // email único para cada vez que rodar o teste
 
     const userExists = await request(app.getHttpServer())
       .get('/accounts/me')
-      .set('Authorization', `Bearer ${token}`);
+      .set('Cookie', cookies);
 
     const updateUserProfile = await request(app.getHttpServer())
       .patch('/accounts/me')
-      .set('Authorization', `Bearer ${token}`)
-      .send({ name: 'Novo Nome', email: uniqueEmail }); //passa os campos que serão atualizados
+      .send({ name: 'Novo Nome', email: uniqueEmail })
+      .set('Cookie', cookies); //passa os campos que serão atualizados
 
     expect(userExists.statusCode).toBe(200);
     expect(updateUserProfile.statusCode).toBe(200);

@@ -23,15 +23,15 @@ describe('GetAllUsersController (E2E)', () => {
 
   it('[GET] /accounts/users', async () => {
     const user = await makeCreateAdminUser(prisma);
-    const token = await makeAuthenticate(app, user.email);
+    const { cookies } = await makeAuthenticate(app, user.email);
 
     const users = await request(app.getHttpServer())
       .get('/accounts/users')
-      .set('Authorization', `Bearer ${token}`)
       .query({
         page: 1,
         limit: 10,
-      });
+      })
+      .set('Cookie', cookies);
 
     expect(users.statusCode).toBe(200);
     expect(users.body.meta).toHaveProperty('total_items');

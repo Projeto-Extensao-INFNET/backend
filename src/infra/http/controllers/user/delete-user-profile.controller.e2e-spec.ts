@@ -22,22 +22,22 @@ describe('Delete User Profile (E2E)', () => {
 
   it('[DELETE] /accounts/me', async () => {
     const user = await makeUser(prisma);
-    const token = await makeAuthenticate(app, user.email);
+    const { cookies } = await makeAuthenticate(app, user.email);
 
     const userExists = await request(app.getHttpServer())
       .get('/accounts/me')
-      .set('Authorization', `Bearer ${token}`);
+      .set('Cookie', cookies);
 
     const deleteUser = await request(app.getHttpServer())
       .delete('/accounts/me')
-      .set('Authorization', `Bearer ${token}`);
+      .set('Cookie', cookies);
 
     const isUserDeleted = await request(app.getHttpServer())
       .get('/accounts/me')
-      .set('Authorization', `Bearer ${token}`);
+      .set('Cookie', cookies);
 
     expect(userExists.statusCode).toBe(200);
-    expect(deleteUser.statusCode).toBe(204);
+    expect(deleteUser.statusCode).toBe(200);
     expect(isUserDeleted.statusCode).toBe(404);
   });
 });
