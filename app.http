@@ -1,13 +1,12 @@
 @baseUrl = http://localhost:3333
-@token = {{SignIn.response.body.$.accessToken}}
-
-# !! Pega só o primeiro refreshToken, se tentar dnv da 401
-@refreshToken = {{SignIn.response.headers.set-cookie}}
 
 # @name Health
 GET {{baseUrl}}/health
 
 ###
+
+# 👇👇👇 repassar manualmente os tokens JWT (access e refresh),
+# pois não funciona repassar dinamicamente vindo dos cookies
 
 # @name SignUp
 POST {{baseUrl}}/auth/signup
@@ -15,12 +14,12 @@ Content-Type: application/json
 
 {
   "name": "Nathan Rodrigues Vieira",
-  "email": "nathanrodriguesvieira99@gmail.com",
+  "email": "nathanrodriguesvieira99@test.com",
   "password": "12345678",
   "birthDate": "2005-09-26T00:00:00.000Z",
   "role": "ADMIN",
   "documentType": "CPF",
-  "document": "207.767.427-01"
+  "document": "999.999.999-99"
 }
 
 ###
@@ -38,19 +37,21 @@ Content-Type: application/json
 
 # @name refresh
 POST {{baseUrl}}/auth/refresh
-Cookie: {{refreshToken}}
+Cookie: refreshToken=
 
 ###
+
 
 # @name logout
 POST {{baseUrl}}/auth/logout
-Authorization: Bearer {{token}}
+Cookie: accessToken=
 
 ###
 
+
 # @name upload_avatar
 POST {{baseUrl}}/accounts/me/avatar
-Authorization: Bearer {{token}}
+Cookie: accessToken=
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
@@ -62,23 +63,26 @@ Content-Disposition: form-data; name="avatar"; filename="test.jpg"
 
 ###
 
+
 # @name user_profile
 GET {{baseUrl}}/accounts/me
-Authorization:  Bearer {{token}}
+Cookie: accessToken=
 Content-Type: application/json
 
 ###
+
 
 # @name all_users
 GET {{baseUrl}}/accounts/users?page=1&limit=10
-Authorization:  Bearer {{token}}
+Cookie: accessToken=
 Content-Type: application/json
 
 ###
 
+
 # @name edit_profile
 PATCH {{baseUrl}}/accounts/me
-Authorization:  Bearer {{token}}
+Cookie: accessToken=
 Content-Type: application/json
 
 {
@@ -87,19 +91,21 @@ Content-Type: application/json
 
 ###
 
+
 # @name delete_profile
 DELETE  {{baseUrl}}/accounts/me
-Authorization:  Bearer {{token}}
+Cookie: accessToken=
 Content-Type: application/json
 
 ###
 
+
 # @name user_appointments
 GET {{baseUrl}}/appointments
-Authorization:  Bearer {{token}}
+Cookie: accessToken=
 
 ###
 
 # @name list_professionals
 GET {{baseUrl}}/professionals?page=1&limit=10
-Authorization:  Bearer {{token}}
+Cookie: accessToken=
