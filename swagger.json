@@ -3,10 +3,12 @@
   "paths": {
     "/auth/signup": {
       "post": {
+        "description": "Cria um novo usuário e retorna os dados do usuário criado.",
         "operationId": "signUp",
         "parameters": [],
         "requestBody": {
           "required": true,
+          "description": "Dados necessários para criar um novo usuário.",
           "content": {
             "application/json": {
               "schema": {
@@ -17,11 +19,23 @@
         },
         "responses": {
           "201": {
-            "description": "User created successfully",
+            "description": "User created successfully. Retorna os dados do usuário criado.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SignUpResponseDto"
+                  "example": {
+                    "status": 201,
+                    "message": "Usuário criado com sucesso!",
+                    "data": {
+                      "id": "uuid",
+                      "name": "John Doe",
+                      "email": "john@example.com",
+                      "birthDate": "1990-01-01T00:00:00.000Z",
+                      "role": "PATIENT",
+                      "documentType": "CPF",
+                      "document": "12345678901"
+                    }
+                  }
                 }
               }
             }
@@ -206,8 +220,25 @@
         "operationId": "deleteUserProfile",
         "parameters": [],
         "responses": {
-          "204": {
-            "description": "User account deleted successfully"
+          "200": {
+            "description": "User account deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Usuário removido com sucesso!"
+                    }
+                  }
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -694,20 +725,24 @@
         "properties": {
           "name": {
             "type": "string",
-            "example": "John Doe"
+            "example": "John Doe",
+            "description": "Nome completo do usuário."
           },
           "email": {
             "type": "string",
-            "example": "john@example.com"
+            "example": "john@example.com",
+            "description": "E-mail do usuário."
           },
           "password": {
             "type": "string",
-            "example": "password123"
+            "example": "password123",
+            "description": "Senha do usuário."
           },
           "birthDate": {
             "format": "date-time",
             "type": "string",
-            "example": "1990-01-01"
+            "example": "1990-01-01",
+            "description": "Data de nascimento do usuário."
           },
           "role": {
             "type": "string",
@@ -716,7 +751,8 @@
               "PROFESSIONAL",
               "ADMIN"
             ],
-            "example": "PATIENT"
+            "example": "PATIENT",
+            "description": "Papel do usuário no sistema."
           },
           "documentType": {
             "type": "string",
@@ -724,11 +760,13 @@
               "CPF",
               "RG"
             ],
-            "example": "CPF"
+            "example": "CPF",
+            "description": "Tipo de documento."
           },
           "document": {
             "type": "string",
-            "example": "12345678901"
+            "example": "12345678901",
+            "description": "Número do documento."
           }
         },
         "required": [
@@ -741,63 +779,18 @@
           "document"
         ]
       },
-      "SignUpResponseDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "example": "John Doe"
-          },
-          "email": {
-            "type": "string",
-            "example": "john@example.com"
-          },
-          "birthDate": {
-            "format": "date-time",
-            "type": "string",
-            "example": "1990-01-01"
-          },
-          "role": {
-            "type": "string",
-            "enum": [
-              "PATIENT",
-              "PROFESSIONAL",
-              "ADMIN"
-            ],
-            "example": "PATIENT"
-          },
-          "documentType": {
-            "type": "string",
-            "enum": [
-              "CPF",
-              "RG"
-            ],
-            "example": "CPF"
-          },
-          "document": {
-            "type": "string",
-            "example": "12345678901"
-          }
-        },
-        "required": [
-          "name",
-          "email",
-          "birthDate",
-          "role",
-          "documentType",
-          "document"
-        ]
-      },
       "SignInDto": {
         "type": "object",
         "properties": {
           "email": {
             "type": "string",
-            "example": "user@example.com"
+            "example": "user@example.com",
+            "description": "E-mail do usuário."
           },
           "password": {
             "type": "string",
-            "example": "password123"
+            "example": "password123",
+            "description": "Senha do usuário."
           }
         },
         "required": [
@@ -810,11 +803,13 @@
         "properties": {
           "accessToken": {
             "type": "string",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+            "description": "Token JWT de acesso."
           },
           "refreshToken": {
             "type": "string",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+            "description": "Token JWT de refresh."
           }
         },
         "required": [
@@ -827,7 +822,8 @@
         "properties": {
           "message": {
             "type": "string",
-            "example": "Logged out"
+            "example": "Logged out",
+            "description": "Mensagem de logout bem-sucedido."
           }
         },
         "required": [
@@ -839,32 +835,39 @@
         "properties": {
           "id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "ID do usuário."
           },
           "name": {
             "type": "string",
-            "example": "John Doe"
+            "example": "John Doe",
+            "description": "Nome completo do usuário."
           },
           "email": {
             "type": "string",
-            "example": "john@example.com"
+            "example": "john@example.com",
+            "description": "E-mail do usuário."
           },
           "birthDate": {
             "format": "date-time",
             "type": "string",
-            "example": "1990-01-01T00:00:00Z"
+            "example": "1990-01-01T00:00:00Z",
+            "description": "Data de nascimento."
           },
           "avatar": {
             "type": "string",
-            "example": "data:image/jpeg;base64,..."
+            "example": "data:image/jpeg;base64,...",
+            "description": "Avatar do usuário em base64."
           },
           "role": {
             "type": "string",
-            "example": "PATIENT"
+            "example": "PATIENT",
+            "description": "Papel do usuário."
           },
           "document": {
             "type": "string",
-            "example": "12345678901"
+            "example": "12345678901",
+            "description": "Número do documento."
           }
         },
         "required": [
@@ -882,11 +885,13 @@
         "properties": {
           "name": {
             "type": "string",
-            "example": "John Doe"
+            "example": "John Doe",
+            "description": "Nome completo do usuário."
           },
           "avatar": {
             "type": "string",
-            "example": "data:image/jpeg;base64,..."
+            "example": "data:image/jpeg;base64,...",
+            "description": "Avatar do usuário em base64."
           }
         }
       },
@@ -896,30 +901,36 @@
           "scheduleId": {
             "type": "string",
             "format": "uuid",
-            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            "description": "ID do agendamento."
           },
           "userId": {
             "type": "string",
             "format": "uuid",
-            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            "description": "ID do usuário."
           },
           "specialtyId": {
             "type": "string",
             "format": "uuid",
-            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            "description": "ID da especialidade."
           },
           "typeOfTreatmentId": {
             "type": "string",
             "format": "uuid",
-            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            "description": "ID do tipo de tratamento."
           },
           "isAvailable": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "description": "Se está disponível."
           },
           "isConfirmed": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "description": "Se está cancelado."
           }
         },
         "required": [
