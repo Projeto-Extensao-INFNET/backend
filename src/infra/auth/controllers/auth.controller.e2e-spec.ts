@@ -9,7 +9,7 @@ import {
   generateUniqueName,
 } from '@/utils';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
-import { makeAuthenticate, makeUser } from '@/shared/factories';
+import { makeUser } from '@/shared/factories';
 import type { DOCUMENT_TYPE, ROLE } from '@/shared/types';
 
 describe('AuthController (E2E)', () => {
@@ -52,13 +52,13 @@ describe('AuthController (E2E)', () => {
         .send(user);
 
       expect(response.statusCode).toBe(201);
-      expect(response.body).toHaveProperty('id');
-      expect(response.body).toHaveProperty('email', user.email);
-      expect(response.body).not.toHaveProperty('password');
+      expect(response.body.data).toHaveProperty('id');
+      expect(response.body.data).toHaveProperty('email');
+      expect(response.body.data).not.toHaveProperty('password');
     });
 
     describe('SignIn', () => {
-      it('[POST] /auth/signin - should return access token with valid credentials', async () => {
+      it('[POST] /auth/signin - should return access and refresh token with valid credentials', async () => {
         // cria um usuário
         const user = await makeUser(prisma);
 
@@ -70,13 +70,17 @@ describe('AuthController (E2E)', () => {
         // busca os cookies nos Headers
         const cookies = response.get('Set-Cookie');
 
-        // valida se o refreshToken está nos cookies
+        // valida se o accessToken e refreshToken  estão nos cookies
+        const hasAccessTokenCookie = cookies?.some((cookie: string) =>
+          cookie.startsWith('accessToken='),
+        );
+
         const hasRefreshTokenCookie = cookies?.some((cookie: string) =>
           cookie.startsWith('refreshToken='),
         );
 
+        expect(hasAccessTokenCookie).toBe(true);
         expect(hasRefreshTokenCookie).toBe(true);
-        expect(response.body.accessToken).toEqual(expect.any(String));
       });
     });
 
