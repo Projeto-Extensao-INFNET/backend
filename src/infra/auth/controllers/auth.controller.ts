@@ -83,11 +83,12 @@ export class AuthController {
     @Body() body: SignInDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { tokens, data } = await this.authService.SignIn(body);
+    const { accessToken, refreshToken, data } =
+      await this.authService.SignIn(body);
 
     const isProd = env.NODE_ENV === 'production';
 
-    res.cookie('refreshToken', tokens.refreshToken, {
+    res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       path: '/auth/refresh',
       secure: isProd,
@@ -96,7 +97,7 @@ export class AuthController {
       domain: isProd ? 'FUTURO_DOMÍNIO_DE_PROD' : 'localhost',
     });
 
-    res.cookie('accessToken', tokens.accessToken, {
+    res.cookie('accessToken', accessToken, {
       httpOnly: true,
       path: '/auth/refresh',
       secure: isProd,
