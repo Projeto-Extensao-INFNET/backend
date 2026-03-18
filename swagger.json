@@ -73,23 +73,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "example": {
-                    "status": 201,
-                    "message": "Usuário logado com sucesso!",
-                    "data": {
-                      "tokens": {
-                        "accessToken": "jwt-access-token",
-                        "refreshToken": "jwt-refresh-token"
-                      },
-                      "user": {
-                        "username": "user@example.com",
-                        "name": "John Doe",
-                        "email": "user@example.com",
-                        "sub": "uuid",
-                        "role": "ADMIN"
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/SignInResponseDto"
                 }
               }
             }
@@ -815,6 +799,35 @@
         "required": [
           "email",
           "password"
+        ]
+      },
+      "SignInResponseDto": {
+        "type": "object",
+        "properties": {
+          "tokens": {
+            "type": "object",
+            "example": {
+              "accessToken": "jwt-access-token",
+              "refreshToken": "jwt-refresh-token"
+            },
+            "description": "JWT tokens de acesso e refresh."
+          },
+          "data": {
+            "type": "object",
+            "description": "Dados do usuário autenticado.",
+            "example": {
+              "user": {
+                "username": "user@example.com",
+                "email": "user@example.com",
+                "sub": "uuid",
+                "role": "ADMIN"
+              }
+            }
+          }
+        },
+        "required": [
+          "tokens",
+          "data"
         ]
       },
       "LogoutResponse": {
