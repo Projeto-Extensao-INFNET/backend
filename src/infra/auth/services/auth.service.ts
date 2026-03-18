@@ -113,8 +113,7 @@ export class AuthService {
 
     // dados que vão para o JWT
     const payload = {
-      username: user.name,
-      email: user.email,
+      username: user.email,
       sub: user.id,
       role: user.role,
     };
