@@ -15,7 +15,7 @@ import {
   ERROR_INVALID_CREDENTIALS,
 } from '@/shared/errors';
 import { SignUpDto } from '@/shared/dto/auth/signUp.dto';
-import { SignInDto } from '@/shared/dto/auth/signIn.dto';
+import { SignInDto, SignInResponseDto } from '@/shared/dto/auth/signIn.dto';
 import { COOKIES_MAX_AGE } from '@/shared/constants';
 import { env } from '@/config/env';
 
@@ -76,26 +76,7 @@ export class AuthController {
   @ApiResponse({
     status: 201,
     description: 'Authenticated successfully',
-    schema: {
-      example: {
-        status: 201,
-        message: 'Usuário logado com sucesso!',
-        data: {
-          tokens: {
-            accessToken: 'jwt-access-token',
-            refreshToken: 'jwt-refresh-token',
-          },
-
-          user: {
-            username: 'user@example.com',
-            name: 'John Doe',
-            email: 'user@example.com',
-            sub: 'uuid',
-            role: 'ADMIN',
-          },
-        },
-      },
-    },
+    type: SignInResponseDto,
   })
   @ApiResponse({ status: 401, description: ERROR_INVALID_CREDENTIALS })
   async signIn(
