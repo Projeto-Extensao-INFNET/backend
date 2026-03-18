@@ -75,7 +75,20 @@
                 "schema": {
                   "example": {
                     "status": 201,
-                    "message": "Usuário logado com sucesso!"
+                    "message": "Usuário logado com sucesso!",
+                    "data": {
+                      "tokens": {
+                        "accessToken": "jwt-access-token",
+                        "refreshToken": "jwt-refresh-token"
+                      },
+                      "user": {
+                        "username": "user@example.com",
+                        "name": "John Doe",
+                        "email": "user@example.com",
+                        "sub": "uuid",
+                        "role": "ADMIN"
+                      }
+                    }
                   }
                 }
               }
@@ -104,7 +117,7 @@
                 "schema": {
                   "example": {
                     "status": 201,
-                    "message": "Refresh Token e Access Token criados com sucesso!"
+                    "message": "Refresh Token criado com sucesso!"
                   }
                 }
               }
