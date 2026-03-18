@@ -10,7 +10,10 @@ import type {
   SignUpDto,
   SignUpResponseDto,
 } from '@/shared/dto/auth/signUp.dto';
-import type { SignInDto } from '@/shared/dto/auth/signIn.dto';
+import type {
+  SignInDto,
+  SignInResponseDto,
+} from '@/shared/dto/auth/signIn.dto';
 import {
   ERROR_CREDENTIALS_IN_USE,
   ERROR_INVALID_CREDENTIALS,
@@ -19,6 +22,7 @@ import {
 import { GetTokens } from '../jwt/generate-jwt-tokens';
 import { hash } from 'bcryptjs';
 import { SALT_ROUNDS } from '@/shared/constants';
+import { email } from 'zod';
 
 @Injectable()
 export class AuthService {
@@ -83,13 +87,14 @@ export class AuthService {
   }
 
   // Login
-  async SignIn(data: SignInDto) {
+  async SignIn(data: SignInDto): Promise<SignInResponseDto> {
     const user = await this.prismaService.user.findUnique({
       where: {
         email: data.email,
       },
       select: {
         id: true,
+        name: true,
         email: true,
         password: true,
         role: true,
@@ -108,7 +113,8 @@ export class AuthService {
 
     // dados que vão para o JWT
     const payload = {
-      username: user.email,
+      username: user.name,
+      email: user.email,
       sub: user.id,
       role: user.role,
     };
@@ -129,6 +135,12 @@ export class AuthService {
       },
     });
 
-    return tokens;
+    return {
+      tokens: {
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+      },
+      data: { user: payload },
+    };
   }
 }
