@@ -16,7 +16,6 @@ import {
   ERROR_INVALID_CREDENTIALS,
   ERROR_REQUIRED_FIELDS,
 } from '@/shared/errors';
-import type { AuthResponse } from '@/shared/dto/auth/auth-user';
 import { GetTokens } from '../jwt/generate-jwt-tokens';
 import { hash } from 'bcryptjs';
 import { SALT_ROUNDS } from '@/shared/constants';
@@ -84,7 +83,7 @@ export class AuthService {
   }
 
   // Login
-  async SignIn(data: SignInDto): Promise<AuthResponse> {
+  async SignIn(data: SignInDto) {
     const user = await this.prismaService.user.findUnique({
       where: {
         email: data.email,
