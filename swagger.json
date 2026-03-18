@@ -73,7 +73,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuthResponse"
+                  "example": {
+                    "status": 201,
+                    "message": "Usuário logado com sucesso!"
+                  }
                 }
               }
             }
@@ -99,7 +102,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuthResponse"
+                  "example": {
+                    "status": 201,
+                    "message": "Refresh Token e Access Token criados com sucesso!"
+                  }
                 }
               }
             }
@@ -796,25 +802,6 @@
         "required": [
           "email",
           "password"
-        ]
-      },
-      "AuthResponse": {
-        "type": "object",
-        "properties": {
-          "accessToken": {
-            "type": "string",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-            "description": "Token JWT de acesso."
-          },
-          "refreshToken": {
-            "type": "string",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-            "description": "Token JWT de refresh."
-          }
-        },
-        "required": [
-          "accessToken",
-          "refreshToken"
         ]
       },
       "LogoutResponse": {
