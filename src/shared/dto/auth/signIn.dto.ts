@@ -19,13 +19,15 @@ export class SignInDto {
 
 export class SignInResponseDto {
   @ApiProperty({
-    example: {
-      accessToken: 'jwt-access-token',
-      refreshToken: 'jwt-refresh-token',
-    },
-    description: 'JWT tokens de acesso e refresh.',
+    example: 'jwt-access-token',
+    description: 'JWT token de acesso.',
   })
   accessToken!: string;
+
+  @ApiProperty({
+    example: 'jwt-refresh-token',
+    description: 'JWT token de refresh.',
+  })
   refreshToken!: string;
 
   @ApiProperty({
