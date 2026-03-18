@@ -12,7 +12,6 @@ import {
 } from '@nestjs/common';
 import { RefreshTokenService } from '../services/refresh-token.service';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { AuthResponse } from '@/shared/dto/auth/auth-user';
 import type { Request, Response } from 'express';
 import { COOKIES_MAX_AGE } from '@/shared/constants';
 import { env } from '@/config/env';
@@ -32,7 +31,12 @@ export class RefreshTokenController {
   @ApiResponse({
     status: 201,
     description: 'Token refreshed successfully',
-    type: AuthResponse,
+    schema: {
+      example: {
+        status: 201,
+        message: 'Refresh Token criado com sucesso!',
+      },
+    },
   })
   @ApiResponse({ status: 401, description: ERROR_INVALID_REFRESH_TOKEN })
   async refresh(
@@ -41,13 +45,12 @@ export class RefreshTokenController {
   ) {
     // busca o refreshToken e accessToken nos cookies da requisição
     const refreshToken = req.cookies?.refreshToken;
-    const accessToken = req.cookies?.accessToken;
 
-    if (!refreshToken || !accessToken)
+    if (!refreshToken)
       throw new UnauthorizedException(ERROR_INVALID_TOKEN_TYPE);
 
     // repassa o novo accessToken e refreshToken  para o service
-    const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+    const { refreshToken: newRefreshToken } =
       await this.refreshTokenService.exec(refreshToken);
 
     const isProd = env.NODE_ENV === 'production';
@@ -62,18 +65,9 @@ export class RefreshTokenController {
       domain: isProd ? 'FUTURO_DOMÍNIO_DE_PROD' : 'localhost',
     });
 
-    res.cookie('accessToken', newAccessToken, {
-      httpOnly: true,
-      path: '/auth/refresh',
-      secure: isProd,
-      sameSite: isProd ? 'none' : 'lax',
-      maxAge: COOKIES_MAX_AGE,
-      domain: isProd ? 'FUTURO_DOMÍNIO_DE_PROD' : 'localhost',
-    });
-
     return {
       status: HttpStatus.CREATED,
-      message: 'Refresh Token e Access Token criados com sucesso!',
+      message: 'Refresh Token criado com sucesso!',
     };
   }
 }
