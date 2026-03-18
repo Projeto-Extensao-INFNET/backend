@@ -233,8 +233,11 @@ describe('AuthService', () => {
 
       // espera que retorne exatamente os 2 tokens criados
       expect(result).toEqual({
-        accessToken: 'fake-jwt-token',
-        refreshToken: 'fake-jwt-refresh-token',
+        tokens: {
+          accessToken: 'fake-jwt-token',
+          refreshToken: 'fake-jwt-refresh-token',
+        },
+        data: { user: payload },
       });
 
       // espera que os tokens sejam gerados com o payload +  expiresIn + secret
