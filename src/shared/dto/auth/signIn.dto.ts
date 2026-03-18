@@ -35,7 +35,6 @@ export class SignInResponseDto {
     example: {
       user: {
         username: 'user@example.com',
-        email: 'user@example.com',
         sub: 'uuid',
         role: 'ADMIN',
       },
