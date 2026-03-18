@@ -25,10 +25,8 @@ export class SignInResponseDto {
     },
     description: 'JWT tokens de acesso e refresh.',
   })
-  tokens!: {
-    accessToken: string;
-    refreshToken: string;
-  };
+  accessToken!: string;
+  refreshToken!: string;
 
   @ApiProperty({
     description: 'Dados do usuário autenticado.',
