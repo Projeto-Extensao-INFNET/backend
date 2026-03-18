@@ -1,4 +1,4 @@
-import { IsUUID, IsString, IsOptional } from 'class-validator';
+import { IsUUID, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import type { ROLE } from '@/shared/types';
 
