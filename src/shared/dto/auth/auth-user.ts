@@ -20,18 +20,3 @@ export class AuthenticatedUserResponse {
   @ApiProperty({ type: User, description: 'Dados do usuário autenticado.' })
   user!: User;
 }
-
-export class AuthResponse {
-  @ApiProperty({
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-    description: 'Token JWT de acesso.',
-  })
-  accessToken!: string;
-
-  @ApiProperty({
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-    description: 'Token JWT de refresh.',
-  })
-  @IsOptional()
-  refreshToken!: string;
-}
