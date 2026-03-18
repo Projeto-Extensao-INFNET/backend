@@ -20,7 +20,7 @@
 ## Opcional
 
 - [x] Criar repositórios e entidades para cada caso de uso
-- [] Comentários explicativos nos arquivos de testes (me ajudar a lembrar o que fazem)
+- [x] Comentários explicativos nos arquivos de testes (me ajudar a lembrar o que fazem)
 - [x] Refatorar para usar Pulumi no lugar do Terraform
 
 ## Requisitos do Sistema
@@ -34,7 +34,7 @@
 
 - [x] Agendamentos só podem ser feitos em horários disponíveis
 - [ ] Pacientes só podem agendar com profissionais que tenham especialidade/tipo compatível
-- [ ] Documentos CPF/RG e CRM/CRP devem ser únicos no sistema
+- [x] Documentos CPF/RG e CRM/CRP devem ser únicos no sistema
 - [x] Emails devem ser únicos no sistema
 - [x] Senhas devem ser criptografadas
 - [ ] Horários de agenda não podem conflitar
