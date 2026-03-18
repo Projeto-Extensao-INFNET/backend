@@ -80,6 +80,20 @@ export class AuthController {
       example: {
         status: 201,
         message: 'Usuário logado com sucesso!',
+        data: {
+          tokens: {
+            accessToken: 'jwt-access-token',
+            refreshToken: 'jwt-refresh-token',
+          },
+
+          user: {
+            username: 'user@example.com',
+            name: 'John Doe',
+            email: 'user@example.com',
+            sub: 'uuid',
+            role: 'ADMIN',
+          },
+        },
       },
     },
   })
@@ -88,11 +102,11 @@ export class AuthController {
     @Body() body: SignInDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { accessToken, refreshToken } = await this.authService.SignIn(body);
+    const { tokens, data } = await this.authService.SignIn(body);
 
     const isProd = env.NODE_ENV === 'production';
 
-    res.cookie('refreshToken', refreshToken, {
+    res.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: true,
       path: '/auth/refresh',
       secure: isProd,
@@ -101,7 +115,7 @@ export class AuthController {
       domain: isProd ? 'FUTURO_DOMÍNIO_DE_PROD' : 'localhost',
     });
 
-    res.cookie('accessToken', accessToken, {
+    res.cookie('accessToken', tokens.accessToken, {
       httpOnly: true,
       path: '/auth/refresh',
       secure: isProd,
@@ -113,6 +127,7 @@ export class AuthController {
     return {
       status: HttpStatus.CREATED,
       message: `Usuário logado com sucesso!`,
+      data,
     };
   }
 }
