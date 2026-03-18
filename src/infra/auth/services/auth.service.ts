@@ -135,10 +135,9 @@ export class AuthService {
     });
 
     return {
-      tokens: {
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
-      },
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+
       data: { user: payload },
     };
   }
