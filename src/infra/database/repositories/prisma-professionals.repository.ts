@@ -25,19 +25,27 @@ export class PrismaProfessionalsRepository implements IProfessionalsRepository {
     params: PaginationQueryDto,
   ): Promise<PaginationResultDto<ProfessionalEntity>> {
     const { page = DEFAULT_PAGE_NUMBER, limit = DEFAULT_PAGE_LIMIT } = params;
+    const take = Number(limit);
+    const skip = (Number(page) - 1) * take;
 
     const CACHE_KEY = `professionals:page:${page}:limit:${limit}`;
-
     const cacheHit = await this.cache.get(CACHE_KEY);
 
     if (cacheHit) {
       const cachedData = JSON.parse(cacheHit);
 
-      return cachedData;
+      // retorna os dados cacheados e os query params do cache convertidos para Number
+      return {
+        ...cachedData,
+        meta: {
+          ...cachedData.meta,
+          page: Number(cachedData?.meta?.page),
+          limit: Number(cachedData?.meta?.limit),
+          total_items: Number(cachedData?.meta?.total_items),
+          total_pages: Number(cachedData?.meta?.total_pages),
+        },
+      };
     }
-
-    const take = Number(limit);
-    const skip = Number(page - 1) * take; // page=1, take=10 resulta em skip=0 -> primeira página com 10 itens
 
     const professionals = await this.prismaService.professional.findMany({
       skip,
@@ -84,8 +92,8 @@ export class PrismaProfessionalsRepository implements IProfessionalsRepository {
       meta: {
         total_items,
         total_pages,
-        page,
-        limit,
+        page: Number(page),
+        limit: Number(take),
       },
     };
 
