@@ -3,39 +3,6 @@ volumes:
   redis_data:
 
 services:
-  # app:
-  #   container_name: app-projeto-extensao-dev
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.dev
-  #   depends_on:
-  #     postgresql:
-  #       condition: service_healthy
-  #     redis:
-  #       condition: service_started
-  #   env_file: .env
-  #   environment:
-  #     NODE_ENV: development
-  #     DATABASE_URL: "postgresql://${POSTGRESQL_USERNAME}:${POSTGRESQL_PASSWORD}@postgresql:${POSTGRESQL_PORT}/${POSTGRESQL_DATABASE}?schema=public"
-  #     REDIS_HOST: redis
-  #     REDIS_PORT: 6379
-  #   ports:
-  #     - "3333:3333"
-  #   command:
-  #     [
-  #       "sh",
-  #       "-c",
-  #       "pnpm prisma:generate && pnpm prisma:migrate:deploy && pnpm prisma:seed && pnpm start:dev",
-  #     ]
-  #   volumes:
-  #     - .:/app
-  #     - /app/node_modules
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost:3333/api/health"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
-
   postgresql:
     container_name: db-projeto-extensao
     image: bitnami/postgresql:latest
@@ -48,7 +15,7 @@ services:
       POSTGRESQL_DATABASE: ${POSTGRESQL_DATABASE}
     volumes:
       - postgres_data:/bitnami/postgresql
-      - ./.docker/test-db.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres/test-db.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRESQL_USERNAME}"]
       interval: 10s
@@ -70,3 +37,5 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+# TODO => configurar toxiproxy
