@@ -1,3 +1,7 @@
+// Modules
+import { Module } from '@nestjs/common';
+import { CacheModule } from '@/infra/cache/cache.module';
+
 // Controllers
 import { DeleteUserProfileController } from '@Controllers/user/delete-user-profile.controller';
 import { EditUserProfileController } from '@Controllers/user/edit-user-profile.controller';
@@ -14,10 +18,6 @@ import { CancelAppointmentsController } from '@Controllers/appointments/cancel-a
 import { HealthController } from './controllers/health/health.controller';
 import { RefreshTokenController } from '@/infra/auth/controllers/refresh-token.controller';
 import { LogoutController } from '../auth/controllers/logout.controller';
-
-// Modules
-import { Module } from '@nestjs/common';
-import { CacheModule } from '@/infra/cache/cache.module';
 
 // Services
 import { AvatarUploadService } from '@/domain/services/upload-avatar/avatar-upload.service';
@@ -48,7 +48,7 @@ import {
   PrismaAppointmentsRepository,
 } from '@/infra/database/repositories/prisma-appointments.repository';
 
-// functions
+// Functions
 import { GetTokens } from '../auth/jwt/generate-jwt-tokens';
 
 @Module({

@@ -1,21 +1,23 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { UserEntity } from '@/core/entities/user.entity';
-import { EditProfileDto } from '@/shared/dto/user/edit-profile.dto';
-import { ERROR_USER_NOT_FOUND, ERROR_USERS_NOT_FOUND } from '@/shared/errors';
+
 import type {
   PaginationQueryDto,
   PaginationResultDto,
 } from '@/shared/dto/pagination/pagination.dto';
-import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER } from '@/shared/constants';
 import type { GetUserProfileResponse } from '@/shared/dto/user/get-user.dto';
+
+import { PrismaService } from '../prisma/prisma.service';
+import { UserEntity } from '@/core/entities/user.entity';
+import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER } from '@/shared/constants';
+import { EditProfileDto } from '@/shared/dto/user/edit-profile.dto';
+import { ERROR_USERS_NOT_FOUND, ERROR_USER_NOT_FOUND } from '@/shared/errors';
 
 // Cria um contrato que poderá ser usado por vários repositórios reais
 export abstract class IUserRepository {
   abstract uploadAvatar(userId: string, avatarUrl: string): Promise<void>;
   abstract getProfile(userId: string): Promise<GetUserProfileResponse>;
   abstract findById(id: string): Promise<Omit<UserEntity, 'password'>>;
-  abstract deleteProfile(id: string): Promise<{}>;
+  abstract deleteProfile(id: string): Promise<unknown>;
   abstract editProfile(
     id: string,
     dto: EditProfileDto,
