@@ -101,8 +101,8 @@ export class PrismaUserRepository implements IUserRepository {
       meta: {
         total_items: total,
         total_pages: totalPages,
-        page,
-        limit,
+        page: Number(page),
+        limit: Number(take),
       },
     };
   }
