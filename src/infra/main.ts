@@ -2,8 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { setupSwagger } from '../config/docs';
 import { env } from '../config/env';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
+  const logger: Logger = new Logger('Backend');
   const app = await NestFactory.create(AppModule, {});
 
   app.enableCors({
@@ -16,5 +18,6 @@ async function bootstrap() {
   setupSwagger(app);
 
   await app.listen(env.PORT);
+  logger.log(`Project is running on: http://localhost:${env.PORT}`);
 }
 bootstrap();

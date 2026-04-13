@@ -5,6 +5,8 @@ import { resolve } from 'node:path';
 import { writeFile } from 'node:fs/promises';
 
 export const setupSwagger = (app: INestApplication) => {
+  const logger: Logger = new Logger('Swagger');
+
   const config = new DocumentBuilder()
     .setTitle('API Projeto de Extensao')
     .setDescription('API do Projeto de Extensão - documentação Swagger')
@@ -23,7 +25,7 @@ export const setupSwagger = (app: INestApplication) => {
     const spec = JSON.stringify(document, null, 2);
 
     writeFile(specFile, spec).then(() => {
-      Logger.log('Swagger spec generated!');
+      logger.log('Swagger spec generated!');
     });
   }
 };

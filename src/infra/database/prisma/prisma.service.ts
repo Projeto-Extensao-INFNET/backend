@@ -14,6 +14,8 @@ export class PrismaService
   extends PrismaClient
   implements OnModuleInit, OnModuleDestroy
 {
+  private logger: Logger = new Logger('Database');
+
   constructor() {
     const adapter = new PrismaPg({
       connectionString: env.DATABASE_URL,
@@ -25,12 +27,13 @@ export class PrismaService
         env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
     });
   }
+
   async onModuleInit() {
     try {
       await this.$connect();
-      Logger.log('Database connection OK!');
+      this.logger.log('Database connection OK!');
     } catch (err) {
-      Logger.error(`Database connection failed ${err}`);
+      this.logger.error(`Database connection failed ${err}`);
       throw err;
     }
   }
@@ -38,11 +41,9 @@ export class PrismaService
   async onModuleDestroy() {
     try {
       await this.$disconnect();
-      Logger.log('========================');
-      Logger.log('Database disconnected!');
-      Logger.log('========================');
+      this.logger.log('Database disconnected!');
     } catch (err) {
-      Logger.error(`Error disconnecting database: ${err}`);
+      this.logger.error(`Error disconnecting database: ${err}`);
     }
   }
 }
