@@ -43,11 +43,8 @@ describe('GetAllUsersController (E2E)', () => {
     expect(users.body.meta).toMatchObject({
       ...users.body.meta,
       // valida se fez a conversão de Number -> String ()
-      page: expect.any(String),
-      limit: expect.any(String),
+      page: expect.any(Number),
+      limit: expect.any(Number),
     });
   });
 });
-
-
-
