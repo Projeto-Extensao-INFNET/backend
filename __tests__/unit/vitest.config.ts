@@ -8,10 +8,10 @@ export default defineConfig({
   test: {
     // Configs básicas
     name: 'unit',
-    include: ['**/*.spec.ts'],
+    include: ['__tests__/unit/**/*.spec.ts'],
     reporters: ['verbose'],
     environment: 'node',
-    root: './',
+    root: resolve(__dirname, '../..'),
     globals: true,
     restoreMocks: true,
     clearMocks: true,
@@ -76,7 +76,9 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      src: resolve(__dirname, './src'),
+      '@': resolve(__dirname, '../../src'),
+      src: resolve(__dirname, '../../src'),
+      __mocks__: resolve(__dirname, '../../src/__mocks__'),
     },
   },
 });

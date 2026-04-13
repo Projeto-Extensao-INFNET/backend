@@ -7,9 +7,9 @@ export default defineConfig({
   test: {
     // Configs básicas
     name: 'e2e',
-    include: ['**/*.e2e-spec.ts'],
+    include: ['__tests__/e2e/**/*.e2e-spec.ts'],
     environment: 'node',
-    root: './',
+    root: resolve(__dirname, '../..'),
     globals: true,
     fileParallelism: false,
     testTimeout: 30000,
@@ -32,7 +32,9 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      src: resolve(__dirname, './src'),
+      '@': resolve(__dirname, '../../src'),
+      src: resolve(__dirname, '../../src'),
+      __mocks__: resolve(__dirname, '../../src/__mocks__'),
     },
   },
 });
