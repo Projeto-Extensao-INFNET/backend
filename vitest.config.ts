@@ -1,4 +1,5 @@
 import { resolve } from 'node:path';
+
 import swc from 'unplugin-swc';
 import tsConfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
@@ -6,6 +7,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     // Configs básicas
+    name: 'unit',
     include: ['**/*.spec.ts'],
     reporters: ['verbose'],
     environment: 'node',

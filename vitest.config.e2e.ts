@@ -6,6 +6,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     // Configs básicas
+    name: 'e2e',
     include: ['**/*.e2e-spec.ts'],
     environment: 'node',
     root: './',
