@@ -1,4 +1,4 @@
-pnpm test:cov
-pnpm test:e2e
+pnpm test:unit:cov
+pnpm test:e2e:cov
 
 echo "pre-push hook has been executed 🚀"
