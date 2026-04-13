@@ -1,35 +1,32 @@
-FROM node:22-alpine AS builder 
-
-WORKDIR /app
-
-RUN  corepack enable 
-
-COPY package.json pnpm-lock.yaml ./
-
-RUN pnpm install --frozen-lockfile
-
-COPY . .
-COPY .env.production .env
-
-RUN pnpm prisma generate && pnpm run build
-
-
-FROM node:22-alpine AS production
+# Stage 1: Dependências
+FROM node:22-alpine AS deps
 
 WORKDIR /app
 
 RUN corepack enable
 
-COPY --from=builder /app/package.json /app/pnpm-lock.yaml  ./
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/dist ./dist
+COPY package.json pnpm-lock.yaml ./
 
-RUN pnpm install --frozen-lockfile --production --ignore-scripts
+RUN pnpm install --frozen-lockfile
 
-RUN npx prisma generate
+# Stage 2: Runtime
+FROM node:22-alpine
 
-ENV NODE_ENV=production
+WORKDIR /app
+
+RUN corepack enable
+
+ENV NODE_ENV=development
+
+# Copia dependências do stage anterior
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copia código-fonte e configs necessários
+COPY package.json pnpm-lock.yaml tsconfig.json tsconfig.build.json nest-cli.json ./
+COPY src ./src
+COPY prisma ./prisma
 
 EXPOSE 3333
 
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main"]
+# Hot-reload em desenvolvimento
+CMD ["pnpm", "start:dev"]
