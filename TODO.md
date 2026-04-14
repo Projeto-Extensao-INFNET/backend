@@ -1,9 +1,10 @@
 # Regras de Negócio
 
 - [x] Refatorar a arquitetura do projeto
+- [ ] Dockerizar o Nest corretamente no modo de dev
 - [x] Refatorar testes (factories, boas práticas do vitest ,melhores mocks etc)
 - [x] Quebrar services em arquivos separados (arquivos de teste também)
-- [ ] Adicionar paginação
+- [x] Adicionar paginação
 - [x] Adicionar Swagger
 - [x] Usar o Dockerfile(talvez refatorar o de deploy ou criar um de dev) no docker-compose para rodar o app direto no docker
 - [x] Corrigir erro nos seeds do banco de dados
