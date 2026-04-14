@@ -38,4 +38,9 @@ services:
       timeout: 5s
       retries: 5
 
-# TODO => configurar toxiproxy
+  toxiproxy:
+    container_name: toxiproxy
+    image: ghcr.io/shopify/toxiproxy
+    ports:
+      - "8474:8474"
+      - "13333:13333" # porta do proxy
