@@ -2,12 +2,10 @@ import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '@/infra/app.module';
-import { PrismaService } from '@/infra/database/prisma/prisma.service';
-import { makeAuthenticate, makeUser } from '@/shared/factories';
+import { createFakeUser, fakeLogin } from '__tests__/shared/factories';
 
 describe('Delete User Profile (E2E)', () => {
   let app: INestApplication;
-  let prisma: PrismaService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -15,14 +13,24 @@ describe('Delete User Profile (E2E)', () => {
     }).compile();
 
     app = moduleRef.createNestApplication();
-    prisma = moduleRef.get<PrismaService>(PrismaService);
 
     await app.init();
   });
 
   it('[DELETE] /accounts/me', async () => {
-    const user = await makeUser(prisma);
-    const { cookies } = await makeAuthenticate(app, user.email);
+    const user = createFakeUser();
+
+    await request(app.getHttpServer()).post('/auth/signup').send({
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      role: user.role,
+      documentType: user.documentType,
+      birthDate: user.birthDate,
+      document: user.document,
+    });
+
+    const { cookies } = await fakeLogin(app, user.email, user.password);
 
     const userExists = await request(app.getHttpServer())
       .get('/accounts/me')
@@ -41,6 +49,3 @@ describe('Delete User Profile (E2E)', () => {
     expect(isUserDeleted.statusCode).toBe(404);
   });
 });
-
-
-

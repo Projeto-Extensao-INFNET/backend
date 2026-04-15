@@ -5,16 +5,14 @@ import { AppModule } from '@/infra/app.module';
 import {
   generateBirthDate,
   generateUniqueCPF,
-  generateUniqueEmail,
-  generateUniqueName,
+  generateEmail,
+  generateName,
 } from '@/utils';
-import { PrismaService } from '@/infra/database/prisma/prisma.service';
-import { makeUser } from '@/shared/factories';
 import type { DOCUMENT_TYPE, ROLE } from '@/shared/types';
+import { createFakeUser } from '__tests__/shared/factories';
 
 describe('AuthController (E2E)', () => {
   let app: INestApplication;
-  let prisma: PrismaService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -22,7 +20,6 @@ describe('AuthController (E2E)', () => {
     }).compile();
 
     app = moduleRef.createNestApplication();
-    prisma = moduleRef.get<PrismaService>(PrismaService);
 
     await app.init();
   });
@@ -38,8 +35,8 @@ describe('AuthController (E2E)', () => {
   describe('SignUp ', () => {
     it('[POST] /auth/signup - should create a new user successfully', async () => {
       const user = {
-        name: generateUniqueName(),
-        email: generateUniqueEmail(),
+        name: generateName(),
+        email: generateEmail(),
         password: '12345678',
         role: 'PATIENT' as ROLE,
         documentType: 'CPF' as DOCUMENT_TYPE,
@@ -59,13 +56,14 @@ describe('AuthController (E2E)', () => {
 
     describe('SignIn', () => {
       it('[POST] /auth/signin - should return access and refresh token with valid credentials', async () => {
-        // cria um usuário
-        const user = await makeUser(prisma);
+        // cria um usuário via signup
+        const user = createFakeUser();
+        await request(app.getHttpServer()).post('/auth/signup').send(user);
 
         // faz o login
         const response = await request(app.getHttpServer())
           .post('/auth/signin')
-          .send({ email: user.email, password: '12345678' });
+          .send({ email: user.email, password: user.password });
 
         // busca os cookies nos Headers
         const cookies = response.get('Set-Cookie');
@@ -86,8 +84,8 @@ describe('AuthController (E2E)', () => {
 
     it('Complete flow: signup then signin', async () => {
       const user = {
-        name: generateUniqueName(),
-        email: generateUniqueEmail(),
+        name: generateName(),
+        email: generateEmail(),
         password: '12345678',
         role: 'PATIENT' as ROLE,
         documentType: 'CPF' as DOCUMENT_TYPE,
@@ -108,6 +106,3 @@ describe('AuthController (E2E)', () => {
     });
   });
 });
-
-
-

@@ -2,16 +2,10 @@ import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '@/infra/app.module';
-import { PrismaService } from '@/infra/database/prisma/prisma.service';
-import {
-  makeAuthenticate,
-  makeUser,
-  makeProfessional,
-} from '@/shared/factories';
+import { createFakeUser, fakeLogin } from '../../../../../shared/factories';
 
 describe('List Professionals (E2E)', () => {
   let app: INestApplication;
-  let prisma: PrismaService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -19,20 +13,19 @@ describe('List Professionals (E2E)', () => {
     }).compile();
 
     app = moduleRef.createNestApplication();
-    prisma = moduleRef.get<PrismaService>(PrismaService);
 
     await app.init();
   });
 
   it('[GET] /professionals', async () => {
     // cria um usuário
-    const user = await makeUser(prisma);
+    const user = createFakeUser();
 
     // cria um profissional
-    await makeProfessional(prisma);
+    createFakeUser({ role: 'PROFESSIONAL' });
 
     // gera e pega o token jwt
-    const token = await makeAuthenticate(app, user.email);
+    const token = await fakeLogin(app, user.email, user.password);
 
     // faz a requisição para listar profissionais
     const getProfessional = await request(app.getHttpServer())
@@ -42,6 +35,3 @@ describe('List Professionals (E2E)', () => {
     expect(getProfessional.statusCode).toBe(200);
   });
 });
-
-
-
