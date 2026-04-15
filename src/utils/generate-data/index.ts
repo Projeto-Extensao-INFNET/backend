@@ -1,12 +1,14 @@
+import { v4 as uuidv4 } from 'uuid';
 import { faker } from '@faker-js/faker/locale/pt_BR';
 
-export const nonExistentUserId = 'non-existent-id'; // id para testes que devem retornar erros
+export const generateUUID = (): string => {
+  return uuidv4();
+};
 
-export const generateUniqueName = () => faker.person.fullName();
-
+export const generateAvatar = () => faker.image.avatar();
 export const generateBirthDate = () => faker.date.birthdate();
-
-export const generateUniqueEmail = () => faker.internet.email();
+export const generateName = () => faker.person.fullName();
+export const generateEmail = () => faker.internet.email();
 
 export const generateUniqueCPF = () =>
   faker.helpers.replaceSymbols('###.###.###-##');
