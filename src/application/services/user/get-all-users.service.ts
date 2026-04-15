@@ -4,7 +4,7 @@ import type { UserEntity } from '@/core/entities/user.entity';
 import type {
   PaginationQueryDto,
   PaginationResultDto,
-} from '@/shared/dto/pagination/pagination.dto';
+} from '@/infra/http/dtos/pagination/pagination.dto';
 
 @Injectable()
 export class GetAllUsersService {

@@ -1,4 +1,4 @@
-import { EditProfileDto } from '@/shared/dto/user/edit-profile.dto';
+import { EditProfileDto } from '@/infra/http/dtos/user/edit-profile.dto';
 import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
 import { Injectable } from '@nestjs/common';
 
