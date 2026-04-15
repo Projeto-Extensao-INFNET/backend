@@ -3,20 +3,20 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import type {
   PaginationQueryDto,
   PaginationResultDto,
-} from '@/shared/dto/pagination/pagination.dto';
-import type { GetUserProfileResponse } from '@/shared/dto/user/get-user.dto';
+} from '@/infra/http/dtos/pagination/pagination.dto';
+import type { GetUserProfileResponse } from '@/infra/http/dtos/user/get-user.dto';
 
 import { PrismaService } from '../prisma/prisma.service';
-import { UserEntity } from '@/core/entities/user.entity';
+import { UserModel } from '@/domain/models/user.model';
 import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER } from '@/shared/constants';
-import { EditProfileDto } from '@/shared/dto/user/edit-profile.dto';
+import { EditProfileDto } from '@/infra/http/dtos/user/edit-profile.dto';
 import { ERROR_USERS_NOT_FOUND, ERROR_USER_NOT_FOUND } from '@/shared/errors';
 
 // Cria um contrato que poderá ser usado por vários repositórios reais
 export abstract class IUserRepository {
   abstract uploadAvatar(userId: string, avatarUrl: string): Promise<void>;
   abstract getProfile(userId: string): Promise<GetUserProfileResponse>;
-  abstract findById(id: string): Promise<Omit<UserEntity, 'password'>>;
+  abstract findById(id: string): Promise<Omit<UserModel, 'password'>>;
   abstract deleteProfile(id: string): Promise<unknown>;
   abstract editProfile(
     id: string,
@@ -24,7 +24,7 @@ export abstract class IUserRepository {
   ): Promise<EditProfileDto>;
   abstract getAllUsers(
     params: PaginationQueryDto,
-  ): Promise<PaginationResultDto<Omit<UserEntity, 'password'>>>;
+  ): Promise<PaginationResultDto<Omit<UserModel, 'password'>>>;
 }
 
 // implementação real do IUserRepository usando o Prisma para acessar o banco de dados
@@ -39,7 +39,7 @@ export class PrismaUserRepository implements IUserRepository {
     });
   }
 
-  async findById(id: string): Promise<Omit<UserEntity, 'password'>> {
+  async findById(id: string): Promise<Omit<UserModel, 'password'>> {
     const user = await this.prismaService.user.findUnique({
       where: {
         id,
@@ -65,7 +65,7 @@ export class PrismaUserRepository implements IUserRepository {
 
   async getAllUsers(
     params: PaginationQueryDto,
-  ): Promise<PaginationResultDto<Omit<UserEntity, 'password'>>> {
+  ): Promise<PaginationResultDto<Omit<UserModel, 'password'>>> {
     const { page = DEFAULT_PAGE_NUMBER, limit = DEFAULT_PAGE_LIMIT } = params;
     const take = Number(limit);
     const skip = (Number(page) - 1) * take;

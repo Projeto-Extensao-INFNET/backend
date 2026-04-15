@@ -3,15 +3,15 @@ import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER } from '@/shared/constants';
 import type {
   PaginationQueryDto,
   PaginationResultDto,
-} from '@/shared/dto/pagination/pagination.dto';
+} from '@/infra/http/dtos/pagination/pagination.dto';
 import { Injectable } from '@nestjs/common';
-import type { ProfessionalEntity } from '@/core/entities/professional.entity';
+import type { ProfessionalModel } from '@/domain/models/professional.model';
 import { CacheRepository } from '@/infra/cache/cache-repository';
 
 export abstract class IProfessionalsRepository {
   abstract listProfessionals(
     params: PaginationQueryDto,
-  ): Promise<PaginationResultDto<ProfessionalEntity>>;
+  ): Promise<PaginationResultDto<ProfessionalModel>>;
 }
 
 @Injectable()
@@ -23,7 +23,7 @@ export class PrismaProfessionalsRepository implements IProfessionalsRepository {
 
   async listProfessionals(
     params: PaginationQueryDto,
-  ): Promise<PaginationResultDto<ProfessionalEntity>> {
+  ): Promise<PaginationResultDto<ProfessionalModel>> {
     const { page = DEFAULT_PAGE_NUMBER, limit = DEFAULT_PAGE_LIMIT } = params;
     const take = Number(limit);
     const skip = (Number(page) - 1) * take;
@@ -87,7 +87,7 @@ export class PrismaProfessionalsRepository implements IProfessionalsRepository {
     const total_items = await this.prismaService.professional.count();
     const total_pages = Math.ceil(total_items / take);
 
-    const result: PaginationResultDto<ProfessionalEntity> = {
+    const result: PaginationResultDto<ProfessionalModel> = {
       data: professionals,
       meta: {
         total_items,
