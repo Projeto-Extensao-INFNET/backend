@@ -9,11 +9,11 @@ import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import type {
   SignUpDto,
   SignUpResponseDto,
-} from '@/shared/dto/auth/signUp.dto';
+} from '@/infra/http/dtos/auth/signUp.dto';
 import type {
   SignInDto,
   SignInResponseDto,
-} from '@/shared/dto/auth/signIn.dto';
+} from '@/infra/http/dtos/auth/signIn.dto';
 import {
   ERROR_CREDENTIALS_IN_USE,
   ERROR_INVALID_CREDENTIALS,
@@ -22,7 +22,6 @@ import {
 import { GetTokens } from '../jwt/generate-jwt-tokens';
 import { hash } from 'bcryptjs';
 import { SALT_ROUNDS } from '@/shared/constants';
-import { email } from 'zod';
 
 @Injectable()
 export class AuthService {
