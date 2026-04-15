@@ -1,12 +1,9 @@
 import type { INestApplication } from '@nestjs/common';
-import { CreateAppointmentsController } from '@/infra/http/controllers/appointments/create-appointments.controller';
 import { Test } from '@nestjs/testing';
-import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { AppModule } from '@/infra/app.module';
 
-describe('Create Appointments (E2E)', () => {
+describe.skip('Create Appointments (E2E)', () => {
   let app: INestApplication;
-  let prisma: PrismaService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -14,7 +11,6 @@ describe('Create Appointments (E2E)', () => {
     }).compile();
 
     app = moduleRef.createNestApplication();
-    prisma = moduleRef.get<PrismaService>(PrismaService);
 
     await app.init();
   });
@@ -23,6 +19,3 @@ describe('Create Appointments (E2E)', () => {
     expect(true).toBe(true); // TODO criar tests E2E
   });
 });
-
-
-

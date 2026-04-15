@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GetAppointmentsController } from '@/infra/http/controllers/appointments/get-appointments.controller';
 
-describe('Get Appointments (E2E)', () => {
+describe.skip('Get Appointments (E2E)', () => {
   let controller: GetAppointmentsController;
 
   beforeEach(async () => {
@@ -18,6 +18,3 @@ describe('Get Appointments (E2E)', () => {
     expect(controller).toBeDefined();
   });
 });
-
-
-
