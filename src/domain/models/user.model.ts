@@ -1,6 +1,6 @@
 import type { DOCUMENT_TYPE, ROLE } from '@/shared/types';
 
-export interface UserEntity {
+export interface UserModel {
   id: string;
   name: string;
   email: string;

@@ -5,7 +5,7 @@ import type {
   TYPE_OF_QUERY,
 } from '@/shared/types';
 
-export interface ProfessionalEntity {
+export interface ProfessionalModel {
   id: string;
   typeOfQuery: TYPE_OF_QUERY;
   price: number;
