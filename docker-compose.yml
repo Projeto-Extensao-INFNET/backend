@@ -44,3 +44,4 @@ services:
     ports:
       - "8474:8474"
       - "13333:13333" # porta do proxy
+    restart: unless-stopped
