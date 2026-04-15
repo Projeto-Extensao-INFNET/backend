@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
-import type { UserEntity } from '@/core/entities/user.entity';
+import type { UserModel } from '@/domain/models/user.model';
 import type {
   PaginationQueryDto,
   PaginationResultDto,
@@ -12,7 +12,7 @@ export class GetAllUsersService {
 
   async execute(
     query: PaginationQueryDto,
-  ): Promise<PaginationResultDto<Omit<UserEntity, 'password'>>> {
+  ): Promise<PaginationResultDto<Omit<UserModel, 'password'>>> {
     return this.repo.getAllUsers(query);
   }
 }
