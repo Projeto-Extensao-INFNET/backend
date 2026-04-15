@@ -1,6 +1,6 @@
 import { IProfessionalsRepository } from '@/infra/database/repositories/prisma-professionals.repository';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ListProfessionalsService } from '@/domain/services/professionals/list-professionals.service';
+import { ListProfessionalsService } from '@Services/professionals/list-professionals.service';
 
 const mockProfessionalsRepository = {};
 

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AvatarUploadService } from '@/domain/services/upload-avatar/avatar-upload.service';
+import { AvatarUploadService } from '@Services/upload-avatar/avatar-upload.service';
 import {
   IUserRepository,
   PrismaUserRepository,

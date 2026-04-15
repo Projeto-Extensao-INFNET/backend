@@ -1,8 +1,8 @@
 import { CreateMockUser } from '__mocks__/create-mock-user/create-mock-user';
 import { Test, type TestingModule } from '@nestjs/testing';
-import { EditUserProfileService } from '@/domain/services/user/edit-user-profile.service';
+import { EditUserProfileService } from '@Services/user/edit-user-profile.service';
 import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
-import type { EditProfileDto } from '@/shared/dto/user/edit-profile.dto';
+import type { EditProfileDto } from '@/infra/http/dtos/user/edit-profile.dto';
 
 const mockUserRepository = {
   editProfile: vi.fn(),

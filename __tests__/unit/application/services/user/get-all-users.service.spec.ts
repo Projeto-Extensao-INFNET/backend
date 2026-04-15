@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
-import { GetAllUsersService } from '@/domain/services/user/get-all-users.service';
+import { GetAllUsersService } from '@Services/user/get-all-users.service';
 import type {
   PaginationQueryDto,
   PaginationResultDto,
-} from '@/shared/dto/pagination/pagination.dto';
+} from '@/infra/http/dtos/pagination/pagination.dto';
 import type { UserEntity } from '@/core/entities/user.entity';
 import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER } from '@/shared/constants';
 import { users } from '@/utils';

@@ -1,4 +1,4 @@
-import { DeleteUserProfileService } from '@/domain/services/user/delete-user-profile.service';
+import { DeleteUserProfileService } from '@Services/user/delete-user-profile.service';
 import { nonExistentUserId } from '@/utils';
 import { NotFoundException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';

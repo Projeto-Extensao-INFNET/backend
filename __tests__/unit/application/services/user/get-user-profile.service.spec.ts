@@ -2,7 +2,7 @@ import { NotFoundException } from '@nestjs/common';
 import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
 import { Test, TestingModule } from '@nestjs/testing';
 import { nonExistentUserId } from '@/utils';
-import { GetUserProfileService } from '@/domain/services/user/get-user-profile.service';
+import { GetUserProfileService } from '@Services/user/get-user-profile.service';
 import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
 import { CreateMockUserWithoutPassword } from '__mocks__/create-mock-user/create-mock-user';
 

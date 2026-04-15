@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CancelAppointmentsService } from '@/domain/services/appointments/cancel-appointments.service';
+import { CancelAppointmentsService } from '@Services/appointments/cancel-appointments.service';
 
 describe('CancelAppointmentsService', () => {
   let service: CancelAppointmentsService;
