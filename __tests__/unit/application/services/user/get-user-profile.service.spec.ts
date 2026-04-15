@@ -1,10 +1,9 @@
 import { NotFoundException } from '@nestjs/common';
 import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
 import { Test, TestingModule } from '@nestjs/testing';
-import { nonExistentUserId } from '@/utils';
 import { GetUserProfileService } from '@Services/user/get-user-profile.service';
 import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
-import { CreateMockUserWithoutPassword } from '__mocks__/create-mock-user/create-mock-user';
+import { createFakeUser } from '__tests__/shared/factories';
 
 const mockUserRepository = {
   getProfile: vi.fn(),
@@ -12,7 +11,6 @@ const mockUserRepository = {
 
 describe('GetUserProfileService', () => {
   let service: GetUserProfileService;
-  const userMock = CreateMockUserWithoutPassword;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -34,9 +32,9 @@ describe('GetUserProfileService', () => {
 
   describe('getUserProfileService', () => {
     it('should get user profile', async () => {
-      const user = userMock;
+      const user = createFakeUser();
 
-      mockUserRepository.getProfile.mockResolvedValue(userMock);
+      mockUserRepository.getProfile.mockResolvedValue(user);
 
       const result = await service.execute(user.id);
 
@@ -46,7 +44,7 @@ describe('GetUserProfileService', () => {
     it('it should throw NotFoundException when user not found', async () => {
       mockUserRepository.getProfile.mockResolvedValue(null);
 
-      await expect(service.execute(nonExistentUserId)).rejects.toThrow(
+      await expect(service.execute('id-que-nao-existe')).rejects.toThrow(
         new NotFoundException(ERROR_USER_NOT_FOUND),
       );
     });

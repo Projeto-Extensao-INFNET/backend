@@ -1,10 +1,9 @@
 import { DeleteUserProfileService } from '@Services/user/delete-user-profile.service';
-import { nonExistentUserId } from '@/utils';
 import { NotFoundException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
-import { CreateMockUser } from '__mocks__/create-mock-user/create-mock-user';
 import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
+import { createFakeUser } from '__tests__/shared/factories';
 
 const mockUserRepository = {
   findById: vi.fn(),
@@ -13,8 +12,6 @@ const mockUserRepository = {
 
 describe('deleteAccount ', () => {
   let service: DeleteUserProfileService;
-
-  const userMock = CreateMockUser;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -31,7 +28,7 @@ describe('deleteAccount ', () => {
   });
 
   it('should delete user profile', async () => {
-    const user = userMock;
+    const user = createFakeUser();
 
     mockUserRepository.deleteProfile.mockResolvedValue(user);
 
@@ -55,7 +52,7 @@ describe('deleteAccount ', () => {
       new NotFoundException(ERROR_USER_NOT_FOUND),
     );
 
-    await expect(service.execute(nonExistentUserId)).rejects.toThrow(
+    await expect(service.execute('id-que-nao-existe')).rejects.toThrow(
       new NotFoundException(ERROR_USER_NOT_FOUND),
     );
   });

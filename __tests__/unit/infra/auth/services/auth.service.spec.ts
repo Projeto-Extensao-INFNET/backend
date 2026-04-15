@@ -13,15 +13,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import type { DOCUMENT_TYPE, Payload, ROLE } from '@/shared/types';
 import {
   generateBirthDate,
+  generateEmail,
+  generateName,
   generateUniqueCPF,
-  generateUniqueEmail,
-  generateUniqueName,
   hashPassword,
 } from '@/utils';
 import { AuthService } from '@/infra/auth/services/auth.service';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { JWTMockService } from '__mocks__/jwt';
-import { CreateMockUser } from '__mocks__/create-mock-user/create-mock-user';
 import {
   JWT_ACCESS_TOKEN_EXPIRATION,
   JWT_REFRESH_SECRET,
@@ -29,6 +28,7 @@ import {
   JWT_SECRET,
 } from '@/shared/constants';
 import { GetTokens } from '@/infra/auth/jwt/generate-jwt-tokens';
+import { createFakeUser } from '__tests__/shared/factories';
 
 const mockPrisma = {
   user: {
@@ -72,7 +72,7 @@ describe('AuthService', () => {
   describe('SignUp', () => {
     it('should create a new user', async () => {
       // dados para criar um novo usuario
-      const userSignUpData = CreateMockUser;
+      const userSignUpData = createFakeUser();
 
       // verifica se credenciais (email) já estão em uso
       mockPrisma.user.findUnique.mockResolvedValue(null);
@@ -134,8 +134,8 @@ describe('AuthService', () => {
       const plainPassword = 'senha_normal_123';
 
       const userSignUpData = {
-        name: generateUniqueName(),
-        email: generateUniqueEmail(),
+        name: generateName(),
+        email: generateEmail(),
         password: plainPassword,
         birthDate: generateBirthDate(),
         role: 'PATIENT' as ROLE,
@@ -166,8 +166,8 @@ describe('AuthService', () => {
 
     it('should throw conflict exception when email is already in use', async () => {
       const userSignUpData = {
-        name: generateUniqueName(),
-        email: generateUniqueEmail(),
+        name: generateName(),
+        email: generateEmail(),
         password: '23456678',
         birthDate: generateBirthDate(),
         role: 'PATIENT' as ROLE,

@@ -1,8 +1,8 @@
-import { CreateMockUser } from '__mocks__/create-mock-user/create-mock-user';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { EditUserProfileService } from '@Services/user/edit-user-profile.service';
 import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
 import type { EditProfileDto } from '@/infra/http/dtos/user/edit-profile.dto';
+import { createFakeUser } from '__tests__/shared/factories';
 
 const mockUserRepository = {
   editProfile: vi.fn(),
@@ -28,7 +28,7 @@ describe('editProfile', () => {
 
   it('should edit user profile', async () => {
     // usuário que será usado para editar o perfil
-    const user = CreateMockUser;
+    const user = createFakeUser();
 
     // dados que serão usados na edição do perfil
     const dto = { name: 'Novo nome' };

@@ -5,7 +5,7 @@ import type {
   PaginationQueryDto,
   PaginationResultDto,
 } from '@/infra/http/dtos/pagination/pagination.dto';
-import type { UserEntity } from '@/core/entities/user.entity';
+import type { UserModel } from '@/domain/models/user.model';
 import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER } from '@/shared/constants';
 import { users } from '@/utils';
 
@@ -13,7 +13,7 @@ const mockUserRepository = {
   getAllUsers: vi.fn(),
 };
 
-const paginatedUsers: PaginationResultDto<Omit<UserEntity, 'password'>> = {
+const paginatedUsers: PaginationResultDto<Omit<UserModel, 'password'>> = {
   data: users,
   meta: {
     total_items: users.length,
