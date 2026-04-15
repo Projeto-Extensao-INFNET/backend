@@ -2,16 +2,16 @@ import type { DOCUMENT_TYPE, ROLE } from '@/shared/types';
 import {
   generateBirthDate,
   generateUniqueCPF,
-  generateUniqueEmail,
-  generateUniqueName,
+  generateEmail,
+  generateName,
+  generateUUID,
 } from '../generate-data';
-import { generateUUID } from '../generate-uuid';
 
 export const users = [
   {
     id: generateUUID(),
-    name: generateUniqueName(),
-    email: generateUniqueEmail(),
+    name: generateName(),
+    email: generateEmail(),
     role: 'PATIENT' as ROLE,
     document: generateUniqueCPF(),
     documentType: 'CPF' as DOCUMENT_TYPE,
@@ -21,8 +21,8 @@ export const users = [
   },
   {
     id: generateUUID(),
-    name: generateUniqueName(),
-    email: generateUniqueEmail(),
+    name: generateName(),
+    email: generateEmail(),
     role: 'PATIENT' as ROLE,
     document: generateUniqueCPF(),
     documentType: 'CPF' as DOCUMENT_TYPE,
@@ -32,8 +32,8 @@ export const users = [
   },
   {
     id: generateUUID(),
-    name: generateUniqueName(),
-    email: generateUniqueEmail(),
+    name: generateName(),
+    email: generateEmail(),
     role: 'PATIENT' as ROLE,
     document: generateUniqueCPF(),
     documentType: 'CPF' as DOCUMENT_TYPE,
@@ -43,8 +43,8 @@ export const users = [
   },
   {
     id: generateUUID(),
-    name: generateUniqueName(),
-    email: generateUniqueEmail(),
+    name: generateName(),
+    email: generateEmail(),
     role: 'PATIENT' as ROLE,
     document: generateUniqueCPF(),
     documentType: 'CPF' as DOCUMENT_TYPE,
@@ -54,8 +54,8 @@ export const users = [
   },
   {
     id: '5',
-    name: generateUniqueName(),
-    email: generateUniqueEmail(),
+    name: generateName(),
+    email: generateEmail(),
     role: 'PATIENT' as ROLE,
     document: generateUniqueCPF(),
     documentType: 'CPF' as DOCUMENT_TYPE,
@@ -65,8 +65,8 @@ export const users = [
   },
   {
     id: '6',
-    name: generateUniqueName(),
-    email: generateUniqueEmail(),
+    name: generateName(),
+    email: generateEmail(),
     role: 'PATIENT' as ROLE,
     document: generateUniqueCPF(),
     documentType: 'CPF' as DOCUMENT_TYPE,
@@ -76,8 +76,8 @@ export const users = [
   },
   {
     id: '7',
-    name: generateUniqueName(),
-    email: generateUniqueEmail(),
+    name: generateName(),
+    email: generateEmail(),
     role: 'PATIENT' as ROLE,
     document: generateUniqueCPF(),
     documentType: 'CPF' as DOCUMENT_TYPE,
@@ -87,8 +87,8 @@ export const users = [
   },
   {
     id: '8',
-    name: generateUniqueName(),
-    email: generateUniqueEmail(),
+    name: generateName(),
+    email: generateEmail(),
     role: 'PATIENT' as ROLE,
     document: generateUniqueCPF(),
     documentType: 'CPF' as DOCUMENT_TYPE,
@@ -98,8 +98,8 @@ export const users = [
   },
   {
     id: '9',
-    name: generateUniqueName(),
-    email: generateUniqueEmail(),
+    name: generateName(),
+    email: generateEmail(),
     role: 'PATIENT' as ROLE,
     document: generateUniqueCPF(),
     documentType: 'CPF' as DOCUMENT_TYPE,
@@ -109,8 +109,8 @@ export const users = [
   },
   {
     id: '10',
-    name: generateUniqueName(),
-    email: generateUniqueEmail(),
+    name: generateName(),
+    email: generateEmail(),
     role: 'PATIENT' as ROLE,
     document: generateUniqueCPF(),
     documentType: 'CPF' as DOCUMENT_TYPE,
@@ -120,8 +120,8 @@ export const users = [
   },
   {
     id: '11',
-    name: generateUniqueName(),
-    email: generateUniqueEmail(),
+    name: generateName(),
+    email: generateEmail(),
     role: 'PATIENT' as ROLE,
     document: generateUniqueCPF(),
     documentType: 'CPF' as DOCUMENT_TYPE,
