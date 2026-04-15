@@ -1,4 +1,4 @@
-import { generateUUID } from '@/utils/generate-uuid';
+import { generateUUID } from '@/utils';
 
 describe('Generate UUID', () => {
   it('should generate a UUID', async () => {
