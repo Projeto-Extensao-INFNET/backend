@@ -1,10 +1,10 @@
 import type { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 
-export const makeAuthenticate = async (
+export const fakeLogin = async (
   app: INestApplication,
   email: string,
-  password = '12345678',
+  password: string,
 ) => {
   const response = await request(app.getHttpServer())
     .post('/auth/signin')
