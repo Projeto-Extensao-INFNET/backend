@@ -6,9 +6,9 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { GetUserProfileService } from '@/domain/services/user/get-user-profile.service';
+import { GetUserProfileService } from '@Services/user/get-user-profile.service';
 import { JwtAuthGuard } from '../../../auth/guards/auth.guard';
-import type { AuthenticatedUserResponse } from '@/shared/dto/auth/auth-user';
+import type { AuthenticatedUserResponse } from '@/infra/http/dtos/auth/auth-user';
 import {
   ApiTags,
   ApiBearerAuth,
@@ -16,7 +16,7 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
-import { GetUserProfileResponse } from '@/shared/dto/user/get-user.dto';
+import { GetUserProfileResponse } from '@/infra/http/dtos/user/get-user.dto';
 
 @Controller('/accounts')
 @ApiTags('Accounts')

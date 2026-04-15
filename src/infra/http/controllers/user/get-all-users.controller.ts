@@ -8,9 +8,9 @@ import {
 } from '@nestjs/common';
 import { Roles } from '@/infra/auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../../auth/guards/auth.guard';
-import { GetAllUsersService } from '@/domain/services/user/get-all-users.service';
+import { GetAllUsersService } from '@Services/user/get-all-users.service';
 import type { ROLE } from '@/shared/types';
-import type { PaginationQueryDto } from '@/shared/dto/pagination/pagination.dto';
+import type { PaginationQueryDto } from '@/infra/http/dtos/pagination/pagination.dto';
 import {
   ApiTags,
   ApiBearerAuth,

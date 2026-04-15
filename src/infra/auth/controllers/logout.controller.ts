@@ -1,6 +1,6 @@
 import { Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import type { Response } from 'express';
-import type { AuthenticatedUserResponse } from '@/shared/dto/auth/auth-user';
+import type { AuthenticatedUserResponse } from '@/infra/http/dtos/auth/auth-user';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { JwtAuthGuard } from '../guards/auth.guard';
 import {
@@ -10,7 +10,7 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { ERROR_INVALID_CREDENTIALS } from '@/shared/errors';
-import { LogoutResponse } from '@/shared/dto/auth/logout';
+import { LogoutResponse } from '@/infra/http/dtos/auth/logout';
 
 @ApiTags('Auth')
 @ApiBearerAuth()

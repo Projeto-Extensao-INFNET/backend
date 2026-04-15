@@ -7,7 +7,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import type { AuthenticatedUserResponse } from '@/shared/dto/auth/auth-user';
+import type { AuthenticatedUserResponse } from '@/infra/http/dtos/auth/auth-user';
 import { EditUserProfileService } from '@Services/user/edit-user-profile.service';
 import { JwtAuthGuard } from '@/infra/auth/guards/auth.guard';
 import {
@@ -17,8 +17,8 @@ import {
   ApiBody,
   ApiResponse,
 } from '@nestjs/swagger';
-import { EditProfileDto } from '@/shared/dto/user/edit-profile.dto';
-import { GetUserProfileResponse } from '@/shared/dto/user/get-user.dto';
+import { EditProfileDto } from '@/infra/http/dtos/user/edit-profile.dto';
+import { GetUserProfileResponse } from '@/infra/http/dtos/user/get-user.dto';
 
 @Controller('/accounts')
 @ApiTags('Accounts')

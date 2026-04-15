@@ -14,8 +14,11 @@ import {
   ERROR_CREDENTIALS_IN_USE,
   ERROR_INVALID_CREDENTIALS,
 } from '@/shared/errors';
-import { SignUpDto } from '@/shared/dto/auth/signUp.dto';
-import { SignInDto, SignInResponseDto } from '@/shared/dto/auth/signIn.dto';
+import { SignUpDto } from '@/infra/http/dtos/auth/signUp.dto';
+import {
+  SignInDto,
+  SignInResponseDto,
+} from '@/infra/http/dtos/auth/signIn.dto';
 import { COOKIES_MAX_AGE } from '@/shared/constants';
 import { env } from '@/config/env';
 

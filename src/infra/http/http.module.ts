@@ -20,17 +20,17 @@ import { RefreshTokenController } from '@/infra/auth/controllers/refresh-token.c
 import { LogoutController } from '../auth/controllers/logout.controller';
 
 // Services
-import { AvatarUploadService } from '@/domain/services/upload-avatar/avatar-upload.service';
-import { ListProfessionalsService } from '@/domain/services/professionals/list-professionals.service';
+import { AvatarUploadService } from '@Services/upload-avatar/avatar-upload.service';
+import { ListProfessionalsService } from '@Services/professionals/list-professionals.service';
 import { SpecialtyService } from '@Services/specialty/specialty.service';
 import { TreatmentTypeService } from '@Services/treatment-type/treatment-type.service';
-import { DeleteUserProfileService } from '@/domain/services/user/delete-user-profile.service';
-import { EditUserProfileService } from '@/domain/services/user/edit-user-profile.service';
-import { GetUserProfileService } from '@/domain/services/user/get-user-profile.service';
-import { GetAllUsersService } from '@/domain/services/user/get-all-users.service';
-import { GetAppointmentsService } from '@/domain/services/appointments/get-appointments.service';
-import { CreateAppointmentsService } from '@/domain/services/appointments/create-appointments.service';
-import { UpdateAppointmentsService } from '@/domain/services/appointments/update-appointments.service';
+import { DeleteUserProfileService } from '@Services/user/delete-user-profile.service';
+import { EditUserProfileService } from '@Services/user/edit-user-profile.service';
+import { GetUserProfileService } from '@Services/user/get-user-profile.service';
+import { GetAllUsersService } from '@Services/user/get-all-users.service';
+import { GetAppointmentsService } from '@Services/appointments/get-appointments.service';
+import { CreateAppointmentsService } from '@Services/appointments/create-appointments.service';
+import { UpdateAppointmentsService } from '@Services/appointments/update-appointments.service';
 import { CancelAppointmentsService } from '@Services/appointments/cancel-appointments.service';
 import { RefreshTokenService } from '@/infra/auth/services/refresh-token.service';
 

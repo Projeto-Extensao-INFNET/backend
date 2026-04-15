@@ -1,8 +1,8 @@
 import { Controller, Get, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { Roles } from '@/infra/auth/decorators/roles.decorator';
 import type { ROLE } from '@/shared/types';
-import { ListProfessionalsService } from '@/domain/services/professionals/list-professionals.service';
-import type { PaginationQueryDto } from '@/shared/dto/pagination/pagination.dto';
+import { ListProfessionalsService } from '@Services/professionals/list-professionals.service';
+import type { PaginationQueryDto } from '@/infra/http/dtos/pagination/pagination.dto';
 import {
   ApiTags,
   ApiBearerAuth,

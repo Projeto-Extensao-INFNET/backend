@@ -1,4 +1,4 @@
-import type { AuthenticatedUserResponse } from '@/shared/dto/auth/auth-user';
+import type { AuthenticatedUserResponse } from '@/infra/http/dtos/auth/auth-user';
 import {
   Controller,
   Delete,

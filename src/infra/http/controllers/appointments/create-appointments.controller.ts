@@ -1,6 +1,6 @@
 import { Roles } from '@/infra/auth/decorators/roles.decorator';
 import type { ROLE } from '@/shared/types';
-import { CreateAppointmentsService } from '@/domain/services/appointments/create-appointments.service';
+import { CreateAppointmentsService } from '@Services/appointments/create-appointments.service';
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import {
   ApiTags,
@@ -15,7 +15,7 @@ import {
   ERROR_SCHEDULE_NOT_AVAILABLE,
   ERROR_SCHEDULE_ALREADY_BOOKED,
 } from '@/shared/errors';
-import { CreateAppointmentDto } from '@/shared/dto/appointments/create-appointment.dto';
+import { CreateAppointmentDto } from '@/infra/http/dtos/appointments/create-appointment.dto';
 
 @Controller('/appointments')
 @ApiTags('Appointments')

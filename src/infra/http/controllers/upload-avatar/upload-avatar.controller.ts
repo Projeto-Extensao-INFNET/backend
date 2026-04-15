@@ -1,8 +1,8 @@
 import { MAX_FILE_SIZE } from '@/shared/constants';
-import { AvatarUploadService } from '@/domain/services/upload-avatar/avatar-upload.service';
+import { AvatarUploadService } from '@Services/upload-avatar/avatar-upload.service';
 import { JwtAuthGuard } from '@/infra/auth/guards/auth.guard';
 import { Roles } from '@/infra/auth/decorators/roles.decorator';
-import type { AuthenticatedUserResponse } from '@/shared/dto/auth/auth-user';
+import type { AuthenticatedUserResponse } from '@/infra/http/dtos/auth/auth-user';
 import type { ROLE } from '@/shared/types';
 import {
   Controller,
