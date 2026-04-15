@@ -18,9 +18,9 @@
     "paths": {
       "@/*": ["./src/*"],
       "@Controllers/*": ["./src/infra/http/controllers/*"],
-      "@Services/*": ["src/domain/services/*"],
+      "@Services/*": ["src/application/services/*"],
       "@constants": ["src/shared/constants/*"],
-      "@dtos/*": ["src/shared/dto/*"]
+      "@dtos/*": ["src/infra/http/dtos/*"]
     },
     "types": ["vitest/globals", "multer"],
     "incremental": true,
