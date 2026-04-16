@@ -319,7 +319,7 @@
                 {
                   "key": "avatar",
                   "type": "file",
-                  "src": "C:\\Projetos_VsCode\\backend\\__tests__\\images\\test.jpg"
+                  "src": "C:\\Projetos_VsCode\\backend\\test\\images\\test.jpg"
                 }
               ]
             },
