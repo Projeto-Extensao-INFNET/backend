@@ -1,8 +1,11 @@
+name: backend_projeto_de_extensao
+
 volumes:
   postgres_data:
   redis_data:
 
 services:
+  # TODO => criar service para usar Dockerfile corretamente para dev
   postgresql:
     container_name: db-projeto-extensao
     image: bitnami/postgresql:latest
@@ -10,14 +13,14 @@ services:
       - "5432:5432"
     restart: unless-stopped
     environment:
-      POSTGRESQL_USERNAME: ${POSTGRESQL_USERNAME}
-      POSTGRESQL_PASSWORD: ${POSTGRESQL_PASSWORD}
-      POSTGRESQL_DATABASE: ${POSTGRESQL_DATABASE}
+      POSTGRESQL_USERNAME: postgres
+      POSTGRESQL_PASSWORD: postgres
+      POSTGRESQL_DATABASE: db_projeto_extensao
     volumes:
       - postgres_data:/bitnami/postgresql
-      - ./docker/postgres:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRESQL_USERNAME}"]
+      test: ["CMD-SHELL", "pg_isready -U db_projeto_extensao"]
       interval: 10s
       timeout: 5s
       retries: 5
