@@ -1,50 +1,38 @@
+import { Test, TestingModule } from '@nestjs/testing';
 import {
   BadRequestException,
   ConflictException,
   UnauthorizedException,
 } from '@nestjs/common';
+
 import {
   ERROR_CREDENTIALS_IN_USE,
   ERROR_REQUIRED_FIELDS,
   ERROR_INVALID_CREDENTIALS,
 } from '@/shared/errors';
-import { JwtService } from '@nestjs/jwt';
-import { Test, TestingModule } from '@nestjs/testing';
-import type { DOCUMENT_TYPE, Payload, ROLE } from '@/shared/types';
-import {
-  generateBirthDate,
-  generateEmail,
-  generateName,
-  generateUniqueCPF,
-  hashPassword,
-} from '@/utils';
-import { AuthService } from '@/infra/auth/services/auth.service';
-import { PrismaService } from '@/infra/database/prisma/prisma.service';
-import { JWTMockService } from 'test/shared/mocks/jwt';
 import {
   JWT_ACCESS_TOKEN_EXPIRATION,
   JWT_REFRESH_SECRET,
   JWT_REFRESH_TOKEN_EXPIRATION,
   JWT_SECRET,
 } from '@/shared/constants';
-import { GetTokens } from '@/infra/auth/jwt/generate-jwt-tokens';
+
+import { JwtService } from '@nestjs/jwt';
+import { AuthService } from '@/infra/auth/services/auth.service';
+import { PrismaService } from '@/infra/database/prisma/prisma.service';
+
+import { generateUniqueCPF, hashPassword } from '@/utils';
 import { createFakeUser } from 'test/shared/factories';
+import { GetTokens } from '@/infra/auth/jwt/generate-jwt-tokens';
 
-const mockPrisma = {
-  user: {
-    findUnique: vi.fn(),
-    create: vi.fn(),
-    update: vi.fn(),
-  },
-};
-
-vi.mock('@prisma/client', () => ({
-  PrismaClient: vi.fn().mockImplementation(() => mockPrisma),
-}));
+import type { DOCUMENT_TYPE, Payload, ROLE } from '@/shared/types';
+import type { SignUpDto } from '@/infra/http/dtos/auth/signUp.dto';
+import type { User } from '@/infra/database/prisma/generated/client';
 
 describe('AuthService', () => {
   let service: AuthService;
-  const mockJwtService = JWTMockService();
+  let prisma: PrismaService;
+  let jwt: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -53,109 +41,86 @@ describe('AuthService', () => {
         GetTokens,
         {
           provide: PrismaService,
-          useValue: mockPrisma,
+          useValue: {
+            user: {
+              findUnique: vi.fn(),
+              create: vi.fn(),
+              update: vi.fn(),
+            },
+          },
         },
         {
           provide: JwtService,
-          useValue: mockJwtService,
+          useValue: {
+            sign: vi.fn(),
+          },
         },
       ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
+    prisma = module.get<PrismaService>(PrismaService);
+    jwt = module.get<JwtService>(JwtService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  describe('Services', () => {
+    it('services should be defined', () => {
+      expect(service).toBeDefined();
+      expect(prisma).toBeDefined();
+      expect(jwt).toBeDefined();
+    });
   });
 
   describe('SignUp', () => {
-    it('should create a new user', async () => {
-      // dados para criar um novo usuario
-      const userSignUpData = createFakeUser();
+    it(`should create a new user when ${AuthService.prototype.SignUp.name} is called`, async () => {
+      const fakeData = createFakeUser();
+      const userSignUpData: SignUpDto = createFakeUser();
 
-      // verifica se credenciais (email) já estão em uso
-      mockPrisma.user.findUnique.mockResolvedValue(null);
-
-      // simula dados que serão enviados pro Prisma
-      const created_user = {
-        id: 'new-user-id',
-        name: userSignUpData.name,
-        email: userSignUpData.email,
-        role: userSignUpData.role,
-        document: userSignUpData.document,
-        documentType: userSignUpData.documentType,
-        birthDate: userSignUpData.birthDate,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
+      // email/document ainda nao existem no banco
+      vi.spyOn(prisma.user, 'findUnique')
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce(null);
 
       // cria um usuario no Prisma com os dados mockados
-      mockPrisma.user.create.mockResolvedValue(created_user);
+      const createdUser = {
+        id: fakeData.id,
+        name: fakeData.name,
+        email: fakeData.email,
+        birthDate: fakeData.birthDate,
+        role: fakeData.role,
+        documentType: fakeData.documentType,
+        document: fakeData.document,
+      };
+
+      // !!FIX => corrigir tipagem, o teste está passando mas esta forcando uma tipagem indevida
+      vi.spyOn(prisma.user, 'create').mockResolvedValue(createdUser as User);
 
       // chama o serviço real com os dados de signUp mockados
       const result = await service.SignUp(userSignUpData);
 
-      // verifica que a senha não foi retornada
       expect(result).not.toHaveProperty('password');
-
-      // verifica se os dados estão corretos
-      expect(result).toMatchObject({
-        id: 'new-user-id',
-        name: userSignUpData.name,
-        email: userSignUpData.email,
-        role: userSignUpData.role,
-        document: userSignUpData.document,
-        documentType: userSignUpData.documentType,
-        birthDate: userSignUpData.birthDate,
-        createdAt: expect.any(Date),
-        updatedAt: expect.any(Date),
-      });
-
-      // verifica se email  já existe antes de criar
-      expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
-        where: {
-          email: userSignUpData.email,
-        },
-      });
-
-      // verifica se documento já existe antes de criar
-      expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
-        where: {
-          document: userSignUpData.document,
-        },
-      });
-
-      // verifica se o usuario foi criado apenas 1 vez
-      expect(mockPrisma.user.create).toHaveBeenCalledTimes(1);
+      expect(result).toMatchObject(createdUser);
+      expect(prisma.user.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            email: userSignUpData.email,
+            document: userSignUpData.document,
+            password: expect.any(String),
+          }),
+        }),
+      );
     });
 
-    it('should hash password', async () => {
+    it('should hash user password', async () => {
       const plainPassword = 'senha_normal_123';
+      const userSignUpData = createFakeUser();
 
-      const userSignUpData = {
-        name: generateName(),
-        email: generateEmail(),
-        password: plainPassword,
-        birthDate: generateBirthDate(),
-        role: 'PATIENT' as ROLE,
-        documentType: 'CPF' as DOCUMENT_TYPE,
-        document: generateUniqueCPF(),
-      };
-
-      mockPrisma.user.findUnique.mockResolvedValue(null);
-
-      mockPrisma.user.create.mockResolvedValue({
-        id: 'user-id',
-        ...userSignUpData,
-        password: 'hashed_password',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+      vi.spyOn(prisma.user, 'findUnique').mockResolvedValue(null);
+      vi.spyOn(prisma.user, 'create').mockResolvedValue(userSignUpData);
 
       await service.SignUp(userSignUpData);
 
-      expect(mockPrisma.user.create).toHaveBeenCalledWith(
+      expect(prisma.user.create).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({
             password: expect.not.stringMatching(plainPassword),
@@ -164,28 +129,31 @@ describe('AuthService', () => {
       );
     });
 
-    it('should throw conflict exception when email is already in use', async () => {
-      const userSignUpData = {
-        name: generateName(),
-        email: generateEmail(),
-        password: '23456678',
-        birthDate: generateBirthDate(),
-        role: 'PATIENT' as ROLE,
-        documentType: ' CPF' as DOCUMENT_TYPE,
-        document: generateUniqueCPF(),
-      };
+    it('should throw ConflictException when email is already in use', async () => {
+      const userSignUpData = createFakeUser();
 
-      mockPrisma.user.findUnique.mockResolvedValue({
-        id: 'user-id',
-        email: userSignUpData.email,
-      });
+      vi.spyOn(prisma.user, 'findUnique').mockResolvedValue(userSignUpData);
 
       await expect(service.SignUp(userSignUpData)).rejects.toThrow(
         new ConflictException(ERROR_CREDENTIALS_IN_USE),
       );
+      expect(prisma.user.create).not.toHaveBeenCalled();
     });
 
-    it('should throw bad request exception when not pass data', async () => {
+    it('should throw ConflictException when document is already in use', async () => {
+      const userSignUpData = createFakeUser();
+
+      vi.spyOn(prisma.user, 'findUnique')
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce(userSignUpData);
+
+      await expect(service.SignUp(userSignUpData)).rejects.toThrow(
+        new ConflictException(ERROR_CREDENTIALS_IN_USE),
+      );
+      expect(prisma.user.create).not.toHaveBeenCalled();
+    });
+
+    it('should throw BadRequestException when not pass data', async () => {
       const invalidData = {
         name: '',
         email: '',
@@ -196,34 +164,34 @@ describe('AuthService', () => {
         document: generateUniqueCPF(),
       };
 
-      mockPrisma.user.findUnique.mockResolvedValue(null);
+      vi.spyOn(prisma.user, 'findUnique').mockResolvedValue(null);
 
       await expect(service.SignUp(invalidData)).rejects.toThrow(
         new BadRequestException(ERROR_REQUIRED_FIELDS),
       );
+      expect(prisma.user.create).not.toHaveBeenCalled();
     });
   });
 
   describe('SignIn', () => {
-    it('should sign-in and return JWT tokens', async () => {
+    it(`should call ${AuthService.prototype.SignIn.name} and return JWT tokens`, async () => {
       const hashedPassword = await hashPassword('12345667');
+      const signInUser = createFakeUser();
 
-      mockPrisma.user.findUnique.mockResolvedValue({
-        id: 'user-id',
-        email: 'test@acme.com',
+      vi.spyOn(prisma.user, 'findUnique').mockResolvedValue({
+        ...signInUser,
         password: hashedPassword,
-        role: 'PATIENT' as ROLE,
       });
 
       const payload: Payload = {
-        username: 'test@acme.com',
-        sub: 'user-id',
-        role: 'PATIENT',
+        username: signInUser.email,
+        sub: signInUser.id,
+        role: signInUser.role,
       };
 
       // verifica se retornou os 2 tokens
-      mockJwtService.sign.mockReturnValueOnce('fake-jwt-token');
-      mockJwtService.sign.mockReturnValueOnce('fake-jwt-refresh-token');
+      vi.spyOn(jwt, 'sign').mockReturnValueOnce('fake-jwt-token');
+      vi.spyOn(jwt, 'sign').mockReturnValueOnce('fake-jwt-refresh-token');
 
       // faz o login
       const result = await service.SignIn({
@@ -239,13 +207,13 @@ describe('AuthService', () => {
       });
 
       // espera que os tokens sejam gerados com o payload +  expiresIn + secret
-      expect(mockJwtService.sign).toHaveBeenCalledWith(
+      expect(jwt.sign).toHaveBeenCalledWith(
         {
           ...payload,
         },
         { expiresIn: JWT_ACCESS_TOKEN_EXPIRATION, secret: JWT_SECRET },
       );
-      expect(mockJwtService.sign).toHaveBeenCalledWith(
+      expect(jwt.sign).toHaveBeenCalledWith(
         {
           ...payload,
         },
@@ -253,8 +221,8 @@ describe('AuthService', () => {
       );
     });
 
-    it('should throw unauthorized exception when email is incorrect', async () => {
-      mockPrisma.user.findUnique.mockResolvedValue(null);
+    it('should throw UnauthorizedException when email is incorrect', async () => {
+      vi.spyOn(prisma.user, 'findUnique').mockResolvedValue(null);
 
       await expect(
         service.SignIn({
@@ -262,14 +230,15 @@ describe('AuthService', () => {
           password: 'senha__123',
         }),
       ).rejects.toThrow(new UnauthorizedException(ERROR_INVALID_CREDENTIALS));
+      expect(prisma.user.update).not.toHaveBeenCalled();
     });
 
-    it('should throw unauthorized exception when password is incorrect', async () => {
+    it('should throw UnauthorizedException when password is incorrect', async () => {
       const hashedPassword = await hashPassword('deve_ser_hashed_123');
+      const signInUser = createFakeUser();
 
-      mockPrisma.user.findUnique.mockResolvedValue({
-        id: 'user-id',
-        email: 'test@acme.com',
+      vi.spyOn(prisma.user, 'findUnique').mockResolvedValue({
+        ...signInUser,
         password: hashedPassword,
       });
 
@@ -279,6 +248,7 @@ describe('AuthService', () => {
           password: 'senha_123',
         }),
       ).rejects.toThrow(new UnauthorizedException(ERROR_INVALID_CREDENTIALS));
+      expect(prisma.user.update).not.toHaveBeenCalled();
     });
   });
 });
