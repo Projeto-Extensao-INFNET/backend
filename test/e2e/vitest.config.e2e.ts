@@ -7,7 +7,7 @@ export default defineConfig({
   test: {
     // Configs básicas
     name: 'e2e',
-    include: ['__tests__/e2e/**/*.e2e-spec.ts'],
+    include: ['test/e2e/**/*.e2e-spec.ts'],
     environment: 'node',
     root: resolve(__dirname, '../..'),
     globals: true,

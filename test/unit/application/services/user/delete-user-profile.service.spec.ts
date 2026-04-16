@@ -3,7 +3,7 @@ import { NotFoundException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
 import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
-import { createFakeUser } from '__tests__/shared/factories';
+import { createFakeUser } from 'test/shared/factories';
 
 const mockUserRepository = {
   findById: vi.fn(),

@@ -8,7 +8,7 @@ export default defineConfig({
   test: {
     // Configs básicas
     name: 'unit',
-    include: ['__tests__/unit/**/*.spec.ts'],
+    include: ['test/unit/**/*.spec.ts'],
     reporters: ['verbose'],
     environment: 'node',
     root: resolve(__dirname, '../..'),

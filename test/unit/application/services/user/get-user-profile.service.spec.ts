@@ -3,7 +3,7 @@ import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
 import { Test, TestingModule } from '@nestjs/testing';
 import { GetUserProfileService } from '@Services/user/get-user-profile.service';
 import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
-import { createFakeUser } from '__tests__/shared/factories';
+import { createFakeUser } from 'test/shared/factories';
 
 const mockUserRepository = {
   getProfile: vi.fn(),

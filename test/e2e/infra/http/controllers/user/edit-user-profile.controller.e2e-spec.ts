@@ -1,10 +1,11 @@
+import { faker } from '@faker-js/faker/locale/pt_BR';
 import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '@/infra/app.module';
-import { createFakeUser, fakeLogin } from '__tests__/shared/factories';
+import { createFakeUser, fakeLogin } from 'test/shared/factories';
 
-describe('Delete User Profile (E2E)', () => {
+describe('Edit User Profile (E2E)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -17,7 +18,7 @@ describe('Delete User Profile (E2E)', () => {
     await app.init();
   });
 
-  it('[DELETE] /accounts/me', async () => {
+  it('[PATCH] /accounts/me', async () => {
     const user = createFakeUser();
 
     await request(app.getHttpServer()).post('/auth/signup').send({
@@ -31,21 +32,18 @@ describe('Delete User Profile (E2E)', () => {
     });
 
     const { cookies } = await fakeLogin(app, user.email, user.password);
+    const uniqueEmail = faker.internet.email(); // email único para cada vez que rodar o teste
 
     const userExists = await request(app.getHttpServer())
       .get('/accounts/me')
       .set('Cookie', cookies);
 
-    const deleteUser = await request(app.getHttpServer())
-      .delete('/accounts/me')
-      .set('Cookie', cookies);
-
-    const isUserDeleted = await request(app.getHttpServer())
-      .get('/accounts/me')
-      .set('Cookie', cookies);
+    const updateUserProfile = await request(app.getHttpServer())
+      .patch('/accounts/me')
+      .send({ name: 'Novo Nome', email: uniqueEmail })
+      .set('Cookie', cookies); //passa os campos que serão atualizados
 
     expect(userExists.statusCode).toBe(200);
-    expect(deleteUser.statusCode).toBe(200);
-    expect(isUserDeleted.statusCode).toBe(404);
+    expect(updateUserProfile.statusCode).toBe(200);
   });
 });

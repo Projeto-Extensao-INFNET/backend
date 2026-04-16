@@ -2,9 +2,9 @@ import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '@/infra/app.module';
-import { createFakeUser, fakeLogin } from '__tests__/shared/factories';
+import { createFakeUser, fakeLogin } from 'test/shared/factories';
 
-describe('Get User Profile (E2E)', () => {
+describe('Delete User Profile (E2E)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -17,7 +17,7 @@ describe('Get User Profile (E2E)', () => {
     await app.init();
   });
 
-  it('[GET] /accounts/me', async () => {
+  it('[DELETE] /accounts/me', async () => {
     const user = createFakeUser();
 
     await request(app.getHttpServer()).post('/auth/signup').send({
@@ -32,18 +32,20 @@ describe('Get User Profile (E2E)', () => {
 
     const { cookies } = await fakeLogin(app, user.email, user.password);
 
-    const getUser = await request(app.getHttpServer())
+    const userExists = await request(app.getHttpServer())
       .get('/accounts/me')
       .set('Cookie', cookies);
 
-    expect(getUser.statusCode).toBe(200);
-    expect(getUser.body).toMatchObject({
-      id: expect.any(String),
-      name: user.name,
-      email: user.email,
-      birthDate: user.birthDate.toISOString(),
-      role: user.role,
-      document: user.document,
-    });
+    const deleteUser = await request(app.getHttpServer())
+      .delete('/accounts/me')
+      .set('Cookie', cookies);
+
+    const isUserDeleted = await request(app.getHttpServer())
+      .get('/accounts/me')
+      .set('Cookie', cookies);
+
+    expect(userExists.statusCode).toBe(200);
+    expect(deleteUser.statusCode).toBe(200);
+    expect(isUserDeleted.statusCode).toBe(404);
   });
 });

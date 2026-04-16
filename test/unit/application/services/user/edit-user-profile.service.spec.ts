@@ -2,7 +2,7 @@ import { Test, type TestingModule } from '@nestjs/testing';
 import { EditUserProfileService } from '@Services/user/edit-user-profile.service';
 import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
 import type { EditProfileDto } from '@/infra/http/dtos/user/edit-profile.dto';
-import { createFakeUser } from '__tests__/shared/factories';
+import { createFakeUser } from 'test/shared/factories';
 
 const mockUserRepository = {
   editProfile: vi.fn(),

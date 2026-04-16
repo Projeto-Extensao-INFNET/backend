@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RefreshTokenService } from '@/infra/auth/services/refresh-token.service';
-import { JWTMockService } from '__mocks__/jwt';
+import { JWTMockService } from 'test/shared/mocks/jwt';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 

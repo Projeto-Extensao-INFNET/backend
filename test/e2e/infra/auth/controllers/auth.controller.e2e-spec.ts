@@ -9,7 +9,7 @@ import {
   generateName,
 } from '@/utils';
 import type { DOCUMENT_TYPE, ROLE } from '@/shared/types';
-import { createFakeUser } from '__tests__/shared/factories';
+import { createFakeUser } from 'test/shared/factories';
 
 describe('AuthController (E2E)', () => {
   let app: INestApplication;

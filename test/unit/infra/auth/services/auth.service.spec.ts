@@ -20,7 +20,7 @@ import {
 } from '@/utils';
 import { AuthService } from '@/infra/auth/services/auth.service';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
-import { JWTMockService } from '__mocks__/jwt';
+import { JWTMockService } from 'test/shared/mocks/jwt';
 import {
   JWT_ACCESS_TOKEN_EXPIRATION,
   JWT_REFRESH_SECRET,
@@ -28,7 +28,7 @@ import {
   JWT_SECRET,
 } from '@/shared/constants';
 import { GetTokens } from '@/infra/auth/jwt/generate-jwt-tokens';
-import { createFakeUser } from '__tests__/shared/factories';
+import { createFakeUser } from 'test/shared/factories';
 
 const mockPrisma = {
   user: {

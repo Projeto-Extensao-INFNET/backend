@@ -1,11 +1,10 @@
-import { faker } from '@faker-js/faker/locale/pt_BR';
 import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '@/infra/app.module';
-import { createFakeUser, fakeLogin } from '__tests__/shared/factories';
+import { createFakeUser, fakeLogin } from 'test/shared/factories';
 
-describe('Edit User Profile (E2E)', () => {
+describe('Get User Profile (E2E)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -18,7 +17,7 @@ describe('Edit User Profile (E2E)', () => {
     await app.init();
   });
 
-  it('[PATCH] /accounts/me', async () => {
+  it('[GET] /accounts/me', async () => {
     const user = createFakeUser();
 
     await request(app.getHttpServer()).post('/auth/signup').send({
@@ -32,18 +31,19 @@ describe('Edit User Profile (E2E)', () => {
     });
 
     const { cookies } = await fakeLogin(app, user.email, user.password);
-    const uniqueEmail = faker.internet.email(); // email único para cada vez que rodar o teste
 
-    const userExists = await request(app.getHttpServer())
+    const getUser = await request(app.getHttpServer())
       .get('/accounts/me')
       .set('Cookie', cookies);
 
-    const updateUserProfile = await request(app.getHttpServer())
-      .patch('/accounts/me')
-      .send({ name: 'Novo Nome', email: uniqueEmail })
-      .set('Cookie', cookies); //passa os campos que serão atualizados
-
-    expect(userExists.statusCode).toBe(200);
-    expect(updateUserProfile.statusCode).toBe(200);
+    expect(getUser.statusCode).toBe(200);
+    expect(getUser.body).toMatchObject({
+      id: expect.any(String),
+      name: user.name,
+      email: user.email,
+      birthDate: user.birthDate.toISOString(),
+      role: user.role,
+      document: user.document,
+    });
   });
 });
