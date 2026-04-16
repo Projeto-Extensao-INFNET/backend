@@ -18,9 +18,9 @@ services:
       POSTGRESQL_DATABASE: db_projeto_extensao
     volumes:
       - postgres_data:/bitnami/postgresql
-      - ./postgres:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres/test-db.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U db_projeto_extensao"]
+      test: ["CMD-SHELL", "pg_isready -U postgres db_projeto_extensao"]
       interval: 10s
       timeout: 5s
       retries: 5
