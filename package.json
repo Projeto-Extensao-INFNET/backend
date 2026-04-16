@@ -29,8 +29,8 @@
     "prisma:generate": "prisma generate",
     "prisma:studio": "prisma studio",
     "prisma:seed": "pnpm prisma db seed",
-    "docker:dev": "docker compose  up -d && pnpm start:dev",
-    "docker:stop": "docker compose  stop"
+    "docker:dev": "cd docker && docker compose up -d && pnpm start:dev",
+    "docker:stop": "cd docker && docker compose  stop"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.12",
