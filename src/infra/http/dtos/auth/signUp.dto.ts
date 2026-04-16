@@ -55,6 +55,12 @@ export class SignUpDto {
 
 export class SignUpResponseDto {
   @ApiProperty({
+    example: '39483434ore74520192-348934...',
+    description: 'uuid do usuário',
+  })
+  id!: string;
+
+  @ApiProperty({
     example: 'John Doe',
     description: 'Nome completo do usuário.',
   })
