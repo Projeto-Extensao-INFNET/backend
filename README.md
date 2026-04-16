@@ -1,4 +1,3 @@
-
 # Backend Projeto Extensão
 
 Este repositório contém o backend do Projeto **FUTURO NOME DO PROJETO**, desenvolvido com NestJS, Prisma ORM e PostgreSQL, seguindo princípios de Clean Architecture e Domain-Driven Design. O objetivo é fornecer uma API robusta, escalável e de fácil manutenção para aplicações web e mobile.
@@ -46,7 +45,7 @@ O projeto segue **Clean Architecture** e **DDD**. Principais pastas:
 
 ```
 src/
-├── __tests__/         # Configurações e testes
+├── test/         # Configurações e testes
 ├── __mocks__/         # Mocks customizados
 ├── config/            # Configurações (env, docs)
 ├── core/              # Entidades do domínio
@@ -119,7 +118,7 @@ TODO => reformular a forma de subir o projeto (validar se dockeriza em dev ou n�
    ```sh
    pnpm install
    ```
-  
+
 2. **Rode as migrations e gere o Prisma Client:**
 
    ```sh
