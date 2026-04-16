@@ -36,7 +36,7 @@ docker exec -it toxiproxy /toxiproxy-cli delete nome-do-proxy
 docker exec -it toxiproxy /toxiproxy-cli toxic add -t latency -a latency=2000 backend-proxy
 ```
 
-Isso adiciona 800ms de latencia com jitter de 200ms nas respostas para o cliente.
+Isso adiciona 2000ms (2s) de latencia nas respostas para o cliente.
 
 ## Remover latencia
 
