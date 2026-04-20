@@ -29,6 +29,6 @@ README.md
 TODO.md
 
 # linters
-biome.json
+eslint.config.mjs
 commitlint.config.js
 .lintstagedrc.json
