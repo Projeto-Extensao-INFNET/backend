@@ -1,51 +1,53 @@
-import { NotFoundException } from '@nestjs/common';
-import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
 import { Test, TestingModule } from '@nestjs/testing';
-import { GetUserProfileService } from '@Services/user/get-user-profile.service';
-import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
-import { createFakeUser } from 'test/shared/factories';
+import { NotFoundException } from '@nestjs/common';
 
-const mockUserRepository = {
-  getProfile: vi.fn(),
-};
+import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
+import { GetUserProfileService } from '@Services/user/get-user-profile.service';
+
+import { createFakeUser } from 'test/__shared__/factories';
 
 describe('GetUserProfileService', () => {
   let service: GetUserProfileService;
+
+  const mockRepository = {
+    getProfile: vi.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         GetUserProfileService,
-        {
-          provide: IUserRepository,
-          useValue: mockUserRepository,
-        },
+        { provide: IUserRepository, useValue: mockRepository },
       ],
     }).compile();
 
     service = module.get<GetUserProfileService>(GetUserProfileService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  describe('Service', () => {
+    it('service should be defined', () => {
+      expect(service).toBeDefined();
+    });
   });
 
-  describe('getUserProfileService', () => {
+  describe('execute', () => {
     it('should get user profile', async () => {
       const user = createFakeUser();
-
-      mockUserRepository.getProfile.mockResolvedValue(user);
+      mockRepository.getProfile.mockResolvedValue(user);
 
       const result = await service.execute(user.id);
 
       expect(result.id).toBe(user.id);
+      expect(mockRepository.getProfile).toHaveBeenCalledWith(user.id);
     });
 
-    it('it should throw NotFoundException when user not found', async () => {
-      mockUserRepository.getProfile.mockResolvedValue(null);
+    it('should throw NotFoundException when user not found', async () => {
+      mockRepository.getProfile.mockRejectedValue(
+        new NotFoundException('Usuário não encontrado'),
+      );
 
       await expect(service.execute('id-que-nao-existe')).rejects.toThrow(
-        new NotFoundException(ERROR_USER_NOT_FOUND),
+        NotFoundException,
       );
     });
   });

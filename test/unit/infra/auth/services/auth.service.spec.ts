@@ -22,39 +22,38 @@ import { AuthService } from '@/infra/auth/services/auth.service';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
 
 import { generateUniqueCPF, hashPassword } from '@/utils';
-import { createFakeUser } from 'test/shared/factories';
+import { createFakeUser } from 'test/__shared__/factories';
+
 import { GetTokens } from '@/infra/auth/jwt/generate-jwt-tokens';
 
 import type { DOCUMENT_TYPE, Payload, ROLE } from '@/shared/types';
-import type { SignUpDto } from '@/infra/http/dtos/auth/signUp.dto';
 import type { User } from '@/infra/database/prisma/generated/client';
+import type { SignUpDto } from '@/infra/http/dtos/auth/signUp.dto';
 
 describe('AuthService', () => {
   let service: AuthService;
   let prisma: PrismaService;
   let jwt: JwtService;
 
+  const mockPrisma = {
+    user: {
+      findUnique: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+    },
+  };
+
+  const mockJwt = {
+    sign: vi.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
         GetTokens,
-        {
-          provide: PrismaService,
-          useValue: {
-            user: {
-              findUnique: vi.fn(),
-              create: vi.fn(),
-              update: vi.fn(),
-            },
-          },
-        },
-        {
-          provide: JwtService,
-          useValue: {
-            sign: vi.fn(),
-          },
-        },
+        { provide: PrismaService, useValue: mockPrisma },
+        { provide: JwtService, useValue: mockJwt },
       ],
     }).compile();
 
@@ -77,7 +76,7 @@ describe('AuthService', () => {
       const userSignUpData: SignUpDto = createFakeUser();
 
       // email/document ainda nao existem no banco
-      vi.spyOn(prisma.user, 'findUnique')
+      mockPrisma.user.findUnique
         .mockResolvedValueOnce(null)
         .mockResolvedValueOnce(null);
 
@@ -93,7 +92,7 @@ describe('AuthService', () => {
       };
 
       // !!FIX => corrigir tipagem, o teste está passando mas esta forcando uma tipagem indevida
-      vi.spyOn(prisma.user, 'create').mockResolvedValue(createdUser as User);
+      mockPrisma.user.create.mockResolvedValue(createdUser as User);
 
       // chama o serviço real com os dados de signUp mockados
       const result = await service.SignUp(userSignUpData);
@@ -115,8 +114,8 @@ describe('AuthService', () => {
       const plainPassword = 'senha_normal_123';
       const userSignUpData = createFakeUser();
 
-      vi.spyOn(prisma.user, 'findUnique').mockResolvedValue(null);
-      vi.spyOn(prisma.user, 'create').mockResolvedValue(userSignUpData);
+      mockPrisma.user.findUnique.mockResolvedValue(null);
+      mockPrisma.user.create.mockResolvedValue(userSignUpData);
 
       await service.SignUp(userSignUpData);
 
@@ -132,7 +131,7 @@ describe('AuthService', () => {
     it('should throw ConflictException when email is already in use', async () => {
       const userSignUpData = createFakeUser();
 
-      vi.spyOn(prisma.user, 'findUnique').mockResolvedValue(userSignUpData);
+      mockPrisma.user.findUnique.mockResolvedValue(userSignUpData);
 
       await expect(service.SignUp(userSignUpData)).rejects.toThrow(
         new ConflictException(ERROR_CREDENTIALS_IN_USE),
@@ -143,7 +142,7 @@ describe('AuthService', () => {
     it('should throw ConflictException when document is already in use', async () => {
       const userSignUpData = createFakeUser();
 
-      vi.spyOn(prisma.user, 'findUnique')
+      mockPrisma.user.findUnique
         .mockResolvedValueOnce(null)
         .mockResolvedValueOnce(userSignUpData);
 
@@ -164,7 +163,7 @@ describe('AuthService', () => {
         document: generateUniqueCPF(),
       };
 
-      vi.spyOn(prisma.user, 'findUnique').mockResolvedValue(null);
+      mockPrisma.user.findUnique.mockResolvedValue(null);
 
       await expect(service.SignUp(invalidData)).rejects.toThrow(
         new BadRequestException(ERROR_REQUIRED_FIELDS),
@@ -178,7 +177,7 @@ describe('AuthService', () => {
       const hashedPassword = await hashPassword('12345667');
       const signInUser = createFakeUser();
 
-      vi.spyOn(prisma.user, 'findUnique').mockResolvedValue({
+      mockPrisma.user.findUnique.mockResolvedValue({
         ...signInUser,
         password: hashedPassword,
       });
@@ -222,7 +221,7 @@ describe('AuthService', () => {
     });
 
     it('should throw UnauthorizedException when email is incorrect', async () => {
-      vi.spyOn(prisma.user, 'findUnique').mockResolvedValue(null);
+      mockPrisma.user.findUnique.mockResolvedValue(null);
 
       await expect(
         service.SignIn({
@@ -237,7 +236,7 @@ describe('AuthService', () => {
       const hashedPassword = await hashPassword('deve_ser_hashed_123');
       const signInUser = createFakeUser();
 
-      vi.spyOn(prisma.user, 'findUnique').mockResolvedValue({
+      mockPrisma.user.findUnique.mockResolvedValue({
         ...signInUser,
         password: hashedPassword,
       });

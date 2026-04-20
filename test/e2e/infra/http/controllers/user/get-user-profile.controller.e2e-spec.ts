@@ -1,8 +1,11 @@
-import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import request from 'supertest';
+import type { INestApplication } from '@nestjs/common';
+
 import { AppModule } from '@/infra/app.module';
-import { createFakeUser, fakeLogin } from 'test/shared/factories';
+
+import request from 'supertest';
+
+import { createFakeUser, fakeLogin } from 'test/__shared__/factories';
 
 describe('Get User Profile (E2E)', () => {
   let app: INestApplication;

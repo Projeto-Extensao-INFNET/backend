@@ -9,7 +9,7 @@ import {
   generateName,
 } from '@/utils';
 import type { DOCUMENT_TYPE, ROLE } from '@/shared/types';
-import { createFakeUser } from 'test/shared/factories';
+import { createFakeUser } from 'test/__shared__/factories';
 
 describe('AuthController (E2E)', () => {
   let app: INestApplication;
@@ -24,12 +24,10 @@ describe('AuthController (E2E)', () => {
     await app.init();
   });
 
-  afterAll(async () => {
-    await app.close();
-  });
-
-  it('should be defined', () => {
-    expect(app).toBeDefined();
+  describe('App', () => {
+    it('app should be defined', () => {
+      expect(app).toBeDefined();
+    });
   });
 
   describe('SignUp ', () => {

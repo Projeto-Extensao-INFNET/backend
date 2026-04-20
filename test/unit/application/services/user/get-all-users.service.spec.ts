@@ -30,18 +30,17 @@ describe('GetAllUsersService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         GetAllUsersService,
-        {
-          provide: IUserRepository,
-          useValue: mockUserRepository,
-        },
+        { provide: IUserRepository, useValue: mockUserRepository },
       ],
     }).compile();
 
     service = module.get<GetAllUsersService>(GetAllUsersService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  describe('Service', () => {
+    it('should be defined', () => {
+      expect(service).toBeDefined();
+    });
   });
 
   it('should list all users', async () => {

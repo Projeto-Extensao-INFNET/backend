@@ -4,19 +4,16 @@ import { PrismaService } from '@/infra/database/prisma/prisma.service';
 describe('PrismaService', () => {
   let prisma: PrismaService;
 
+  const mockPrisma = {
+    $connect: vi.fn(),
+    $disconnect: vi.fn(),
+    onModuleInit: vi.fn(),
+    onModuleDestroy: vi.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        {
-          provide: PrismaService,
-          useValue: {
-            $connect: vi.fn(),
-            $disconnect: vi.fn(),
-            onModuleInit: vi.fn(),
-            onModuleDestroy: vi.fn(),
-          },
-        },
-      ],
+      providers: [{ provide: PrismaService, useValue: mockPrisma }],
     }).compile();
 
     prisma = module.get<PrismaService>(PrismaService);

@@ -2,7 +2,7 @@ import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '@/infra/app.module';
-import { createFakeUser, fakeLogin } from '../../../../../shared/factories';
+import { createFakeUser, fakeLogin } from '../../../../../__shared__/factories';
 
 describe('List Professionals (E2E)', () => {
   let app: INestApplication;

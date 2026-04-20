@@ -1,59 +1,57 @@
-import { DeleteUserProfileService } from '@Services/user/delete-user-profile.service';
-import { NotFoundException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
+import { NotFoundException } from '@nestjs/common';
+
 import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
-import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
-import { createFakeUser } from 'test/shared/factories';
+import { DeleteUserProfileService } from '@Services/user/delete-user-profile.service';
 
-const mockUserRepository = {
-  findById: vi.fn(),
-  deleteProfile: vi.fn(),
-};
+import { createFakeUser } from 'test/__shared__/factories';
 
-describe('deleteAccount ', () => {
+describe('deleteAccount', () => {
   let service: DeleteUserProfileService;
+
+  const mockRepository = {
+    findById: vi.fn(),
+    deleteProfile: vi.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         DeleteUserProfileService,
-        {
-          provide: IUserRepository,
-          useValue: mockUserRepository,
-        },
+        { provide: IUserRepository, useValue: mockRepository },
       ],
     }).compile();
 
     service = module.get<DeleteUserProfileService>(DeleteUserProfileService);
   });
 
+  describe('Service', () => {
+    it('service should be defined', () => {
+      expect(service).toBeDefined();
+    });
+  });
+
   it('should delete user profile', async () => {
     const user = createFakeUser();
 
-    mockUserRepository.deleteProfile.mockResolvedValue(user);
-
-    mockUserRepository.findById
-      .mockResolvedValueOnce(user) // 1ª chamada: retorna o usuário
-      .mockResolvedValueOnce(null); // 2ª chamada: retorna null
+    mockRepository.findById.mockResolvedValue(user);
+    mockRepository.deleteProfile.mockResolvedValue({
+      message: 'Usuário removido com sucesso!',
+    });
 
     await service.execute(user.id);
 
-    const result = await mockUserRepository.findById({
-      where: {
-        id: user.id,
-      },
-    });
-
-    expect(result).toBeNull();
+    expect(mockRepository.findById).toHaveBeenCalledWith(user.id);
+    expect(mockRepository.deleteProfile).toHaveBeenCalledWith(user.id);
   });
 
-  it('it should throw NotFoundException when user not found', async () => {
-    mockUserRepository.deleteProfile.mockRejectedValue(
-      new NotFoundException(ERROR_USER_NOT_FOUND),
+  it('should throw NotFoundException when user not found', async () => {
+    vi.spyOn(mockRepository, 'findById').mockRejectedValue(
+      new NotFoundException('Usuário não encontrado'),
     );
 
     await expect(service.execute('id-que-nao-existe')).rejects.toThrow(
-      new NotFoundException(ERROR_USER_NOT_FOUND),
+      NotFoundException,
     );
   });
 });

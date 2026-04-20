@@ -1,21 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AvatarUploadService } from '@Services/upload-avatar/avatar-upload.service';
-import {
-  IUserRepository,
-  PrismaUserRepository,
-} from '@/infra/database/repositories/prisma-user-repository';
-import { PrismaService } from '@/infra/database/prisma/prisma.service';
 
-const mockPrisma = {
+import { AvatarUploadService } from '@Services/upload-avatar/avatar-upload.service';
+
+import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
+
+const mockRepository = {
   user: {
     create: vi.fn(),
     findUnique: vi.fn(),
   },
 };
-
-vi.mock('@prisma/client', () => ({
-  PrismaClient: vi.fn().mockImplementation(() => mockPrisma),
-}));
 
 describe.skip('AvatarUploadService', () => {
   let service: AvatarUploadService;
@@ -24,11 +18,7 @@ describe.skip('AvatarUploadService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AvatarUploadService,
-        PrismaService,
-        {
-          provide: IUserRepository,
-          useClass: PrismaUserRepository,
-        },
+        { provide: IUserRepository, useValue: mockRepository },
       ],
     }).compile();
 
