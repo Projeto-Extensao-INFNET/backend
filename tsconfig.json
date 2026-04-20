@@ -19,8 +19,8 @@
       "@/*": ["./src/*"],
       "@Controllers/*": ["./src/infra/http/controllers/*"],
       "@Services/*": ["src/application/services/*"],
-      "@constants": ["src/shared/constants/*"],
-      "@dtos/*": ["src/infra/http/dtos/*"]
+      "@Constants": ["src/shared/constants/*"],
+      "@Dtos/*": ["src/infra/http/dtos/*"]
     },
     "types": ["vitest/globals", "multer"],
     "incremental": true,
