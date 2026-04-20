@@ -1,34 +1,37 @@
 import { resolve } from 'node:path';
+
 import swc from 'unplugin-swc';
 import tsConfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    // Configs básicas
-    name: 'e2e',
-    include: ['test/e2e/**/*.e2e-spec.ts'],
+    name: 'integration',
+    include: ['test/integration/**/*.test.{ts,tsx}'],
     environment: 'node',
     root: resolve(__dirname, '../..'),
     globals: true,
     fileParallelism: false,
-    testTimeout: 30000,
+    testTimeout: 15000,
 
-    // Coverage
+    setupFiles: [resolve(__dirname, 'vitest.setup.ts')],
+
     coverage: {
-      reportsDirectory: './coverage/e2e',
+      reportsDirectory: './coverage/integration',
       provider: 'v8',
-      reporter: ['text', 'html', 'lcov', 'cobertura'],
       include: ['src/**/*.ts'],
       exclude: [
         '**/*.test.{ts,tsx}',
         '**/*.spec.{ts,tsx}',
         '**/types/**',
+        '**/dtos/**',
         '**/*.d.ts',
+        '**/*.dto.ts',
         '**/*.type.ts',
         '**/*.types.ts',
         '**/*.contract.ts',
         '**/*.interface.ts',
+        '**/*.controller.ts',
         '**/*.model.ts',
         '**/*.decorator.ts',
         '**/*.guard.ts',
@@ -41,14 +44,24 @@ export default defineConfig({
         '**/__tests__/**',
         '**/generated/**',
       ],
+      thresholds: {
+        global: {
+          branches: 80,
+          functions: 80,
+          lines: 80,
+          statements: 80,
+        },
+      },
     },
   },
+
   plugins: [
     tsConfigPaths(),
     swc.vite({
       module: { type: 'es6' },
     }),
   ],
+
   resolve: {
     alias: {
       '@': resolve(__dirname, '../../src'),

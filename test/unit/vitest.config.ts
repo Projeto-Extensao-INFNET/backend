@@ -6,55 +6,49 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    // Configs básicas
     name: 'unit',
-    include: ['test/unit/**/*.spec.ts'],
-    reporters: ['verbose'],
+    include: ['test/unit/**/*.spec.{ts,tsx}'],
     environment: 'node',
     root: resolve(__dirname, '../..'),
     globals: true,
-    restoreMocks: true,
-    clearMocks: true,
+    fileParallelism: false,
     testTimeout: 10000,
 
     // UI
     // ui: true,
     // open: true,
 
-    // Performance
-    pool: 'threads',
-    poolOptions: {
-      threads: {
-        minThreads: 4,
-        maxThreads: 8,
-      },
-    },
-
-    // Setup Global
-    // setupFiles: [resolve(__dirname, 'vitest.setup.ts')],
+    // Setup File
+    setupFiles: [resolve(__dirname, 'vitest.setup.ts')],
 
     // Coverage
     coverage: {
-      reportsDirectory: './coverage',
-      reporter: ['text', 'html', 'lcov', 'cobertura'],
+      reportsDirectory: './coverage/unit',
       provider: 'v8',
-      include: ['src/**/*.ts'],
+      include: ['src/**/*.{ts,tsx}'],
       exclude: [
+        '**/*.test.{ts,tsx}',
+        '**/*.spec.{ts,tsx}',
         '**/types/**',
-        '**/dto/**',
+        '**/dtos/**',
         '**/*.d.ts',
         '**/*.dto.ts',
-        '**/mocks/**',
-        '**/mocks/**',
-        '**/factories/**',
-        '**/generated/**',
-        'src/main.ts',
-        '**/*.module.ts',
-        '**/*.e2e-spec.ts',
+        '**/*.type.ts',
+        '**/*.types.ts',
+        '**/*.contract.ts',
+        '**/*.interface.ts',
         '**/*.controller.ts',
-        '**/*.entity.ts',
+        '**/*.model.ts',
         '**/*.decorator.ts',
         '**/*.guard.ts',
+        '**/*.entity.ts',
+        '**/*.module.ts',
+        '**/*.mock.{ts,tsx}',
+        '**/*.mocks.{ts,tsx}',
+        '**/mocks/**',
+        '**/__mocks__/**',
+        '**/__tests__/**',
+        '**/generated/**',
       ],
 
       // Metas de cobertura dos testes
@@ -77,8 +71,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, '../../src'),
-      src: resolve(__dirname, '../../src'),
-      __mocks__: resolve(__dirname, '../../src/__mocks__'),
+      '@Services': resolve(__dirname, '../../src/application/services'),
+      '@Controllers': resolve(__dirname, '../../src/infra/http/controllers'),
+      '@constants': resolve(__dirname, '../../src/shared/constants'),
+      '@dtos': resolve(__dirname, '../../src/infra/http/dtos'),
     },
   },
 });
