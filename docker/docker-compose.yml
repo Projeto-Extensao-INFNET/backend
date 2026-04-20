@@ -3,11 +3,41 @@ name: backend_projeto_de_extensao
 volumes:
   postgres_data:
   redis_data:
+  app_node_modules:
 
 services:
-  # TODO => criar service para usar Dockerfile corretamente para dev
+  backend:
+    container_name: app
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    env_file:
+      - ../.env
+    depends_on:
+      postgresql:
+        condition: service_started
+      redis:
+        condition: service_started
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgresql:5432/db_projeto_extensao?schema=public
+      - REDIS_HOST=redis
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true # hot-reload (gambiarra)
+    ports:
+      - "3333:3333" # NestJs
+      - "5555:5555" # prisma studio
+    restart: always
+    volumes:
+      - ..:/app
+      - /app/node_modules
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3333/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
   postgresql:
-    container_name: db-projeto-extensao
+    container_name: db
     image: bitnami/postgresql:latest
     ports:
       - "5432:5432"
@@ -20,13 +50,13 @@ services:
       - postgres_data:/bitnami/postgresql
       - ./postgres/test-db.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres db_projeto_extensao"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres db_projeto_extensao" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
   redis:
-    container_name: cache-projeto-extensao
+    container_name: cache
     image: bitnami/redis:latest
     ports:
       - "6379:6379"
@@ -36,7 +66,7 @@ services:
     volumes:
       - redis_data:/bitnami/redis
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
       timeout: 5s
       retries: 5
