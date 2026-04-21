@@ -40,5 +40,5 @@ export class SignInResponseDto {
       },
     },
   })
-  data!: AuthenticatedUserResponse;
+  payload!: AuthenticatedUserResponse;
 }
