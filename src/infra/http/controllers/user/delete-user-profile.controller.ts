@@ -1,4 +1,3 @@
-import type { AuthenticatedUserResponse } from '@/infra/http/dtos/auth/auth-user';
 import {
   Controller,
   Delete,
@@ -7,14 +6,20 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { DeleteUserProfileService } from '@Services/user/delete-user-profile.service';
-import { JwtAuthGuard } from '../../../auth/guards/auth.guard';
 import {
   ApiTags,
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
 } from '@nestjs/swagger';
+import { DeleteUserProfileService } from '@Services/user/delete-user-profile.service';
+import { JwtAuthGuard } from '../../../auth/guards/auth.guard';
+import { successResponse } from '@/shared/errors/responses/success.response';
+import { handleError } from '@/shared/errors/handleError';
+
+import type { AuthenticatedUserResponse } from '@/infra/http/dtos/auth/auth-user';
+import type { DeleteProfileResponseDto } from '../../dtos/user/delete-profile.dto';
+import type { RequestResponse } from '@/shared/errors/responses';
 
 @Controller('/accounts')
 @ApiTags('Accounts')
@@ -43,12 +48,15 @@ export class DeleteUserProfileController {
     },
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async deleteUserProfile(@Req() req: AuthenticatedUserResponse) {
-    await this.deleteUserProfileService.execute(req.user.sub);
+  async deleteUserProfile(
+    @Req() req: AuthenticatedUserResponse,
+  ): Promise<RequestResponse<DeleteProfileResponseDto>> {
+    const result = await this.deleteUserProfileService.execute(req.user.sub);
+    if (!result.ok) handleError(result.error);
 
-    return {
-      status: HttpStatus.NO_CONTENT,
-      message: 'Usuário removido com sucesso!',
-    };
+    return successResponse(
+      { message: 'Perfil removido com sucesso!' },
+      HttpStatus.NO_CONTENT,
+    );
   }
 }
