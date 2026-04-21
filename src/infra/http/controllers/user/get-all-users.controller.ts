@@ -9,8 +9,6 @@ import {
 import { Roles } from '@/infra/auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../../auth/guards/auth.guard';
 import { GetAllUsersService } from '@Services/user/get-all-users.service';
-import type { ROLE } from '@/shared/types';
-import type { PaginationQueryDto } from '@/infra/http/dtos/pagination/pagination.dto';
 import {
   ApiTags,
   ApiBearerAuth,
@@ -18,10 +16,16 @@ import {
   ApiQuery,
   ApiResponse,
 } from '@nestjs/swagger';
-import {
-  ERROR_INVALID_CREDENTIALS,
-  ERROR_USERS_NOT_FOUND,
-} from '@/shared/errors';
+import { successResponse } from '@/shared/errors/responses/success.response';
+import { handleError } from '@/shared/errors/handleError';
+
+import type {
+  PaginationQueryDto,
+  PaginationResultDto,
+} from '@/infra/http/dtos/pagination/pagination.dto';
+import type { ROLE } from '@/shared/types';
+import type { UserModel } from '@/domain/models/user.model';
+import type { RequestResponse } from '@/shared/errors/responses';
 
 @Controller('/accounts')
 @ApiTags('Accounts')
@@ -33,51 +37,29 @@ export class GetAllUsersController {
   @Get('users')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
   @ApiOperation({
     summary: 'Get all users (paginated)',
     operationId: 'listUsers',
   })
-  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
-  @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
   @ApiResponse({
     status: 200,
     description: 'List of users (paginated)',
-    schema: {
-      type: 'object',
-      properties: {
-        data: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              id: { type: 'string', format: 'uuid' },
-              name: { type: 'string' },
-              email: { type: 'string', format: 'email' },
-              birthDate: { type: 'string', format: 'date-time' },
-              avatar: { type: 'string' },
-              role: { type: 'string' },
-              document: { type: 'string' },
-            },
-          },
-        },
-        meta: {
-          type: 'object',
-          properties: {
-            total_items: { type: 'number' },
-            total_pages: { type: 'number' },
-            page: { type: 'number' },
-            limit: { type: 'number' },
-          },
-        },
-      },
-    },
   })
-  @ApiResponse({ status: 401, description: ERROR_INVALID_CREDENTIALS })
+  @ApiResponse({ status: 401, description: 'Credenciais inválidas!' })
   @ApiResponse({
     status: 404,
-    description: ERROR_USERS_NOT_FOUND,
+    description: 'Recurso não encontrado!',
   })
-  async getAllUsers(@Query() query: PaginationQueryDto) {
-    return await this.getAllUsersService.execute(query);
+  async getAllUsers(
+    @Query() query: PaginationQueryDto,
+  ): Promise<
+    RequestResponse<PaginationResultDto<Omit<UserModel, 'password'>>>
+  > {
+    const result = await this.getAllUsersService.execute(query);
+    if (!result.ok) return handleError(result.error);
+
+    return successResponse(result.value, HttpStatus.OK);
   }
 }
