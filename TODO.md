@@ -1,8 +1,12 @@
 # Regras de Negócio
 
 - [x] Refatorar a arquitetura do projeto
-- [ ] Dockerizar o Nest corretamente no modo de dev
-- [x] Refatorar testes (factories, boas práticas do vitest ,melhores mocks etc)
+- [x] Dockerizar o Nest corretamente no modo de dev
+- [ ] Aplicar arquitetura limpa e recomendações do NestJS
+- [ ] Unificar services e controllers por domínio (talvez fazer o mesmo com testes unitários e E2E)
+- [ ] Verificar se existem testes unitários que na verdade são de integração e vice-versa
+- [ ] Corrigir testes unitários e e2e nas validações das exceptions
+- [ ] Refatorar testes usando o video: <https://www.youtube.com/watch?v=XjfWQ46ePWg> e <https://www.youtube.com/watch?v=N8-XBjZPkmQ&t=1326s>
 - [x] Quebrar services em arquivos separados (arquivos de teste também)
 - [x] Adicionar paginação
 - [x] Adicionar Swagger
