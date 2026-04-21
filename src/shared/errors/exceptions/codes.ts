@@ -1,5 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 
+// Mapeia códigos de erro da aplicação para status HTTP
 export const ERROR_CODES = {
   UNAUTHORIZED: { code: 'UNAUTHORIZED', status: HttpStatus.UNAUTHORIZED },
   INVALID_CREDENTIALS: {
@@ -19,4 +20,5 @@ export const ERROR_CODES = {
   },
 } as const;
 
+//  União das chaves de erro disponíveis no mapeamento
 export type ErrorCodes = keyof typeof ERROR_CODES;

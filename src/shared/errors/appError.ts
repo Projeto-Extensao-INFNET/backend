@@ -1,11 +1,12 @@
 import type { ErrorCodes } from './exceptions/codes';
 
+// Tipo base de erros do projeto
 export type AppError = {
   code: ErrorCodes;
   message: string;
 };
 
-// função responsável por repassar o código e a mensagem do erro
+// Factory que cria um AppError com código e mensagem padronizados
 export const appError = (code: ErrorCodes, message: string): AppError => ({
   code,
   message,

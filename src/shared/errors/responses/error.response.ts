@@ -10,10 +10,8 @@ export type ErrorResponse = {
   timestamp: string;
 };
 
-/* 
-Função responsável por retornar o erro da requisição já tipado,
-recebe o código do erro e a mensagem dinamicamente via AppError()
- */
+// Estrutura padrão de resposta de erro enviada pelos controllers
+// Monta o payload final de erro com codigo http, status, message e timestamp
 export const errorResponse = (
   code: AppError['code'],
   status: number,

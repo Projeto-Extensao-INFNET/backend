@@ -1,5 +1,8 @@
 import { appError } from '../appError';
 
+// Funções factory para serem usadas como exceptions.
+// Cada função cria um AppError.
+// Possui mensagens padrão que podem ser sobrescritas.
 export const unauthorized = (message = 'Não autorizado!') =>
   appError('UNAUTHORIZED', message);
 
