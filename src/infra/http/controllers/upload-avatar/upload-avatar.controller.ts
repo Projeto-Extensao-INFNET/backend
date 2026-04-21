@@ -1,9 +1,3 @@
-import { MAX_FILE_SIZE } from '@/shared/constants';
-import { AvatarUploadService } from '@Services/upload-avatar/avatar-upload.service';
-import { JwtAuthGuard } from '@/infra/auth/guards/auth.guard';
-import { Roles } from '@/infra/auth/decorators/roles.decorator';
-import type { AuthenticatedUserResponse } from '@/infra/http/dtos/auth/auth-user';
-import type { ROLE } from '@/shared/types';
 import {
   Controller,
   HttpCode,
@@ -15,7 +9,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiTags,
   ApiBearerAuth,
@@ -24,10 +17,17 @@ import {
   ApiOperation,
   ApiResponse,
 } from '@nestjs/swagger';
-import {
-  ERROR_INVALID_CREDENTIALS,
-  ERROR_USER_NOT_FOUND,
-} from '@/shared/errors';
+import { successResponse } from '@/shared/errors/responses/success.response';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { handleError } from '@/shared/errors/handleError';
+import { MAX_FILE_SIZE } from '@/shared/constants';
+import { AvatarUploadService } from '@Services/upload-avatar/avatar-upload.service';
+import { JwtAuthGuard } from '@/infra/auth/guards/auth.guard';
+import { Roles } from '@/infra/auth/decorators/roles.decorator';
+
+import type { RequestResponse } from '@/shared/errors/responses';
+import type { AuthenticatedUserResponse } from '@/infra/http/dtos/auth/auth-user';
+import type { ROLE } from '@/shared/types';
 
 @ApiTags('Accounts')
 @ApiBearerAuth('authorization')
@@ -63,12 +63,12 @@ export class UploadAvatarController {
     status: 201,
     description: 'Avatar uploaded successfully',
   })
-  @ApiResponse({ status: 401, description: ERROR_INVALID_CREDENTIALS })
+  @ApiResponse({ status: 401, description: 'Credenciais inválidas!' })
   @ApiResponse({
     status: 422,
     description: 'Unprocessable entity - file validation failed',
   })
-  @ApiResponse({ status: 404, description: ERROR_USER_NOT_FOUND })
+  @ApiResponse({ status: 404, description: 'Recurso não encontrado!' })
   async exec(
     @Req() req: AuthenticatedUserResponse,
     @UploadedFile(
@@ -78,7 +78,9 @@ export class UploadAvatarController {
         .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY }),
     )
     file: Express.Multer.File,
-  ) {
-    await this.service.exec(req, file);
+  ): Promise<RequestResponse<string>> {
+    const result = await this.service.exec(req, file);
+    if (!result.ok) handleError(result.error);
+    return successResponse('Sucesso ao enviar imagem', HttpStatus.OK);
   }
 }
