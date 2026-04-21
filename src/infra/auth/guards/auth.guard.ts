@@ -1,13 +1,12 @@
 import {
+  BadRequestException,
   type ExecutionContext,
   Injectable,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { ROLES_KEY } from '@/infra/auth/decorators/roles.decorator';
-import { ERROR_INSUFFICIENT_PERMISSIONS } from '@/shared/errors';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -43,7 +42,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         : requiredRoles.includes(userRoles);
 
     if (!hasRole()) {
-      throw new UnauthorizedException(ERROR_INSUFFICIENT_PERMISSIONS);
+      throw new BadRequestException('Requisição inválida!');
     }
 
     return true;
