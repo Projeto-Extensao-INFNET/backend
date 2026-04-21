@@ -41,10 +41,10 @@
             }
           },
           "400": {
-            "description": "Campos obrigatórios não preenchidos"
+            "description": "Requisição inválida! Os campos estão incorretos"
           },
           "409": {
-            "description": "Credenciais já em uso"
+            "description": "Credenciais já em uso!"
           }
         },
         "summary": "Create a new user account",
@@ -79,7 +79,7 @@
             }
           },
           "401": {
-            "description": "Credenciais inválidas"
+            "description": "Credenciais inválidas!"
           }
         },
         "summary": "Authenticate and receive access token",
@@ -108,7 +108,7 @@
             }
           },
           "401": {
-            "description": "Refresh token inválido"
+            "description": "Credenciais inválidas!"
           }
         },
         "summary": "Refresh access token using the refresh token cookie",
@@ -134,7 +134,7 @@
             }
           },
           "401": {
-            "description": "Credenciais inválidas"
+            "description": "Credenciais inválidas!"
           }
         },
         "security": [
@@ -167,7 +167,7 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Usuário não encontrado"
+            "description": "RESOURCE_NOT_FOUND"
           }
         },
         "security": [
@@ -283,71 +283,13 @@
         ],
         "responses": {
           "200": {
-            "description": "List of users (paginated)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "format": "uuid"
-                          },
-                          "name": {
-                            "type": "string"
-                          },
-                          "email": {
-                            "type": "string",
-                            "format": "email"
-                          },
-                          "birthDate": {
-                            "type": "string",
-                            "format": "date-time"
-                          },
-                          "avatar": {
-                            "type": "string"
-                          },
-                          "role": {
-                            "type": "string"
-                          },
-                          "document": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    },
-                    "meta": {
-                      "type": "object",
-                      "properties": {
-                        "total_items": {
-                          "type": "number"
-                        },
-                        "total_pages": {
-                          "type": "number"
-                        },
-                        "page": {
-                          "type": "number"
-                        },
-                        "limit": {
-                          "type": "number"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "description": "List of users (paginated)"
           },
           "401": {
-            "description": "Credenciais inválidas"
+            "description": "Credenciais inválidas!"
           },
           "404": {
-            "description": "Usuários não encontrados"
+            "description": "Recurso não encontrado!"
           }
         },
         "security": [
@@ -447,7 +389,7 @@
             }
           },
           "401": {
-            "description": "Credenciais inválidas"
+            "description": "Credenciais inválidas!"
           }
         },
         "security": [
@@ -606,10 +548,10 @@
             "description": "Bad request - Invalid appointment data"
           },
           "404": {
-            "description": "Usuário não encontrado"
+            "description": "Recurso não encontrado!"
           },
           "409": {
-            "description": "Agendamento não disponível"
+            "description": "Agendamento indisponível!"
           }
         },
         "security": [
@@ -629,24 +571,7 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "ok"
-                    },
-                    "timestamp": {
-                      "type": "string",
-                      "format": "date-time"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "OK"
           }
         },
         "summary": "Health check",
@@ -685,10 +610,10 @@
             "description": "Avatar uploaded successfully"
           },
           "401": {
-            "description": "Credenciais inválidas"
+            "description": "Credenciais inválidas!"
           },
           "404": {
-            "description": "Usuário não encontrado"
+            "description": "Recurso não encontrado!"
           },
           "422": {
             "description": "Unprocessable entity - file validation failed"
@@ -814,7 +739,7 @@
             "example": "jwt-refresh-token",
             "description": "JWT token de refresh."
           },
-          "data": {
+          "payload": {
             "type": "object",
             "description": "Dados do usuário autenticado.",
             "example": {
@@ -829,7 +754,7 @@
         "required": [
           "accessToken",
           "refreshToken",
-          "data"
+          "payload"
         ]
       },
       "LogoutResponse": {
