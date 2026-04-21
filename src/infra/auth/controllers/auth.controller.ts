@@ -6,21 +6,23 @@ import {
   Post,
   Res,
 } from '@nestjs/common';
-import type { Response } from 'express';
-import { AuthService } from '@/infra/auth/services/auth.service';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-import {
-  ERROR_REQUIRED_FIELDS,
-  ERROR_CREDENTIALS_IN_USE,
-  ERROR_INVALID_CREDENTIALS,
-} from '@/shared/errors';
-import { SignUpDto } from '@/infra/http/dtos/auth/signUp.dto';
 import {
   SignInDto,
   SignInResponseDto,
 } from '@/infra/http/dtos/auth/signIn.dto';
-import { COOKIES_MAX_AGE } from '@/shared/constants';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { env } from '@/config/env';
+import { AuthService } from '@/infra/auth/services/auth.service';
+import {
+  SignUpDto,
+  type SignUpResponseDto,
+} from '@/infra/http/dtos/auth/signUp.dto';
+import { COOKIES_MAX_AGE } from '@/shared/constants';
+import { successResponse } from '@/shared/errors/responses/success.response';
+import { handleError } from '@/shared/errors/handleError';
+
+import type { Response } from 'express';
+import type { RequestResponse } from '@/shared/errors/responses';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -58,15 +60,18 @@ export class AuthController {
       },
     },
   })
-  @ApiResponse({ status: 400, description: ERROR_REQUIRED_FIELDS })
-  @ApiResponse({ status: 409, description: ERROR_CREDENTIALS_IN_USE })
-  async signUp(@Body() body: SignUpDto) {
-    const user = await this.authService.SignUp(body);
-    return {
-      status: HttpStatus.CREATED,
-      message: `Usuário criado com sucesso!`,
-      data: user,
-    };
+  @ApiResponse({
+    status: 400,
+    description: 'Requisição inválida! Os campos estão incorretos',
+  })
+  @ApiResponse({ status: 409, description: 'Credenciais já em uso!' })
+  async signUp(
+    @Body() body: SignUpDto,
+  ): Promise<RequestResponse<SignUpResponseDto>> {
+    const result = await this.authService.SignUp(body);
+    if (!result.ok) return handleError(result.error);
+
+    return successResponse(result.value, HttpStatus.CREATED);
   }
 
   @Post('signin')
@@ -81,13 +86,15 @@ export class AuthController {
     description: 'Authenticated successfully',
     type: SignInResponseDto,
   })
-  @ApiResponse({ status: 401, description: ERROR_INVALID_CREDENTIALS })
+  @ApiResponse({ status: 401, description: 'Credenciais inválidas!' })
   async signIn(
     @Body() body: SignInDto,
     @Res({ passthrough: true }) res: Response,
-  ) {
-    const { accessToken, refreshToken, data } =
-      await this.authService.SignIn(body);
+  ): Promise<RequestResponse<SignInResponseDto>> {
+    const result = await this.authService.SignIn(body);
+    if (!result.ok) return handleError(result.error);
+
+    const { accessToken, refreshToken } = result.value;
 
     const isProd = env.NODE_ENV === 'production';
 
@@ -109,10 +116,6 @@ export class AuthController {
       domain: isProd ? 'FUTURO_DOMÍNIO_DE_PROD' : 'localhost',
     });
 
-    return {
-      status: HttpStatus.CREATED,
-      message: `Usuário logado com sucesso!`,
-      data,
-    };
+    return successResponse(result.value, HttpStatus.CREATED);
   }
 }
