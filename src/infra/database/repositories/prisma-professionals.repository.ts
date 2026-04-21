@@ -1,17 +1,19 @@
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER } from '@/shared/constants';
+import { CacheRepository } from '@/infra/cache/cache-repository';
+import { ok, type Result } from '@/shared/errors/result';
+
 import type {
   PaginationQueryDto,
   PaginationResultDto,
 } from '@/infra/http/dtos/pagination/pagination.dto';
-import { Injectable } from '@nestjs/common';
 import type { ProfessionalModel } from '@/domain/models/professional.model';
-import { CacheRepository } from '@/infra/cache/cache-repository';
 
 export abstract class IProfessionalsRepository {
   abstract listProfessionals(
     params: PaginationQueryDto,
-  ): Promise<PaginationResultDto<ProfessionalModel>>;
+  ): Promise<Result<PaginationResultDto<ProfessionalModel>>>;
 }
 
 @Injectable()
@@ -23,7 +25,7 @@ export class PrismaProfessionalsRepository implements IProfessionalsRepository {
 
   async listProfessionals(
     params: PaginationQueryDto,
-  ): Promise<PaginationResultDto<ProfessionalModel>> {
+  ): Promise<Result<PaginationResultDto<ProfessionalModel>>> {
     const { page = DEFAULT_PAGE_NUMBER, limit = DEFAULT_PAGE_LIMIT } = params;
     const take = Number(limit);
     const skip = (Number(page) - 1) * take;
@@ -35,7 +37,7 @@ export class PrismaProfessionalsRepository implements IProfessionalsRepository {
       const cachedData = JSON.parse(cacheHit);
 
       // retorna os dados cacheados e os query params do cache convertidos para Number
-      return {
+      return ok({
         ...cachedData,
         meta: {
           ...cachedData.meta,
@@ -44,7 +46,7 @@ export class PrismaProfessionalsRepository implements IProfessionalsRepository {
           total_items: Number(cachedData?.meta?.total_items),
           total_pages: Number(cachedData?.meta?.total_pages),
         },
-      };
+      });
     }
 
     const professionals = await this.prismaService.professional.findMany({
@@ -99,6 +101,6 @@ export class PrismaProfessionalsRepository implements IProfessionalsRepository {
 
     await this.cache.set(CACHE_KEY, JSON.stringify(result));
 
-    return result;
+    return ok(result);
   }
 }
