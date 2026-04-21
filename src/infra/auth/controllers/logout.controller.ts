@@ -9,7 +9,7 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { ERROR_INVALID_CREDENTIALS } from '@/shared/errors';
+
 import { LogoutResponse } from '@/infra/http/dtos/auth/logout';
 
 @ApiTags('Auth')
@@ -32,7 +32,7 @@ export class LogoutController {
     description: 'Logged out successfully',
     type: LogoutResponse,
   })
-  @ApiResponse({ status: 401, description: ERROR_INVALID_CREDENTIALS })
+  @ApiResponse({ status: 401, description: 'Credenciais inválidas!' })
   async logout(
     @Res({ passthrough: true }) res: Response,
     @Req() req: AuthenticatedUserResponse,
