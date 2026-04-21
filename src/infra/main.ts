@@ -6,7 +6,7 @@ import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const logger: Logger = new Logger('Backend');
-  const app = await NestFactory.create(AppModule, {});
+  const app = await NestFactory.create(AppModule);
 
   app.enableCors({
     origin: env.DEV_CORS_ORIGIN ?? '*',
@@ -17,7 +17,9 @@ async function bootstrap() {
 
   setupSwagger(app);
 
+  app.setGlobalPrefix('api'); // url da API => http://localhost:3333/api/
+
   await app.listen(env.PORT);
-  logger.log(`Project is running on: http://localhost:${env.PORT}`);
+  logger.log(`Project is running on: http://localhost:${env.PORT}/api`);
 }
 bootstrap();
