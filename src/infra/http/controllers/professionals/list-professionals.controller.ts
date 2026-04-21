@@ -1,8 +1,3 @@
-import { Controller, Get, HttpCode, HttpStatus, Query } from '@nestjs/common';
-import { Roles } from '@/infra/auth/decorators/roles.decorator';
-import type { ROLE } from '@/shared/types';
-import { ListProfessionalsService } from '@Services/professionals/list-professionals.service';
-import type { PaginationQueryDto } from '@/infra/http/dtos/pagination/pagination.dto';
 import {
   ApiTags,
   ApiBearerAuth,
@@ -10,7 +5,19 @@ import {
   ApiQuery,
   ApiResponse,
 } from '@nestjs/swagger';
-import { ERROR_INVALID_CREDENTIALS } from '@/shared/errors';
+import { ListProfessionalsService } from '@Services/professionals/list-professionals.service';
+import { Controller, Get, HttpCode, HttpStatus, Query } from '@nestjs/common';
+import { Roles } from '@/infra/auth/decorators/roles.decorator';
+import { successResponse } from '@/shared/errors/responses/success.response';
+
+import type { ROLE } from '@/shared/types';
+import type {
+  PaginationQueryDto,
+  PaginationResultDto,
+} from '@/infra/http/dtos/pagination/pagination.dto';
+import type { RequestResponse } from '@/shared/errors/responses';
+import type { ProfessionalModel } from '@/domain/models/professional.model';
+import { handleError } from '@/shared/errors/handleError';
 
 @Controller('/professionals')
 @ApiTags('Professionals')
@@ -27,7 +34,7 @@ export class ListProfessionalsController {
   })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
-  @ApiResponse({ status: 401, description: ERROR_INVALID_CREDENTIALS })
+  @ApiResponse({ status: 401, description: 'Credenciais inválidas!' })
   @ApiResponse({
     status: 200,
     description: 'List of professionals (paginated)',
@@ -61,7 +68,12 @@ export class ListProfessionalsController {
       },
     },
   })
-  async listProfessionals(@Query() query: PaginationQueryDto) {
-    return await this.professionalService.execute(query);
+  async listProfessionals(
+    @Query() query: PaginationQueryDto,
+  ): Promise<RequestResponse<PaginationResultDto<ProfessionalModel>>> {
+    const result = await this.professionalService.execute(query);
+    if (!result.ok) return handleError(result.error);
+
+    return successResponse(result.value, HttpStatus.OK);
   }
 }
