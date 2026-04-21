@@ -18,7 +18,7 @@ export const setupSwagger = (app: INestApplication) => {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('docs', app, document);
 
   if (env.NODE_ENV === 'development') {
     const specFile = resolve(__dirname, '../../../swagger.json');
