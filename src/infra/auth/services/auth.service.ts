@@ -1,11 +1,15 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { comparePassword, hashPassword } from '@/utils';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
+import { GetTokens } from '../jwt/generate-jwt-tokens';
+import {
+  badRequest,
+  conflict,
+  resourceNotFound,
+  unauthorized,
+} from '@/shared/errors/exceptions/exceptions';
+import { err, ok, type Result } from '@/shared/errors/result';
+
 import type {
   SignUpDto,
   SignUpResponseDto,
@@ -14,14 +18,6 @@ import type {
   SignInDto,
   SignInResponseDto,
 } from '@/infra/http/dtos/auth/signIn.dto';
-import {
-  ERROR_CREDENTIALS_IN_USE,
-  ERROR_INVALID_CREDENTIALS,
-  ERROR_REQUIRED_FIELDS,
-} from '@/shared/errors';
-import { GetTokens } from '../jwt/generate-jwt-tokens';
-import { hash } from 'bcryptjs';
-import { SALT_ROUNDS } from '@/shared/constants';
 
 @Injectable()
 export class AuthService {
@@ -31,11 +27,10 @@ export class AuthService {
   ) {}
 
   // Cadastro
-  async SignUp(data: SignUpDto): Promise<SignUpResponseDto> {
+  async SignUp(data: SignUpDto): Promise<Result<SignUpResponseDto>> {
     // valida campos obrigatórios
-    if (!data || !data.name || !data.email || !data.password) {
-      throw new BadRequestException(ERROR_REQUIRED_FIELDS);
-    }
+    if (!data || !data.name || !data.email || !data.password)
+      return err(badRequest('Requisição inválida! Os campos estão incorretos'));
 
     const existingEmail = await this.prismaService.user.findUnique({
       where: {
@@ -43,9 +38,7 @@ export class AuthService {
       },
     });
 
-    if (existingEmail) {
-      throw new ConflictException(ERROR_CREDENTIALS_IN_USE);
-    }
+    if (existingEmail) return err(conflict('Credenciais inválidas!'));
 
     // Verifica se documento já existe
     const existingDocument = await this.prismaService.user.findUnique({
@@ -54,9 +47,7 @@ export class AuthService {
       },
     });
 
-    if (existingDocument) {
-      throw new ConflictException(ERROR_CREDENTIALS_IN_USE);
-    }
+    if (existingDocument) return err(conflict('Credenciais inválidas!'));
 
     const hashedPassword = await hashPassword(data.password);
 
@@ -82,11 +73,11 @@ export class AuthService {
       },
     });
 
-    return user;
+    return ok(user);
   }
 
   // Login
-  async SignIn(data: SignInDto): Promise<SignInResponseDto> {
+  async SignIn(data: SignInDto): Promise<Result<SignInResponseDto>> {
     const user = await this.prismaService.user.findUnique({
       where: {
         email: data.email,
@@ -100,15 +91,14 @@ export class AuthService {
       },
     });
 
-    if (!user) throw new UnauthorizedException(ERROR_INVALID_CREDENTIALS);
+    if (!user) return err(resourceNotFound(`Usuário`));
 
     const isPasswordHashed = await comparePassword(
       data.password,
       user.password,
     );
 
-    if (!isPasswordHashed)
-      throw new UnauthorizedException(ERROR_INVALID_CREDENTIALS);
+    if (!isPasswordHashed) return err(unauthorized('Credenciais inválidas!'));
 
     // dados que vão para o JWT
     const payload = {
@@ -121,7 +111,7 @@ export class AuthService {
     const tokens = await this.getTokens.exec(payload);
 
     // faz o hash do refreshToken
-    const hashedRefreshToken = await hash(tokens.refreshToken, SALT_ROUNDS);
+    const hashedRefreshToken = await hashPassword(tokens.refreshToken);
 
     // atualiza o refreshToken no banco de dados
     await this.prismaService.user.update({
@@ -133,11 +123,10 @@ export class AuthService {
       },
     });
 
-    return {
+    return ok({
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
-
-      data: { user: payload },
-    };
+      payload: { user: payload },
+    });
   }
 }
