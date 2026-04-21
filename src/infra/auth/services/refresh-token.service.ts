@@ -1,10 +1,12 @@
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
-import { ERROR_INVALID_REFRESH_TOKEN } from '@/shared/errors';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcryptjs';
-import type { Payload } from '@/shared/types';
 import { GetTokens } from '../jwt/generate-jwt-tokens';
+import { badRequest } from '@/shared/errors/exceptions/exceptions';
+import { err, ok } from '@/shared/errors/result';
+
+import type { Payload } from '@/shared/types';
 
 @Injectable()
 export class RefreshTokenService {
@@ -19,20 +21,18 @@ export class RefreshTokenService {
       secret: process.env.JWT_REFRESH_SECRET,
     });
 
-    if (!payload) throw new UnauthorizedException(ERROR_INVALID_REFRESH_TOKEN);
+    if (!payload) return err(badRequest());
 
     const user = await this.prisma.user.findUnique({
       where: { id: payload.sub },
     });
 
-    if (!user || !user.refreshToken)
-      throw new UnauthorizedException(ERROR_INVALID_REFRESH_TOKEN);
+    if (!user || !user.refreshToken) return err(badRequest());
 
     // Compara o refreshToken recebido com o  salvo no banco
     const isRefreshTokenValid = await compare(refreshToken, user.refreshToken);
 
-    if (!isRefreshTokenValid)
-      throw new UnauthorizedException(ERROR_INVALID_REFRESH_TOKEN);
+    if (!isRefreshTokenValid) return err(badRequest());
 
     // Gera novo payload para o JWT
     const newPayload = {
@@ -51,6 +51,6 @@ export class RefreshTokenService {
       data: { refreshToken: hashedRefreshToken },
     });
 
-    return tokens;
+    return ok(tokens);
   }
 }
