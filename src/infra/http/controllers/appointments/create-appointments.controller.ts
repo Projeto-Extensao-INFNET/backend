@@ -1,5 +1,4 @@
 import { Roles } from '@/infra/auth/decorators/roles.decorator';
-import type { ROLE } from '@/shared/types';
 import { CreateAppointmentsService } from '@Services/appointments/create-appointments.service';
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import {
@@ -9,13 +8,9 @@ import {
   ApiBody,
   ApiResponse,
 } from '@nestjs/swagger';
-import {
-  ERROR_USER_NOT_FOUND,
-  ERROR_SCHEDULE_NOT_FOUND,
-  ERROR_SCHEDULE_NOT_AVAILABLE,
-  ERROR_SCHEDULE_ALREADY_BOOKED,
-} from '@/shared/errors';
 import { CreateAppointmentDto } from '@/infra/http/dtos/appointments/create-appointment.dto';
+
+import type { ROLE } from '@/shared/types';
 
 @Controller('/appointments')
 @ApiTags('Appointments')
@@ -44,10 +39,10 @@ export class CreateAppointmentsController {
     status: 400,
     description: 'Bad request - Invalid appointment data',
   })
-  @ApiResponse({ status: 404, description: ERROR_USER_NOT_FOUND })
-  @ApiResponse({ status: 404, description: ERROR_SCHEDULE_NOT_FOUND })
-  @ApiResponse({ status: 409, description: ERROR_SCHEDULE_NOT_AVAILABLE })
-  @ApiResponse({ status: 409, description: ERROR_SCHEDULE_ALREADY_BOOKED })
+  @ApiResponse({ status: 404, description: 'Recurso não encontrado!' })
+  @ApiResponse({ status: 404, description: 'Recurso não encontrado!' })
+  @ApiResponse({ status: 409, description: 'Agendamento indisponível!' })
+  @ApiResponse({ status: 409, description: 'Agendamento indisponível!' })
   async createAppointments(@Body() body: CreateAppointmentDto) {
     return this.createAppointmentService.exec(body);
   }
