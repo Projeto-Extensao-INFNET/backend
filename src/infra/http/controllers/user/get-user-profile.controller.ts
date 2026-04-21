@@ -8,15 +8,18 @@ import {
 } from '@nestjs/common';
 import { GetUserProfileService } from '@Services/user/get-user-profile.service';
 import { JwtAuthGuard } from '../../../auth/guards/auth.guard';
-import type { AuthenticatedUserResponse } from '@/infra/http/dtos/auth/auth-user';
 import {
   ApiTags,
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
 } from '@nestjs/swagger';
-import { ERROR_USER_NOT_FOUND } from '@/shared/errors';
 import { GetUserProfileResponse } from '@/infra/http/dtos/user/get-user.dto';
+import { handleError } from '@/shared/errors/handleError';
+import { successResponse } from '@/shared/errors/responses/success.response';
+
+import type { RequestResponse } from '@/shared/errors/responses';
+import type { AuthenticatedUserResponse } from '@/infra/http/dtos/auth/auth-user';
 
 @Controller('/accounts')
 @ApiTags('Accounts')
@@ -37,11 +40,15 @@ export class GetUserProfileController {
     type: GetUserProfileResponse,
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 404, description: ERROR_USER_NOT_FOUND })
+  @ApiResponse({ status: 404, description: 'RESOURCE_NOT_FOUND' })
   async getUserProfile(
     @Req() req: AuthenticatedUserResponse,
-  ): Promise<GetUserProfileResponse> {
+  ): Promise<RequestResponse<GetUserProfileResponse>> {
     const userId = req.user.sub;
-    return await this.getUserProfileService.execute(userId);
+
+    const result = await this.getUserProfileService.execute(userId);
+    if (!result.ok) return handleError(result.error);
+
+    return successResponse(result.value, HttpStatus.OK);
   }
 }
