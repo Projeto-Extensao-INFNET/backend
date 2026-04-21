@@ -7,9 +7,6 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import type { AuthenticatedUserResponse } from '@/infra/http/dtos/auth/auth-user';
-import { EditUserProfileService } from '@Services/user/edit-user-profile.service';
-import { JwtAuthGuard } from '@/infra/auth/guards/auth.guard';
 import {
   ApiTags,
   ApiBearerAuth,
@@ -17,8 +14,15 @@ import {
   ApiBody,
   ApiResponse,
 } from '@nestjs/swagger';
+import { successResponse } from '@/shared/errors/responses/success.response';
 import { EditProfileDto } from '@/infra/http/dtos/user/edit-profile.dto';
 import { GetUserProfileResponse } from '@/infra/http/dtos/user/get-user.dto';
+import { handleError } from '@/shared/errors/handleError';
+import { EditUserProfileService } from '@Services/user/edit-user-profile.service';
+import { JwtAuthGuard } from '@/infra/auth/guards/auth.guard';
+
+import type { RequestResponse } from '@/shared/errors/responses';
+import type { AuthenticatedUserResponse } from '@/infra/http/dtos/auth/auth-user';
 
 @Controller('/accounts')
 @ApiTags('Accounts')
@@ -51,8 +55,12 @@ export class EditUserProfileController {
   async editProfile(
     @Req() req: AuthenticatedUserResponse,
     @Body() dto: EditProfileDto,
-  ) {
+  ): Promise<RequestResponse<EditProfileDto>> {
     const userId = req.user.sub;
-    return await this.editUserProfileService.execute(userId, dto);
+
+    const result = await this.editUserProfileService.execute(userId, dto);
+    if (!result.ok) return handleError(result.error);
+
+    return successResponse(result.value);
   }
 }
