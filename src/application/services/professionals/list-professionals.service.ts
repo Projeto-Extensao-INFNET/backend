@@ -5,6 +5,7 @@ import type {
   PaginationResultDto,
 } from '@/infra/http/dtos/pagination/pagination.dto';
 import { Injectable } from '@nestjs/common';
+import { ok, type Result } from '@/shared/errors/result';
 
 @Injectable()
 export class ListProfessionalsService {
@@ -12,7 +13,9 @@ export class ListProfessionalsService {
 
   async execute(
     query: PaginationQueryDto,
-  ): Promise<PaginationResultDto<Professional>> {
-    return await this.repo.listProfessionals(query);
+  ): Promise<Result<PaginationResultDto<Professional>>> {
+    const users = await this.repo.listProfessionals(query);
+    if (!users.ok) return users;
+    return ok(users.value);
   }
 }
