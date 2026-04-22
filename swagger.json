@@ -148,116 +148,6 @@
         ]
       }
     },
-    "/accounts/me": {
-      "get": {
-        "operationId": "getUserProfile",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "User profile retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetUserProfileResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "RESOURCE_NOT_FOUND"
-          }
-        },
-        "security": [
-          {
-            "authorization": []
-          }
-        ],
-        "summary": "Get authenticated user profile",
-        "tags": [
-          "Accounts"
-        ]
-      },
-      "patch": {
-        "operationId": "updateUserProfile",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "description": "User profile data to update",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditProfileDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Profile updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetUserProfileResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
-          {
-            "authorization": []
-          }
-        ],
-        "summary": "Edit authenticated user profile",
-        "tags": [
-          "Accounts"
-        ]
-      },
-      "delete": {
-        "operationId": "deleteUserProfile",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "User account deleted successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "number",
-                      "example": 200
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Usuário removido com sucesso!"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
-          {
-            "authorization": []
-          }
-        ],
-        "summary": "Delete authenticated user account",
-        "tags": [
-          "Accounts"
-        ]
-      }
-    },
     "/accounts/users": {
       "get": {
         "operationId": "listUsers",
@@ -297,286 +187,9 @@
             "authorization": []
           }
         ],
-        "summary": "Get all users (paginated)",
+        "summary": "Get all users",
         "tags": [
           "Accounts"
-        ]
-      }
-    },
-    "/professionals": {
-      "get": {
-        "operationId": "listProfessionals",
-        "parameters": [
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "example": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "example": 1,
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of professionals (paginated)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "format": "uuid"
-                          },
-                          "name": {
-                            "type": "string"
-                          },
-                          "email": {
-                            "type": "string",
-                            "format": "email"
-                          },
-                          "birthDate": {
-                            "type": "string",
-                            "format": "date-time"
-                          },
-                          "avatar": {
-                            "type": "string"
-                          },
-                          "role": {
-                            "type": "string"
-                          },
-                          "document": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    },
-                    "meta": {
-                      "type": "object",
-                      "properties": {
-                        "total_items": {
-                          "type": "number"
-                        },
-                        "total_pages": {
-                          "type": "number"
-                        },
-                        "page": {
-                          "type": "number"
-                        },
-                        "limit": {
-                          "type": "number"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Credenciais inválidas!"
-          }
-        },
-        "security": [
-          {
-            "authorization": []
-          }
-        ],
-        "summary": "List available professionals",
-        "tags": [
-          "Professionals"
-        ]
-      }
-    },
-    "/appointments": {
-      "get": {
-        "operationId": "getAppointment",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "List of appointments",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "format": "uuid"
-                      },
-                      "scheduleId": {
-                        "type": "string"
-                      },
-                      "userId": {
-                        "type": "string"
-                      },
-                      "specialtyId": {
-                        "type": "string"
-                      },
-                      "typeOfTreatmentId": {
-                        "type": "string"
-                      },
-                      "isAvailable": {
-                        "type": "boolean"
-                      },
-                      "isConfirmed": {
-                        "type": "boolean"
-                      },
-                      "createdAt": {
-                        "type": "string",
-                        "format": "date-time"
-                      },
-                      "updatedAt": {
-                        "type": "string",
-                        "format": "date-time"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "summary": "Get appointments",
-        "tags": [
-          "Appointments"
-        ]
-      },
-      "put": {
-        "operationId": "updateAppointment",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Appointment updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "format": "uuid"
-                    },
-                    "scheduleId": {
-                      "type": "string"
-                    },
-                    "userId": {
-                      "type": "string"
-                    },
-                    "specialtyId": {
-                      "type": "string"
-                    },
-                    "typeOfTreatmentId": {
-                      "type": "string"
-                    },
-                    "isAvailable": {
-                      "type": "boolean"
-                    },
-                    "isConfirmed": {
-                      "type": "boolean"
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "updatedAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "summary": "Update appointment",
-        "tags": [
-          "Appointments"
-        ]
-      },
-      "patch": {
-        "operationId": "cancelAppointment",
-        "parameters": [],
-        "responses": {
-          "204": {
-            "description": "Appointment cancelled successfully"
-          }
-        },
-        "summary": "Cancel appointment",
-        "tags": [
-          "Appointments"
-        ]
-      }
-    },
-    "/appointments/create": {
-      "post": {
-        "operationId": "createAppointment",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "description": "Appointment data to create",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateAppointmentDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Appointment created successfully"
-          },
-          "400": {
-            "description": "Bad request - Invalid appointment data"
-          },
-          "404": {
-            "description": "Recurso não encontrado!"
-          },
-          "409": {
-            "description": "Agendamento indisponível!"
-          }
-        },
-        "security": [
-          {
-            "authorization": []
-          }
-        ],
-        "summary": "Create an appointment (patient only)",
-        "tags": [
-          "Appointments"
-        ]
-      }
-    },
-    "/health": {
-      "get": {
-        "operationId": "healthCheck",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "summary": "Health check",
-        "tags": [
-          "Health"
         ]
       }
     },
@@ -627,6 +240,227 @@
         "summary": "Upload avatar for authenticated user",
         "tags": [
           "Accounts"
+        ]
+      }
+    },
+    "/accounts/me": {
+      "get": {
+        "operationId": "getUserProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User profile retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserProfileResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "RESOURCE_NOT_FOUND"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Get user profile",
+        "tags": [
+          "Accounts"
+        ]
+      },
+      "patch": {
+        "operationId": "updateUserProfile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "User profile data to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserProfileResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Edit authenticated user profile",
+        "tags": [
+          "Accounts"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteProfile",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "User account deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 204
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Usuário removido com sucesso!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Delete user profile",
+        "tags": [
+          "Accounts"
+        ]
+      }
+    },
+    "/appointments/create": {
+      "post": {
+        "operationId": "createAppointment",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Appointment data to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAppointmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Appointment created successfully"
+          },
+          "400": {
+            "description": "Bad request - Invalid appointment data"
+          },
+          "404": {
+            "description": "Recurso não encontrado!"
+          },
+          "409": {
+            "description": "Agendamento indisponível!"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Create an appointment (patient only)",
+        "tags": [
+          "Appointments"
+        ]
+      }
+    },
+    "/appointments": {
+      "get": {
+        "operationId": "getAppointment",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of appointments"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Get appointments",
+        "tags": [
+          "Appointments"
+        ]
+      },
+      "put": {
+        "operationId": "updateAppointment",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Appointment updated successfully"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Update appointment",
+        "tags": [
+          "Appointments"
+        ]
+      },
+      "patch": {
+        "operationId": "cancelAppointment",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Appointment cancelled successfully"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Cancel appointment",
+        "tags": [
+          "Appointments"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "healthCheck",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "summary": "Health check",
+        "tags": [
+          "Health"
         ]
       }
     }
