@@ -46,9 +46,6 @@ export class PrismaProfessionalsRepository implements IProfessionalsRepository {
       return ok(cachedProfessionals);
     }
 
-    // const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
-    // await delay(5000);
-
     // bate no banco se não tiver dados cacheados ou ttl expirar
     const professionals = await this.prismaService.professional.findMany({
       skip,
