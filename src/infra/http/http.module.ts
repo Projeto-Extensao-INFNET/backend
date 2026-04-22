@@ -4,6 +4,7 @@ import { CacheModule } from '@/infra/cache/cache.module';
 
 // Controllers
 import { UserController } from '@Controllers/user/user.controller';
+import { ProfessionalsController } from './controllers/professionals/professionals.controller';
 import { AppointmentsController } from '@Controllers/appointments/appointments.controller';
 import { SpecialtyController } from '@Controllers/specialty/specialty.controller';
 import { TreatmentTypeController } from '@Controllers/treatment-type/treatment-type.controller';
@@ -61,6 +62,7 @@ import { GetTokens } from '../auth/jwt/generate-jwt-tokens';
   ],
   controllers: [
     UserController,
+    ProfessionalsController,
     SpecialtyController,
     TreatmentTypeController,
     AppointmentsController,

@@ -26,7 +26,7 @@ export class ProfessionalsController {
   constructor(private readonly service: ProfessionalsService) {}
 
   @Roles('PATIENT' as ROLE)
-  @Get('')
+  @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'List available professionals',
