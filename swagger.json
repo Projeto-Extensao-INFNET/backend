@@ -1,0 +1,821 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/auth/signup": {
+      "post": {
+        "description": "Cria um novo usuário e retorna os dados do usuário criado.",
+        "operationId": "signUp",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Dados necessários para criar um novo usuário.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignUpDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully. Retorna os dados do usuário criado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "status": 201,
+                    "message": "Usuário criado com sucesso!",
+                    "data": {
+                      "id": "uuid",
+                      "name": "John Doe",
+                      "email": "john@example.com",
+                      "birthDate": "1990-01-01T00:00:00.000Z",
+                      "role": "PATIENT",
+                      "documentType": "CPF",
+                      "document": "12345678901"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida! Os campos estão incorretos"
+          },
+          "409": {
+            "description": "Credenciais já em uso!"
+          }
+        },
+        "summary": "Create a new user account",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/signin": {
+      "post": {
+        "operationId": "signIn",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Authenticated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas!"
+          }
+        },
+        "summary": "Authenticate and receive access token",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "description": "Reads the refresh token from the HttpOnly cookie, validates it, and returns a new access token. A new refresh token is also set as a cookie.",
+        "operationId": "refreshToken",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Token refreshed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "status": 201,
+                    "message": "Refresh Token criado com sucesso!"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas!"
+          }
+        },
+        "summary": "Refresh access token using the refresh token cookie",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "description": "Invalidates the refresh token in the database and clears the refresh token cookie.",
+        "operationId": "logout",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Logged out successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas!"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Logout the current user",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/accounts/users": {
+      "get": {
+        "operationId": "listUsers",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of users (paginated)"
+          },
+          "401": {
+            "description": "Credenciais inválidas!"
+          },
+          "404": {
+            "description": "Recurso não encontrado!"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Get all users",
+        "tags": [
+          "Accounts"
+        ]
+      }
+    },
+    "/accounts/me/avatar": {
+      "post": {
+        "operationId": "uploadUserAvatar",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Avatar file to upload (JPEG, PNG, JPG)",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Avatar image file"
+                  }
+                },
+                "required": [
+                  "avatar"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Avatar uploaded successfully"
+          },
+          "401": {
+            "description": "Credenciais inválidas!"
+          },
+          "404": {
+            "description": "Recurso não encontrado!"
+          },
+          "422": {
+            "description": "Unprocessable entity - file validation failed"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Upload avatar for authenticated user",
+        "tags": [
+          "Accounts"
+        ]
+      }
+    },
+    "/accounts/me": {
+      "get": {
+        "operationId": "getUserProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User profile retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserProfileResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "RESOURCE_NOT_FOUND"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Get user profile",
+        "tags": [
+          "Accounts"
+        ]
+      },
+      "patch": {
+        "operationId": "updateUserProfile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "User profile data to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserProfileResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Edit authenticated user profile",
+        "tags": [
+          "Accounts"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteProfile",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "User account deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 204
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Usuário removido com sucesso!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Delete user profile",
+        "tags": [
+          "Accounts"
+        ]
+      }
+    },
+    "/professionals": {
+      "get": {
+        "operationId": "listProfessionals",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of professionals (paginated)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string",
+                            "format": "email"
+                          },
+                          "birthDate": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "avatar": {
+                            "type": "string"
+                          },
+                          "role": {
+                            "type": "string"
+                          },
+                          "document": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "total_items": {
+                          "type": "number"
+                        },
+                        "total_pages": {
+                          "type": "number"
+                        },
+                        "page": {
+                          "type": "number"
+                        },
+                        "limit": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas!"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "List available professionals",
+        "tags": [
+          "Professionals"
+        ]
+      }
+    },
+    "/appointments/create": {
+      "post": {
+        "operationId": "createAppointment",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Appointment data to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAppointmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Appointment created successfully"
+          },
+          "400": {
+            "description": "Bad request - Invalid appointment data"
+          },
+          "404": {
+            "description": "Recurso não encontrado!"
+          },
+          "409": {
+            "description": "Agendamento indisponível!"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Create an appointment (patient only)",
+        "tags": [
+          "Appointments"
+        ]
+      }
+    },
+    "/appointments": {
+      "get": {
+        "operationId": "getAppointment",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of appointments"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Get appointments",
+        "tags": [
+          "Appointments"
+        ]
+      },
+      "put": {
+        "operationId": "updateAppointment",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Appointment updated successfully"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Update appointment",
+        "tags": [
+          "Appointments"
+        ]
+      },
+      "patch": {
+        "operationId": "cancelAppointment",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Appointment cancelled successfully"
+          }
+        },
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "summary": "Cancel appointment",
+        "tags": [
+          "Appointments"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "healthCheck",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "summary": "Health check",
+        "tags": [
+          "Health"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "API Projeto de Extensao",
+    "description": "API do Projeto de Extensão - documentação Swagger",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "authorization": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "SignUpDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "John Doe",
+            "description": "Nome completo do usuário."
+          },
+          "email": {
+            "type": "string",
+            "example": "john@example.com",
+            "description": "E-mail do usuário."
+          },
+          "password": {
+            "type": "string",
+            "example": "password123",
+            "description": "Senha do usuário."
+          },
+          "birthDate": {
+            "format": "date-time",
+            "type": "string",
+            "example": "1990-01-01",
+            "description": "Data de nascimento do usuário."
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "PATIENT",
+              "PROFESSIONAL",
+              "ADMIN"
+            ],
+            "example": "PATIENT",
+            "description": "Papel do usuário no sistema."
+          },
+          "documentType": {
+            "type": "string",
+            "enum": [
+              "CPF",
+              "RG"
+            ],
+            "example": "CPF",
+            "description": "Tipo de documento."
+          },
+          "document": {
+            "type": "string",
+            "example": "12345678901",
+            "description": "Número do documento."
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password",
+          "birthDate",
+          "role",
+          "documentType",
+          "document"
+        ]
+      },
+      "SignInDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com",
+            "description": "E-mail do usuário."
+          },
+          "password": {
+            "type": "string",
+            "example": "password123",
+            "description": "Senha do usuário."
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "SignInResponseDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "example": "jwt-access-token",
+            "description": "JWT token de acesso."
+          },
+          "refreshToken": {
+            "type": "string",
+            "example": "jwt-refresh-token",
+            "description": "JWT token de refresh."
+          },
+          "payload": {
+            "type": "object",
+            "description": "Dados do usuário autenticado.",
+            "example": {
+              "user": {
+                "username": "user@example.com",
+                "sub": "uuid",
+                "role": "ADMIN"
+              }
+            }
+          }
+        },
+        "required": [
+          "accessToken",
+          "refreshToken",
+          "payload"
+        ]
+      },
+      "LogoutResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Logged out",
+            "description": "Mensagem de logout bem-sucedido."
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "GetUserProfileResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID do usuário."
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe",
+            "description": "Nome completo do usuário."
+          },
+          "email": {
+            "type": "string",
+            "example": "john@example.com",
+            "description": "E-mail do usuário."
+          },
+          "birthDate": {
+            "format": "date-time",
+            "type": "string",
+            "example": "1990-01-01T00:00:00Z",
+            "description": "Data de nascimento."
+          },
+          "avatar": {
+            "type": "string",
+            "example": "data:image/jpeg;base64,...",
+            "description": "Avatar do usuário em base64."
+          },
+          "role": {
+            "type": "string",
+            "example": "PATIENT",
+            "description": "Papel do usuário."
+          },
+          "document": {
+            "type": "string",
+            "example": "12345678901",
+            "description": "Número do documento."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "birthDate",
+          "avatar",
+          "role",
+          "document"
+        ]
+      },
+      "EditProfileDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "John Doe",
+            "description": "Nome completo do usuário."
+          },
+          "avatar": {
+            "type": "string",
+            "example": "data:image/jpeg;base64,...",
+            "description": "Avatar do usuário em base64."
+          }
+        }
+      },
+      "CreateAppointmentDto": {
+        "type": "object",
+        "properties": {
+          "scheduleId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            "description": "ID do agendamento."
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            "description": "ID do usuário."
+          },
+          "specialtyId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            "description": "ID da especialidade."
+          },
+          "typeOfTreatmentId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            "description": "ID do tipo de tratamento."
+          },
+          "isAvailable": {
+            "type": "boolean",
+            "example": true,
+            "description": "Se está disponível."
+          },
+          "isConfirmed": {
+            "type": "boolean",
+            "example": false,
+            "description": "Se está cancelado."
+          }
+        },
+        "required": [
+          "scheduleId",
+          "userId",
+          "specialtyId",
+          "typeOfTreatmentId",
+          "isAvailable",
+          "isConfirmed"
+        ]
+      }
+    }
+  }
+}

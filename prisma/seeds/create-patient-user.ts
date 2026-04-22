@@ -1,18 +1,10 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
-import { PrismaClient, type User } from '../../generated/prisma';
-import { hashPassword } from '../../src/core/shared/utils';
-import { PrismaPg } from '@prisma/adapter-pg';
-import { env } from '../../src/core/config/env';
+import { PrismaClient } from '../.././src/infra/database/prisma/generated/client';
+import { hashPassword } from '../../src/utils';
 
-
-export const CreatePatientUser = async () => {
-  const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
-  const prisma = new PrismaClient({ adapter });
-
-  const userPatients: User[] = [];
-
+export const CreatePatientUser = async (prisma: PrismaClient) => {
   for (let i = 0; i < 10; i++) {
-    const userPatient = await prisma.user.create({
+    await prisma.user.createMany({
       data: {
         name: faker.person.fullName(),
         email: faker.internet.email(),
@@ -23,8 +15,6 @@ export const CreatePatientUser = async () => {
         document: faker.helpers.replaceSymbols('###.###.###-##'),
       },
     });
-    userPatients.push(userPatient);
   }
-  await prisma.$disconnect();
-  return userPatients;
+  console.log('✔️ patients created');
 };

@@ -1,12 +1,7 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
-import { PrismaClient } from '../../generated/prisma';
-import { PrismaPg } from '@prisma/adapter-pg';
-import { env } from '../../src/core/config/env';
+import type { PrismaClient } from '../.././src/infra/database/prisma/generated/client';
 
-export const CreateUserAgenda = async () => {
-  const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
-  const prisma = new PrismaClient({ adapter });
-
+export const CreateUserAgenda = async (prisma: PrismaClient) => {
   // busca os usuários do tipo paciente
   const patients = await prisma.user.findMany({
     where: {
@@ -24,7 +19,6 @@ export const CreateUserAgenda = async () => {
   // se não houver horários disponíveis, emite um erro e para o seed
   if (schedules.length === 0) {
     console.warn('Sem horários livres para criar agendamentos!');
-    await prisma.$disconnect();
     return;
   }
 
@@ -83,6 +77,5 @@ export const CreateUserAgenda = async () => {
       }),
     ]);
   }
-
-  await prisma.$disconnect();
+  console.log('✔️ users agenda created');
 };

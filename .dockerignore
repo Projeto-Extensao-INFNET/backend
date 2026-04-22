@@ -10,26 +10,25 @@ coverage/
 .gitignore
 
 # IDE - VSCode
-.vscode/*
+/.vscode/*
 !.vscode/settings.json
 
-.husky/
+/.husky/
 
 # prisma
-/generated/prisma
+src/infra/database/prisma/generated/
 
 *.log
 
 # dotenv environment variable files
 .env
 .env.test
-.env.production
 
 # markdown files
 README.md
 TODO.md
 
 # linters
-biome.json
+eslint.config.mjs
 commitlint.config.js
 .lintstagedrc.json

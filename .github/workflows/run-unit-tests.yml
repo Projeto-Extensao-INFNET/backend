@@ -9,13 +9,13 @@ on:
     branches:
       - main
       - develop
-    
 
 jobs:
   run-unit-tests:
     name: Run Unit Tests
     runs-on: ubuntu-latest
 
+    # define o serviço do postgreSQL
     services:
       postgresql-test:
         image: bitnami/postgresql:latest
@@ -24,6 +24,7 @@ jobs:
         volumes:
           - postgres_data_test:/bitnami/postgresql
         env:
+          # credenciais do banco em segredo no github
           POSTGRESQL_USERNAME: ${{ secrets.POSTGRESQL_USERNAME_TEST }}
           POSTGRESQL_PASSWORD: ${{ secrets.POSTGRESQL_PASSWORD_TEST }}
           POSTGRESQL_DATABASE: ${{ secrets.POSTGRESQL_DATABASE_TEST }}
@@ -33,23 +34,38 @@ jobs:
       - uses: pnpm/action-setup@v2
         with:
           version: 10.12.1
+
+          # instala o node 22
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'pnpm'
+          node-version: "22"
+          cache: "pnpm"
+
+          # instala dependencias
       - run: pnpm install --frozen-lockfile
-      - run: pnpm prisma:generate
+
+      # cria o .env.test antes de gerar o PrismaClient
       - name: Create .env.test
         run: |
           echo "POSTGRESQL_USERNAME=${{ secrets.POSTGRESQL_USERNAME_TEST }}" > .env.test
           echo "POSTGRESQL_PASSWORD=${{ secrets.POSTGRESQL_PASSWORD_TEST }}" >> .env.test
-          echo "POSTGRESQL_PORT=5433" >> .env.test
+          echo "POSTGRESQL_HOST=localhost" >> .env.test
+          echo "POSTGRESQL_PORT=5432" >> .env.test
           echo "POSTGRESQL_DATABASE=${{ secrets.POSTGRESQL_DATABASE_TEST }}" >> .env.test
-          echo "DATABASE_URL=\"postgresql://${{ secrets.POSTGRESQL_USERNAME_TEST }}:${{ secrets.POSTGRESQL_PASSWORD_TEST }}@localhost:5433/${{ secrets.POSTGRESQL_DATABASE_TEST }}?schema=public\"" >> .env.test
+          echo "DATABASE_URL=postgresql://${{ secrets.POSTGRESQL_USERNAME_TEST }}:${{ secrets.POSTGRESQL_PASSWORD_TEST }}@localhost:5432/${{ secrets.POSTGRESQL_DATABASE_TEST }}?schema=public" >> .env.test
+          echo "NODE_ENV=test" >> .env.test
+          echo "PORT=3333" >> .env.test
+          echo "CORS_ORIGIN=http://localhost:5173" >> .env.test
+          echo "JWT_SECRET=test-jwt-secret-key-min-32-chars-long!!!" >> .env.test
+
+      # gera o PrismaClient (carregando .env.test com dotenv)
+      - run: npx dotenv -e .env.test -- pnpm prisma:generate
+
+      # aguarda até 30s para o postgreSQL estar pronto
       - name: Wait For Test Database
         run: |
           for i in {1..30}; do
-            nc -z localhost 5433 && echo "DB is up!" && break
+            nc -z localhost 5432 && echo "DB is up!" && break
             echo "Waiting for DB..."
             sleep 1
           done

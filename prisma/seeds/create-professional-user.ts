@@ -5,15 +5,10 @@ import {
   PrismaClient,
   ProfessionalDocumentType,
   TypeOfQuery,
-} from '../../generated/prisma';
-import { hashPassword } from '../../src/core/shared/utils';
-import { env } from '../../src/core/config/env';
-import { PrismaPg } from '@prisma/adapter-pg';
+} from '../.././src/infra/database/prisma/generated/client';
+import { hashPassword } from '../../src/utils';
 
-export const CreateProfessionalUser = async () => {
-  const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
-  const prisma = new PrismaClient({ adapter });
-
+export const CreateProfessionalUser = async (prisma: PrismaClient) => {
   const specialties = await prisma.specialty.findMany();
   const typesOfTreatment = await prisma.typesOfTreatment.findMany();
 
@@ -53,13 +48,11 @@ export const CreateProfessionalUser = async () => {
           Gender.NON_BINARY,
           Gender.TRANSGENDER,
         ]),
-        avatar: faker.image.avatar(),
         phone: faker.phone.number(),
         specialtyId: faker.helpers.arrayElement(specialties).id,
         typeOfTreatmentId: faker.helpers.arrayElement(typesOfTreatment).id,
       },
     });
   }
-
-  await prisma.$disconnect();
+  console.log('✔️ professionals created');
 };

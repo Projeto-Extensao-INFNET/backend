@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { PrismaClient } from '../generated/prisma';
+import { PrismaClient } from '../src/infra/database/prisma/generated/client';
 import { CreateAdminUser } from './seeds/create-adm-user';
 import { CreateUserAgenda } from './seeds/create-user-agenda';
 import { CreatePatientUser } from './seeds/create-patient-user';
@@ -8,7 +8,7 @@ import { CreateProfessionalUser } from './seeds/create-professional-user';
 import { CreateSpecialties } from './seeds/create-specialties';
 import { CreateTypesOfTreatment } from './seeds/create-types-of-treatment';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { env } from '../src/core/config/env';
+import { env } from '../src/config/env';
 
 const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -21,24 +21,23 @@ const seed = async () => {
   await prisma.specialty.deleteMany();
   await prisma.typesOfTreatment.deleteMany();
 
-  console.log('✔ Database reset');
+  console.log('✔️ Database reset');
 
-  await CreateAdminUser();
-  await CreateSpecialties();
-  await CreateTypesOfTreatment();
-  await CreateProfessionalUser();
-  await CreatePatientUser();
-  await CreateProfessionalSchedule();
-  await CreateUserAgenda();
+  await CreateAdminUser(prisma);
+  await CreateSpecialties(prisma);
+  await CreateTypesOfTreatment(prisma);
+  await CreateProfessionalUser(prisma);
+  await CreatePatientUser(prisma);
+  await CreateProfessionalSchedule(prisma);
+  await CreateUserAgenda(prisma);
 };
 
 seed()
-  .then(() => {
-    console.log('database seeded 🌱');
-  })
-  .catch((error) => {
-    console.error('error on seed database:', error);
-  })
-  .finally(async () => {
+  .then(async () => {
     await prisma.$disconnect();
+  })
+  .catch(async (error) => {
+    console.error('error on seed database:', error);
+    await prisma.$disconnect();
+    process.exit(1);
   });
