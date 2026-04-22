@@ -13,18 +13,17 @@ export class CacheService implements OnModuleInit {
 
   async get<T>(key: string): Promise<T | undefined> {
     const start = Date.now();
+    const cachedValue = await this.cacheManager.get<T>(key);
     const duration = Date.now() - start;
-
-    const value = await this.cacheManager.get<T>(key);
 
     this.logger.debug({
       key,
       type: 'cache',
-      status: value ? 'HIT' : 'MISS',
+      status: cachedValue ? 'HIT' : 'MISS',
       duration,
     });
 
-    return value;
+    return cachedValue;
   }
 
   async set<T>(key: string, value: T, ttl?: number): Promise<void> {
