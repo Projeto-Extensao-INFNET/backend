@@ -8,7 +8,6 @@ export const DEV_CORS_ORIGIN = env.DEV_CORS_ORIGIN;
 export const COOKIES_MAX_AGE = 60 * 15; // 15 min
 
 export const REDIS_PORT = env.REDIS_PORT;
-export const REDIS_DB = env.REDIS_DB;
 export const REDIS_HOST = env.REDIS_HOST;
 export const REDIS_CACHE_EXPIRATION = 60 * 15; // 15 min
 

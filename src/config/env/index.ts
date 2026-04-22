@@ -17,7 +17,6 @@ export const envSchema = z.object({
   PORT: z.coerce.number(),
   REDIS_PORT: z.coerce.number(),
   REDIS_HOST: z.string().optional(),
-  REDIS_DB: z.coerce.number(),
   DEV_CORS_ORIGIN: z.url().startsWith('http://localhost:'),
 });
 
