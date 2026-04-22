@@ -3,7 +3,7 @@
 - [x] Refatorar a arquitetura do projeto
 - [x] Dockerizar o Nest corretamente no modo de dev
 - [ ] Aplicar arquitetura limpa e recomendações do NestJS
-- [ ] Unificar services e controllers por domínio (talvez fazer o mesmo com testes unitários e E2E)
+- [x] Unificar services e controllers por domínio (talvez fazer o mesmo com testes unitários e E2E)
 - [ ] Verificar se existem testes unitários que na verdade são de integração e vice-versa
 - [ ] Corrigir testes unitários e e2e nas validações das exceptions e injeção dos services
 - [ ] Refatorar testes usando o video: <https://www.youtube.com/watch?v=XjfWQ46ePWg> e <https://www.youtube.com/watch?v=N8-XBjZPkmQ&t=1326s>
@@ -31,7 +31,7 @@
 ## Requisitos do Sistema
 
 - [x] Validação dos dados
-- [x] Deploy em alguma plataforma (Vercel, fly.io, AWS ou Render) - Pulumi configurado para AWS
+- [ ] Deploy em alguma plataforma (Vercel, fly.io, AWS ou Render) - Pulumi configurado para AWS
 - [x] Cache com redis (?)
 - [x] Testes unitários, integração e E2E com vitest + supertest
 
