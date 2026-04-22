@@ -9,7 +9,6 @@ export const COOKIES_MAX_AGE = 60 * 15; // 15 min
 
 export const REDIS_PORT = env.REDIS_PORT;
 export const REDIS_HOST = env.REDIS_HOST;
-export const REDIS_CACHE_EXPIRATION = 60 * 15; // 15 min
 
 export const JWT_SECRET = env.JWT_SECRET;
 export const JWT_REFRESH_SECRET = env.JWT_REFRESH_SECRET;
