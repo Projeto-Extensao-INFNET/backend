@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+
 import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER } from '@/shared/constants';
-import { CacheRepository } from '@/infra/cache/cache-repository';
+
 import { ok, type Result } from '@/shared/errors/result';
+
+import { PrismaService } from '../prisma/prisma.service';
+import { CacheService } from '@/infra/cache/cache.service';
 
 import type {
   PaginationQueryDto,
@@ -20,7 +23,7 @@ export abstract class IProfessionalsRepository {
 export class PrismaProfessionalsRepository implements IProfessionalsRepository {
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly cache: CacheRepository,
+    private readonly cache: CacheService,
   ) {}
 
   async listProfessionals(
@@ -30,25 +33,23 @@ export class PrismaProfessionalsRepository implements IProfessionalsRepository {
     const take = Number(limit);
     const skip = (Number(page) - 1) * take;
 
+    // cria a cache key com a lista de profissionais e o ttl de 1min
     const CACHE_KEY = `professionals:page:${page}:limit:${limit}`;
-    const cacheHit = await this.cache.get(CACHE_KEY);
+    const TTL = 60 * 1000; // 60s
 
-    if (cacheHit) {
-      const cachedData = JSON.parse(cacheHit);
+    // primeiro busca no cache
+    const cachedProfessionals =
+      await this.cache.get<PaginationResultDto<ProfessionalModel>>(CACHE_KEY);
 
-      // retorna os dados cacheados e os query params do cache convertidos para Number
-      return ok({
-        ...cachedData,
-        meta: {
-          ...cachedData.meta,
-          page: Number(cachedData?.meta?.page),
-          limit: Number(cachedData?.meta?.limit),
-          total_items: Number(cachedData?.meta?.total_items),
-          total_pages: Number(cachedData?.meta?.total_pages),
-        },
-      });
+    // se houver dados no cache os retorna
+    if (cachedProfessionals) {
+      return ok(cachedProfessionals);
     }
 
+    // const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+    // await delay(5000);
+
+    // bate no banco se não tiver dados cacheados ou ttl expirar
     const professionals = await this.prismaService.professional.findMany({
       skip,
       take,
@@ -99,7 +100,8 @@ export class PrismaProfessionalsRepository implements IProfessionalsRepository {
       },
     };
 
-    await this.cache.set(CACHE_KEY, JSON.stringify(result));
+    // salva no cache o payload de paginação completo
+    await this.cache.set(CACHE_KEY, result, TTL);
 
     return ok(result);
   }
