@@ -71,7 +71,7 @@ export class ProfessionalsController {
   async listProfessionals(
     @Query() query: PaginationQueryDto,
   ): Promise<RequestResponse<PaginationResultDto<ProfessionalModel>>> {
-    const result = await this.service.execute(query);
+    const result = await this.service.listProfessionals(query);
     if (!result.ok) return handleError(result.error);
 
     return successResponse(result.value, HttpStatus.OK);
