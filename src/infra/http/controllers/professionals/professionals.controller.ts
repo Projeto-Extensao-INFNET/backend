@@ -5,7 +5,7 @@ import {
   ApiQuery,
   ApiResponse,
 } from '@nestjs/swagger';
-import { ListProfessionalsService } from '@Services/professionals/list-professionals.service';
+import { ProfessionalsService } from '@Services/professionals/professionals.service';
 import { Controller, Get, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { Roles } from '@/infra/auth/decorators/roles.decorator';
 import { successResponse } from '@/shared/errors/responses/success.response';
@@ -22,8 +22,8 @@ import { handleError } from '@/shared/errors/handleError';
 @Controller('/professionals')
 @ApiTags('Professionals')
 @ApiBearerAuth('authorization')
-export class ListProfessionalsController {
-  constructor(private readonly professionalService: ListProfessionalsService) {}
+export class ProfessionalsController {
+  constructor(private readonly service: ProfessionalsService) {}
 
   @Roles('PATIENT' as ROLE)
   @Get('')
@@ -71,7 +71,7 @@ export class ListProfessionalsController {
   async listProfessionals(
     @Query() query: PaginationQueryDto,
   ): Promise<RequestResponse<PaginationResultDto<ProfessionalModel>>> {
-    const result = await this.professionalService.execute(query);
+    const result = await this.service.execute(query);
     if (!result.ok) return handleError(result.error);
 
     return successResponse(result.value, HttpStatus.OK);
