@@ -12,14 +12,28 @@ export class CacheService implements OnModuleInit {
   }
 
   async get<T>(key: string): Promise<T | undefined> {
-    return await this.cacheManager.get<T>(key);
+    const start = Date.now();
+    const duration = Date.now() - start;
+
+    const value = await this.cacheManager.get<T>(key);
+
+    this.logger.debug({
+      key,
+      type: 'cache',
+      status: value ? 'HIT' : 'MISS',
+      duration,
+    });
+
+    return value;
   }
 
   async set<T>(key: string, value: T, ttl?: number): Promise<void> {
     await this.cacheManager.set(key, value, ttl);
+    this.logger.debug(`CACHE SET key=${key} ttl=${ttl}`);
   }
 
   async delete(key: string): Promise<void> {
     await this.cacheManager.del(key);
+    this.logger.debug(`CACHE DEL key=${key}`);
   }
 }
