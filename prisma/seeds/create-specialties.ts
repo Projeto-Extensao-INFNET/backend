@@ -1,9 +1,9 @@
-import type { PrismaClient } from '../.././src/infra/database/generated/client';
+import type { PrismaClient } from '../.././src/infra/database/prisma/generated/client';
 
 export const CreateSpecialties = async (prisma: PrismaClient) => {
   await prisma.specialty.createMany({
     data: [{ name: 'Psiquiatria' }, { name: 'Psicologia' }],
+    skipDuplicates: true,
   });
-
-  await prisma.$disconnect();
+  console.log('✔️ specialties created');
 };

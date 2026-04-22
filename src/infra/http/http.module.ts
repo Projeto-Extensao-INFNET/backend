@@ -1,73 +1,74 @@
-/**
- * CONTROLLERS
- */
-import { DeleteUserProfileController } from '@Controllers/user/delete-user-profile.controller';
-import { EditUserProfileController } from '@Controllers/user/edit-user-profile.controller';
-import { ListProfessionalsController } from '@/infra/http/controllers/professionals/list-professionals.controller';
-import { GetUserProfileController } from '@Controllers/user/get-user-profile.controller';
+// Modules
+import { Module } from '@nestjs/common';
+import { CacheModule } from '@/infra/cache/cache.module';
+
+// Controllers
+import { UserController } from '@Controllers/user/user.controller';
+import { ProfessionalsController } from './controllers/professionals/professionals.controller';
+import { AppointmentsController } from '@Controllers/appointments/appointments.controller';
 import { SpecialtyController } from '@Controllers/specialty/specialty.controller';
 import { TreatmentTypeController } from '@Controllers/treatment-type/treatment-type.controller';
-import { UpdateAppointmentsController } from '@Controllers/appointments/update-appointments.controller';
-import { GetAppointmentsController } from '@Controllers/appointments/get-appointments.controller';
-import { CreateAppointmentsController } from '@Controllers/appointments/create-appointments.controller';
-import { CancelAppointmentsController } from '@Controllers/appointments/cancel-appointments.controller';
+import { RefreshTokenController } from '@/infra/auth/controllers/refresh-token.controller';
+import { LogoutController } from '../auth/controllers/logout.controller';
+import { HealthController } from './controllers/health/health.controller';
 
-/**
- *  MODULES
- */
-import { Module } from '@nestjs/common';
-
-/**
- * SERVICES
- */
-import { ListProfessionalsService } from '@/domain/services/professionals/list-professionals.service';
+// Services
+import { UserService } from '@/application/services/user/user.service';
+import { ProfessionalsService } from '@/application/services/professionals/professionals.service';
+import { AppointmentsService } from '@/application/services/appointments/appointments.service';
 import { SpecialtyService } from '@Services/specialty/specialty.service';
 import { TreatmentTypeService } from '@Services/treatment-type/treatment-type.service';
-import { DeleteUserProfileService } from '@/domain/services/user/delete-user-profile.service';
-import { EditUserProfileService } from '@/domain/services/user/edit-user-profile.service';
-import { GetUserProfileService } from '@/domain/services/user/get-user-profile.service';
-import { GetAppointmentsService } from '@/domain/services/appointments/get-appointments.service';
-import { CreateAppointmentsService } from '@/domain/services/appointments/create-appointments.service';
-import { UpdateAppointmentsService } from '@/domain/services/appointments/update-appointments.service';
-import { CancelAppointmentsService } from '@Services/appointments/cancel-appointments.service';
+import { RefreshTokenService } from '@/infra/auth/services/refresh-token.service';
 
-/**
- *  REPOSITORIES
- */
+// Repositories
 import {
   IUserRepository,
   PrismaUserRepository,
-} from '@/core/repositories/prisma-user-repository';
+} from '@/infra/database/repositories/prisma-user-repository';
+import {
+  IProfessionalsRepository,
+  PrismaProfessionalsRepository,
+} from '@/infra/database/repositories/prisma-professionals.repository';
+import {
+  IPrismaAppointmentsRepository,
+  PrismaAppointmentsRepository,
+} from '@/infra/database/repositories/prisma-appointments.repository';
+
+// Functions
+import { GetTokens } from '../auth/jwt/generate-jwt-tokens';
 
 @Module({
+  imports: [CacheModule],
   providers: [
-    ListProfessionalsService,
+    GetTokens,
+    UserService,
+    ProfessionalsService,
+    AppointmentsService,
     SpecialtyService,
     TreatmentTypeService,
-    GetUserProfileService,
-    DeleteUserProfileService,
-    EditUserProfileService,
-    GetAppointmentsService,
-    CancelAppointmentsService,
-    CreateAppointmentsService,
-    UpdateAppointmentsService,
-
+    RefreshTokenService,
     {
       provide: IUserRepository,
       useClass: PrismaUserRepository,
     },
+    {
+      provide: IProfessionalsRepository,
+      useClass: PrismaProfessionalsRepository,
+    },
+    {
+      provide: IPrismaAppointmentsRepository,
+      useClass: PrismaAppointmentsRepository,
+    },
   ],
   controllers: [
-    GetUserProfileController,
-    EditUserProfileController,
-    DeleteUserProfileController,
-    ListProfessionalsController,
+    UserController,
+    ProfessionalsController,
     SpecialtyController,
     TreatmentTypeController,
-    GetAppointmentsController,
-    CreateAppointmentsController,
-    UpdateAppointmentsController,
-    CancelAppointmentsController,
+    AppointmentsController,
+    HealthController,
+    RefreshTokenController,
+    LogoutController,
   ],
 })
 export class HttpModule {}

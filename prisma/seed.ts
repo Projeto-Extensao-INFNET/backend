@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { PrismaClient } from '../src/infra/database/generated/client';
+import { PrismaClient } from '../src/infra/database/prisma/generated/client';
 import { CreateAdminUser } from './seeds/create-adm-user';
 import { CreateUserAgenda } from './seeds/create-user-agenda';
 import { CreatePatientUser } from './seeds/create-patient-user';
@@ -21,7 +21,7 @@ const seed = async () => {
   await prisma.specialty.deleteMany();
   await prisma.typesOfTreatment.deleteMany();
 
-  console.log('✔ Database reset');
+  console.log('✔️ Database reset');
 
   await CreateAdminUser(prisma);
   await CreateSpecialties(prisma);
@@ -33,12 +33,11 @@ const seed = async () => {
 };
 
 seed()
-  .then(() => {
-    console.log('database seeded 🌱');
-  })
-  .catch((error) => {
-    console.error('error on seed database:', error);
-  })
-  .finally(async () => {
+  .then(async () => {
     await prisma.$disconnect();
+  })
+  .catch(async (error) => {
+    console.error('error on seed database:', error);
+    await prisma.$disconnect();
+    process.exit(1);
   });

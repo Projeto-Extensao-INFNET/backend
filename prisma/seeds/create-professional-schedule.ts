@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
-import { PrismaClient } from '../.././src/infra/database/generated/client';
+import { PrismaClient } from '../.././src/infra/database/prisma/generated/client';
 
 export const CreateProfessionalSchedule = async (prisma: PrismaClient) => {
   const professionals = await prisma.professional.findMany();
@@ -19,6 +19,5 @@ export const CreateProfessionalSchedule = async (prisma: PrismaClient) => {
       },
     });
   }
-
-  await prisma.$disconnect();
+  console.log('✔️ professionals schedule created');
 };

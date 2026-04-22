@@ -1,4 +1,4 @@
-import type { PrismaClient } from '../.././src/infra/database/generated/client';
+import type { PrismaClient } from '../.././src/infra/database/prisma/generated/client';
 
 export const CreateTypesOfTreatment = async (prisma: PrismaClient) => {
   await prisma.typesOfTreatment.createMany({
@@ -7,6 +7,7 @@ export const CreateTypesOfTreatment = async (prisma: PrismaClient) => {
       { name: 'Terapia de Casais' },
       { name: 'Terapia Individual' },
     ],
+    skipDuplicates: true,
   });
-  await prisma.$disconnect();
+  console.log('✔️ types of treatment created');
 };
