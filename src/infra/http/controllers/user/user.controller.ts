@@ -174,7 +174,7 @@ export class UserController {
 
   @Delete('me')
   @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Delete user profile',
     operationId: 'deleteProfile',
@@ -199,7 +199,7 @@ export class UserController {
 
     return successResponse(
       { message: 'Perfil removido com sucesso!' },
-      HttpStatus.NO_CONTENT,
+      HttpStatus.OK,
     );
   }
 }
