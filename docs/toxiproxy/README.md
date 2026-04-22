@@ -1,63 +1,52 @@
 # Toxiproxy
 
-Este guia explica como usar o Toxiproxy para simular latência etc.
+Ferramenta de chaos engineering para testar resiliência de serviços (latência, falhas, bandwidth).
 
-## Script para criar o proxy
+## O que é?
 
-```bash
-docker exec -it toxiproxy /toxiproxy-cli create -l 0.0.0.0:13333 -u backend:3333 nome-do-proxy
-```
+Proxy TCP que fica entre sua aplicação e o serviço (Redis, PostgreSQL, etc). Permite injetar falhas dinamicamente sem mudar código.
 
-Esse comando cria um proxy apontando para o backend no Compose (`backend:3333`) e escutando em `13333`.
+---
 
-### O que cada parte faz
-
-- `docker exec -it toxiproxy`: executa o comando dentro do container do toxiproxy
-- `/toxiproxy-cli`: CLI oficial do toxiproxy
-- `create ... nome-do-proxy`: cria um novo proxy
-- `-l 0.0.0.0:13333`: porta onde o proxy vai escutar
-- `-u backend:3333`: destino real (o serviço backend do Compose)
-
-## Listar proxies
+## Referência Rápida
 
 ```bash
+# Criar proxy
+docker exec -it toxiproxy /toxiproxy-cli create -l 0.0.0.0:13333 -u backend:3333 backend-proxy
+
+# Listar proxies
 docker exec -it toxiproxy /toxiproxy-cli list
+
+# Ver detalhes
+docker exec -it toxiproxy /toxiproxy-cli inspect backend-proxy
+
+# Adicionar latência
+docker exec -it toxiproxy /toxiproxy-cli toxic add -t latency -n redis_latency -a latency=2000 backend-proxy
+
+# Remover latência
+docker exec -it toxiproxy /toxiproxy-cli toxic remove -n redis_latency backend-proxy
+
+# Deletar proxy
+docker exec -it toxiproxy /toxiproxy-cli delete backend-proxy
 ```
 
-## Remover proxy
+## Tipos de Toxic
+
+| Tipo         | Descrição         | Parâmetro      |
+| ------------ | ----------------- | -------------- |
+| `latency`    | Atraso            | `latency=ms`   |
+| `timeout`    | Corta conexão     | `timeout=ms`   |
+| `bandwidth`  | Limita velocidade | `rate=bytes/s` |
+| `slow_close` | Atrasa fechamento | `delay=ms`     |
+| `slicer`     | Corta dados       | `average=ms`   |
+| `limit_data` | Limita tamanho    | `bytes=n`      |
+
+---
+
+## Docker
+
+Todos os comandos usam `docker exec` para executar dentro do container:
 
 ```bash
-docker exec -it toxiproxy /toxiproxy-cli delete nome-do-proxy
+docker exec -it toxiproxy /toxiproxy-cli <comando> [opções]
 ```
-
-## Aplicar latência usando o nome do proxy(exemplo: `backend-proxy`)
-
-```bash
-docker exec -it toxiproxy /toxiproxy-cli toxic add -t latency -n latency_down -a latency=2000 nome-do-proxy
-```
-
-Isso adiciona 2000ms (2s) de latencia nas respostas para o cliente.
-
-### O que cada parte faz
-
-- `docker exec -it toxiproxy`: executa o comando dentro do container do toxiproxy
-- `/toxiproxy-cli`: CLI oficial do toxiproxy
-- `toxic add`: adiciona um novo toxic ao proxy
-- `-t latency`: define o tipo do toxic como latência
-- `-n latency`: define o nome do toxic, que depois será usado para remover ou atualizar
-- `-a latency=2000`: define a latência em milissegundos
-- `nome-do-proxy`: nome do proxy que vai receber o toxic
-
-## Remover latencia
-
-```bash
-docker exec -it toxiproxy /toxiproxy-cli toxic remove -n latency nome-do-proxy
-```
-
-### O que cada parte faz
-
-- `docker exec -it toxiproxy`: executa o comando dentro do container do toxiproxy
-- `/toxiproxy-cli`: CLI oficial do toxiproxy
-- `toxic remove`: remove um toxic já aplicado
-- `-n latency`: informa o nome do toxic que será removido
-- `nome-do-proxy`: nome do proxy que contém esse toxic
