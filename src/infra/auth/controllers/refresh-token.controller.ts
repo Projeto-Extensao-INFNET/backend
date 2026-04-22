@@ -1,21 +1,13 @@
-import {
-  ERROR_INVALID_REFRESH_TOKEN,
-  ERROR_INVALID_TOKEN_TYPE,
-} from '@/shared/errors';
-import {
-  Controller,
-  HttpStatus,
-  Post,
-  Req,
-  Res,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Controller, Post, Req, Res } from '@nestjs/common';
 import { RefreshTokenService } from '../services/refresh-token.service';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 import { COOKIES_MAX_AGE } from '@/shared/constants';
 import { env } from '@/config/env';
+import { badRequest } from '@/shared/errors/exceptions/exceptions';
+import { err } from '@/shared/errors/result';
 
+// !!FIX [] => rota não funcionando retorna erro 500
 @ApiTags('Auth')
 @Controller('auth')
 export class RefreshTokenController {
@@ -38,25 +30,25 @@ export class RefreshTokenController {
       },
     },
   })
-  @ApiResponse({ status: 401, description: ERROR_INVALID_REFRESH_TOKEN })
+  @ApiResponse({ status: 401, description: 'Credenciais inválidas!' })
   async refresh(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
     // busca o refreshToken e accessToken nos cookies da requisição
     const refreshToken = req.cookies?.refreshToken;
-
-    if (!refreshToken)
-      throw new UnauthorizedException(ERROR_INVALID_TOKEN_TYPE);
+    if (!refreshToken) return err(badRequest());
 
     // repassa o novo accessToken e refreshToken  para o service
-    const { refreshToken: newRefreshToken } =
-      await this.refreshTokenService.exec(refreshToken);
+    const result = await this.refreshTokenService.exec(refreshToken);
+    if (!result.ok) return err(badRequest());
+
+    const { value } = result;
 
     const isProd = env.NODE_ENV === 'production';
 
     // atualiza os cookies com o novo refreshToken e accessToken
-    res.cookie('refreshToken', newRefreshToken, {
+    res.cookie('refreshToken', value.refreshToken, {
       httpOnly: true,
       path: '/auth/refresh',
       secure: isProd,
@@ -65,9 +57,6 @@ export class RefreshTokenController {
       domain: isProd ? 'FUTURO_DOMÍNIO_DE_PROD' : 'localhost',
     });
 
-    return {
-      status: HttpStatus.CREATED,
-      message: 'Refresh Token criado com sucesso!',
-    };
+    return;
   }
 }
