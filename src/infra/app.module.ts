@@ -9,9 +9,10 @@ import cookieParser from 'cookie-parser';
 import { PrismaModule } from '@/infra/database/prisma/prisma.module';
 import { AuthModule } from '../infra/auth/auth.module';
 import { HttpModule } from '../infra/http/http.module';
+import { CacheModule } from './cache/cache.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, HttpModule],
+  imports: [PrismaModule, AuthModule, CacheModule, HttpModule],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
