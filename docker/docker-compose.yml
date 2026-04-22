@@ -21,6 +21,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@postgresql:5432/db_projeto_extensao?schema=public
       - REDIS_HOST=redis
+      - REDIS_PORT=6379
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true # hot-reload (gambiarra)
     ports:
@@ -76,5 +77,7 @@ services:
     image: ghcr.io/shopify/toxiproxy
     ports:
       - "8474:8474"
-      - "13333:13333" # porta do proxy
+      - "13333:13333" # proxy do Nest
+      - "16379:16379" # proxy do Redis
+      - "15432:15432" # proxy do Postgre
     restart: unless-stopped
