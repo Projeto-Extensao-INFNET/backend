@@ -8,10 +8,10 @@ import { Injectable } from '@nestjs/common';
 import { ok, type Result } from '@/shared/errors/result';
 
 @Injectable()
-export class ListProfessionalsService {
+export class ProfessionalsService {
   constructor(private readonly repo: IProfessionalsRepository) {}
 
-  async execute(
+  async listProfessionals(
     query: PaginationQueryDto,
   ): Promise<Result<PaginationResultDto<Professional>>> {
     const users = await this.repo.listProfessionals(query);
