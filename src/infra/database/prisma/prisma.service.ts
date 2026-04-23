@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaPg } from '@prisma/adapter-pg';
 
-import { PrismaClient } from './generated/client';
+import { PrismaClient, type Prisma } from './generated/client';
 import { env } from '@/config/env';
 
 @Injectable()
@@ -24,7 +24,15 @@ export class PrismaService
     super({
       adapter,
       log:
-        env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+        env.NODE_ENV === 'development'
+          ? [
+              { emit: 'event', level: 'query' },
+              { emit: 'stdout', level: 'info' },
+              { emit: 'event', level: 'error' },
+              { emit: 'event', level: 'warn' },
+            ]
+          : [{ emit: 'event', level: 'error' }],
+      errorFormat: 'pretty',
     });
   }
 
@@ -32,6 +40,25 @@ export class PrismaService
     try {
       await this.$connect();
       this.logger.log('Database connection OK!');
+
+      this.$on('query' as never, (e: Prisma.QueryEvent) => {
+        this.logger.debug({
+          QUERY: e.query,
+          DURATION: `${e.duration.toFixed(2)}ms`,
+        });
+      });
+
+      this.$on('error' as never, (e: Prisma.LogEvent) => {
+        this.logger.error(
+          `Prisma Error: ${e.message} | Timestamp: ${e.timestamp}`,
+        );
+      });
+
+      this.$on('warn' as never, (e: Prisma.LogEvent) => {
+        this.logger.warn(
+          `Prisma Warning: ${e.message} | Timestamp: ${e.timestamp}ms`,
+        );
+      });
     } catch (err) {
       this.logger.error(`Database connection failed ${err}`);
       throw err;
@@ -41,7 +68,7 @@ export class PrismaService
   async onModuleDestroy() {
     try {
       await this.$disconnect();
-      this.logger.log('Database disconnected!');
+      this.logger.warn('Database disconnected!');
     } catch (err) {
       this.logger.error(`Error disconnecting database: ${err}`);
     }
