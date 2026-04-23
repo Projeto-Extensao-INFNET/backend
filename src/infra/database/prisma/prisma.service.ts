@@ -9,6 +9,8 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient, type Prisma } from './generated/client';
 import { env } from '@/config/env';
 
+const connectionString = env.DATABASE_URL;
+
 @Injectable()
 export class PrismaService
   extends PrismaClient
@@ -17,9 +19,7 @@ export class PrismaService
   private logger: Logger = new Logger('Database');
 
   constructor() {
-    const adapter = new PrismaPg({
-      connectionString: env.DATABASE_URL,
-    });
+    const adapter = new PrismaPg({ connectionString });
 
     super({
       adapter,
