@@ -1,4 +1,4 @@
-import { env } from '@/config/env';
+import { env } from '@/infra/config/env';
 import type { Payload } from '@/shared/types';
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
