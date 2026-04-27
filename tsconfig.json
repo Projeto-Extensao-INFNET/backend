@@ -17,7 +17,7 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"],
-      "@Controllers/*": ["./src/infra/http/controllers/*"],
+      "@Controllers/*": ["./src/presentation/controllers/*"],
       "@Services/*": ["src/application/services/*"],
       "@Constants": ["src/shared/constants/*"],
       "@Dtos/*": ["src/infra/http/dtos/*"]
