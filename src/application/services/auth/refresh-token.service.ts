@@ -2,7 +2,7 @@ import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcryptjs';
-import { GetTokens } from '../jwt/generate-jwt-tokens';
+import { GetTokens } from '../../../infra/auth/jwt/generate-jwt-tokens';
 import { badRequest } from '@/shared/errors/exceptions/exceptions';
 import { err, ok } from '@/shared/errors/result';
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { comparePassword, hashPassword } from '@/utils';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
-import { GetTokens } from '../jwt/generate-jwt-tokens';
+import { GetTokens } from '../../../infra/auth/jwt/generate-jwt-tokens';
 import {
   badRequest,
   conflict,
@@ -13,11 +13,11 @@ import { err, ok, type Result } from '@/shared/errors/result';
 import type {
   SignUpDto,
   SignUpResponseDto,
-} from '@/infra/http/dtos/auth/signUp.dto';
+} from '@/presentation/dtos/auth/signUp.dto';
 import type {
   SignInDto,
   SignInResponseDto,
-} from '@/infra/http/dtos/auth/signIn.dto';
+} from '@/presentation/dtos/auth/signIn.dto';
 
 @Injectable()
 export class AuthService {
