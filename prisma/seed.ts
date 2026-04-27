@@ -8,7 +8,7 @@ import { CreateProfessionalUser } from './seeds/create-professional-user';
 import { CreateSpecialties } from './seeds/create-specialties';
 import { CreateTypesOfTreatment } from './seeds/create-types-of-treatment';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { env } from '../src/config/env';
+import { env } from '../src/infra/config/env';
 
 const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
