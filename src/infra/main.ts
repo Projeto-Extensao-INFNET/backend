@@ -3,8 +3,8 @@ import { Logger } from '@nestjs/common';
 
 import { AppModule } from './app.module';
 
-import { setupSwagger } from '../config/docs';
-import { env } from '../config/env';
+import { setupSwagger } from './config/docs';
+import { env } from './config/env';
 
 async function bootstrap() {
   const logger: Logger = new Logger('Backend');

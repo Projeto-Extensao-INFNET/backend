@@ -4,7 +4,7 @@ import { CacheModule as Cache } from '@nestjs/cache-manager';
 import { RedisClientOptions } from 'redis';
 import KeyvRedis from '@keyv/redis';
 
-import { env } from '@/config/env';
+import { env } from '@/infra/config/env';
 import { CacheService } from './cache.service';
 
 @Global()
