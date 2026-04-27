@@ -1,5 +1,5 @@
 import { ok, type Result } from '@/shared/errors/result';
-import { CreateAppointmentDto } from '@/infra/http/dtos/appointments/create-appointment.dto';
+import { CreateAppointmentDto } from '@/presentation/dtos/appointments/create-appointment.dto';
 import {
   conflict,
   resourceNotFound,

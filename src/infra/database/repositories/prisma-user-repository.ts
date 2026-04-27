@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { UserModel } from '@/domain/models/user.model';
-import { EditProfileDto } from '@/infra/http/dtos/user/edit-profile.dto';
+import { EditProfileDto } from '@/presentation/dtos/user/edit-profile.dto';
 import { err, ok, type Result } from '@/shared/errors/result';
 import {
   badRequest,
@@ -12,15 +11,16 @@ import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER } from '@/shared/constants';
 import type {
   PaginationQueryDto,
   PaginationResultDto,
-} from '@/infra/http/dtos/pagination/pagination.dto';
-import type { GetUserProfileResponse } from '@/infra/http/dtos/user/get-user.dto';
-import type { DeleteProfileResponseDto } from '@/infra/http/dtos/user/delete-profile.dto';
+} from '@/presentation/dtos/pagination/pagination.dto';
+import type { GetUserProfileResponse } from '@/presentation/dtos/user/get-user.dto';
+import type { DeleteProfileResponseDto } from '@/presentation/dtos/user/delete-profile.dto';
+import type { OmittedUserPassword } from '@/shared/types';
 
 // Cria um contrato que poderá ser usado por vários repositórios reais
 export abstract class IUserRepository {
   abstract uploadAvatar(userId: string, avatarUrl: string): Promise<void>;
   abstract getProfile(userId: string): Promise<Result<GetUserProfileResponse>>;
-  abstract findById(id: string): Promise<Result<Omit<UserModel, 'password'>>>;
+  abstract findById(id: string): Promise<Result<OmittedUserPassword>>;
   abstract deleteProfile(id: string): Promise<Result<DeleteProfileResponseDto>>;
   abstract editProfile(
     id: string,
@@ -28,7 +28,7 @@ export abstract class IUserRepository {
   ): Promise<Result<EditProfileDto>>;
   abstract getAllUsers(
     params: PaginationQueryDto,
-  ): Promise<Result<PaginationResultDto<Omit<UserModel, 'password'>>>>;
+  ): Promise<Result<PaginationResultDto<OmittedUserPassword>>>;
 }
 
 // implementação real do IUserRepository usando o Prisma para acessar o banco de dados
@@ -44,7 +44,7 @@ export class PrismaUserRepository implements IUserRepository {
   }
 
   // TODO => adicionar cache
-  async findById(id: string): Promise<Result<Omit<UserModel, 'password'>>> {
+  async findById(id: string): Promise<Result<OmittedUserPassword>> {
     const user = await this.prismaService.user.findUnique({
       where: { id },
       select: {
@@ -69,7 +69,7 @@ export class PrismaUserRepository implements IUserRepository {
   // TODO => adicionar cache
   async getAllUsers(
     params: PaginationQueryDto,
-  ): Promise<Result<PaginationResultDto<Omit<UserModel, 'password'>>>> {
+  ): Promise<Result<PaginationResultDto<OmittedUserPassword>>> {
     const { page = DEFAULT_PAGE_NUMBER, limit = DEFAULT_PAGE_LIMIT } = params;
 
     const take = Number(limit);
@@ -99,14 +99,14 @@ export class PrismaUserRepository implements IUserRepository {
 
     if (!users) return err(resourceNotFound('Usuários não encontrados!'));
 
-    const total = await this.prismaService.user.count();
-    const totalPages = Math.ceil(total / take);
+    const total_items = await this.prismaService.user.count();
+    const total_pages = Math.ceil(total_items / take);
 
     return ok({
       data: users,
       meta: {
-        total_items: total,
-        total_pages: totalPages,
+        total_items,
+        total_pages,
         page: Number(page),
         limit: Number(take),
       },

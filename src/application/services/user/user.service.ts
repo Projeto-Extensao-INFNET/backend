@@ -12,11 +12,11 @@ import type { UserModel } from '@/domain/models/user.model';
 import type {
   PaginationQueryDto,
   PaginationResultDto,
-} from '@/infra/http/dtos/pagination/pagination.dto';
-import type { GetUserProfileResponse } from '@/infra/http/dtos/user/get-user.dto';
-import type { EditProfileDto } from '@/infra/http/dtos/user/edit-profile.dto';
-import type { DeleteProfileResponseDto } from '@/infra/http/dtos/user/delete-profile.dto';
-import type { AuthenticatedUserResponse } from '@/infra/http/dtos/auth/auth-user';
+} from '@/presentation/dtos/pagination/pagination.dto';
+import type { GetUserProfileResponse } from '@/presentation/dtos/user/get-user.dto';
+import type { EditProfileDto } from '@/presentation/dtos/user/edit-profile.dto';
+import type { DeleteProfileResponseDto } from '@/presentation/dtos/user/delete-profile.dto';
+import type { AuthenticatedUserResponse } from '@/presentation/dtos/auth/auth-user';
 
 @Injectable()
 export class UserService {

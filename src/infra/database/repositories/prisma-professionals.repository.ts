@@ -10,7 +10,7 @@ import { CacheService } from '@/infra/cache/cache.service';
 import type {
   PaginationQueryDto,
   PaginationResultDto,
-} from '@/infra/http/dtos/pagination/pagination.dto';
+} from '@/presentation/dtos/pagination/pagination.dto';
 import type { ProfessionalModel } from '@/domain/models/professional.model';
 
 export abstract class IProfessionalsRepository {

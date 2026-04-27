@@ -3,7 +3,7 @@ import type { Professional } from '@/infra/database/prisma/generated/client';
 import type {
   PaginationQueryDto,
   PaginationResultDto,
-} from '@/infra/http/dtos/pagination/pagination.dto';
+} from '@/presentation/dtos/pagination/pagination.dto';
 import { Injectable } from '@nestjs/common';
 import { ok, type Result } from '@/shared/errors/result';
 
