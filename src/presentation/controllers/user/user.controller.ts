@@ -27,15 +27,14 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 import { UserService } from '@Services/user/user.service';
 
+import { JwtAuthGuard } from '@/infra/auth/guards/auth.guard';
 import { Roles } from '@/infra/auth/decorators/roles.decorator';
-import { JwtAuthGuard } from '../../../auth/guards/auth.guard';
 
 import { MAX_FILE_SIZE } from '@/shared/constants';
 
 import { successResponse } from '@/shared/errors/responses/success.response';
 import { handleError } from '@/shared/errors/handleError';
 
-import { AuthenticatedUserResponse } from '@/infra/http/dtos/auth/auth-user';
 import { DeleteProfileResponseDto } from '../../dtos/user/delete-profile.dto';
 import { EditProfileDto } from '../../dtos/user/edit-profile.dto';
 import { GetUserProfileResponse } from '../../dtos/user/get-user.dto';
@@ -45,8 +44,8 @@ import type {
   PaginationQueryDto,
   PaginationResultDto,
 } from '../../dtos/pagination/pagination.dto';
-import type { UserModel } from '@/domain/models/user.model';
-import type { ROLE } from '@/shared/types';
+import type { OmittedUserPassword, ROLE } from '@/shared/types';
+import type { AuthenticatedUserResponse } from '@/presentation/dtos/auth/auth-user';
 
 @Controller('/accounts')
 @ApiTags('Accounts')
@@ -66,9 +65,7 @@ export class UserController {
   @ApiResponse({ status: 404, description: 'Recurso não encontrado!' })
   async getAllUsers(
     @Query() query: PaginationQueryDto,
-  ): Promise<
-    RequestResponse<PaginationResultDto<Omit<UserModel, 'password'>>>
-  > {
+  ): Promise<RequestResponse<PaginationResultDto<OmittedUserPassword>>> {
     const result = await this.service.getUsers(query);
     if (!result.ok) return handleError(result.error);
 

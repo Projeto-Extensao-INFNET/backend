@@ -1,9 +1,9 @@
 import { Controller, Post, Req, Res } from '@nestjs/common';
-import { RefreshTokenService } from '../services/refresh-token.service';
+import { RefreshTokenService } from '../../../application/services/auth/refresh-token.service';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 import { COOKIES_MAX_AGE } from '@/shared/constants';
-import { env } from '@/config/env';
+import { env } from '@/infra/config/env';
 import { badRequest } from '@/shared/errors/exceptions/exceptions';
 import { err } from '@/shared/errors/result';
 

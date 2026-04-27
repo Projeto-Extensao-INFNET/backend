@@ -14,7 +14,7 @@ import type { ROLE } from '@/shared/types';
 import type {
   PaginationQueryDto,
   PaginationResultDto,
-} from '@/infra/http/dtos/pagination/pagination.dto';
+} from '@/presentation/dtos/pagination/pagination.dto';
 import type { RequestResponse } from '@/shared/errors/responses';
 import type { ProfessionalModel } from '@/domain/models/professional.model';
 import { handleError } from '@/shared/errors/handleError';

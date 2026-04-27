@@ -9,14 +9,14 @@ import {
 import {
   SignInDto,
   SignInResponseDto,
-} from '@/infra/http/dtos/auth/signIn.dto';
+} from '@/presentation/dtos/auth/signIn.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { env } from '@/config/env';
-import { AuthService } from '@/infra/auth/services/auth.service';
+import { env } from '@/infra/config/env';
+import { AuthService } from '@/application/services/auth/auth.service';
 import {
   SignUpDto,
   type SignUpResponseDto,
-} from '@/infra/http/dtos/auth/signUp.dto';
+} from '@/presentation/dtos/auth/signUp.dto';
 import { COOKIES_MAX_AGE } from '@/shared/constants';
 import { successResponse } from '@/shared/errors/responses/success.response';
 import { handleError } from '@/shared/errors/handleError';

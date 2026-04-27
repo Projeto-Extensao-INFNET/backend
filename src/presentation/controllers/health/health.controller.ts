@@ -1,7 +1,7 @@
 import { Controller, Get, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { successResponse } from '@/shared/errors/responses/success.response';
-import { env } from '@/config/env';
+import { env } from '@/infra/config/env';
 
 @Controller()
 @ApiTags('Health')
