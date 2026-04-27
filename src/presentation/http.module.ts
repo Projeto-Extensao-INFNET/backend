@@ -8,8 +8,8 @@ import { ProfessionalsController } from './controllers/professionals/professiona
 import { AppointmentsController } from '@Controllers/appointments/appointments.controller';
 import { SpecialtyController } from '@Controllers/specialty/specialty.controller';
 import { TreatmentTypeController } from '@Controllers/treatment-type/treatment-type.controller';
-import { RefreshTokenController } from '@/infra/auth/controllers/refresh-token.controller';
-import { LogoutController } from '../auth/controllers/logout.controller';
+import { RefreshTokenController } from '@/presentation/controllers/auth/refresh-token.controller';
+import { LogoutController } from '@Controllers/auth/logout.controller';
 import { HealthController } from './controllers/health/health.controller';
 
 // Services
@@ -18,7 +18,7 @@ import { ProfessionalsService } from '@/application/services/professionals/profe
 import { AppointmentsService } from '@/application/services/appointments/appointments.service';
 import { SpecialtyService } from '@Services/specialty/specialty.service';
 import { TreatmentTypeService } from '@Services/treatment-type/treatment-type.service';
-import { RefreshTokenService } from '@/infra/auth/services/refresh-token.service';
+import { RefreshTokenService } from '@/application/services/auth/refresh-token.service';
 
 // Repositories
 import {
@@ -35,7 +35,7 @@ import {
 } from '@/infra/database/repositories/prisma-appointments.repository';
 
 // Functions
-import { GetTokens } from '../auth/jwt/generate-jwt-tokens';
+import { GetTokens } from '../infra/auth/jwt/generate-jwt-tokens';
 
 @Module({
   imports: [CacheModule],
