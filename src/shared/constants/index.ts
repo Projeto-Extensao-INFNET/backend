@@ -1,4 +1,4 @@
-import { env } from '../../config/env';
+import { env } from '../../infra/config/env';
 
 export const SALT_ROUNDS = 8;
 export const MIN_PASSWORD_LENGTH = 8;
