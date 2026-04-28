@@ -24,15 +24,15 @@ import { RefreshTokenService } from '@/application/services/auth/refresh-token.s
 import {
   IUserRepository,
   PrismaUserRepository,
-} from '@/infra/database/repositories/prisma-user-repository';
+} from '@/infra/database/prisma/repositories/prisma-user-repository';
 import {
   IProfessionalsRepository,
   PrismaProfessionalsRepository,
-} from '@/infra/database/repositories/prisma-professionals.repository';
+} from '@/infra/database/prisma/repositories/prisma-professionals.repository';
 import {
   IPrismaAppointmentsRepository,
   PrismaAppointmentsRepository,
-} from '@/infra/database/repositories/prisma-appointments.repository';
+} from '@/infra/database/prisma/repositories/prisma-appointments.repository';
 
 // Functions
 import { GetTokens } from '../infra/auth/jwt/generate-jwt-tokens';
