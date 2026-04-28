@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   ParseFilePipeBuilder,
   Patch,
   Post,
@@ -39,11 +40,11 @@ import { DeleteProfileResponseDto } from '../../dtos/user/delete-profile.dto';
 import { EditProfileDto } from '../../dtos/user/edit-profile.dto';
 import { GetUserProfileResponse } from '../../dtos/user/get-user.dto';
 
-import type { RequestResponse } from '@/shared/errors/responses';
 import type {
   PaginationQueryDto,
   PaginationResultDto,
 } from '../../dtos/pagination/pagination.dto';
+import type { RequestResponse } from '@/shared/errors/responses';
 import type { OmittedUserPassword, ROLE } from '@/shared/types';
 import type { AuthenticatedUserResponse } from '@/presentation/dtos/auth/auth-user';
 
@@ -119,6 +120,15 @@ export class UserController {
     const result = await this.service.uploadAvatar(req, file);
     if (!result.ok) handleError(result.error);
     return successResponse('Sucesso ao enviar imagem', HttpStatus.OK);
+  }
+
+  @Get(':id')
+  async findById(
+    @Param('id') id: string,
+  ): Promise<RequestResponse<OmittedUserPassword>> {
+    const result = await this.service.findById(id);
+    if (!result.ok) return handleError(result.error);
+    return successResponse(result.value, HttpStatus.OK);
   }
 
   @Get('me')
