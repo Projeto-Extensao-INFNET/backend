@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { EditProfileDto } from '@/presentation/dtos/user/edit-profile.dto';
 import { err, ok, type Result } from '@/shared/errors/result';
 import {
@@ -56,6 +56,7 @@ export class PrismaUserRepository implements IUserRepository {
         document: true,
         documentType: true,
         role: true,
+        avatar: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -85,19 +86,20 @@ export class PrismaUserRepository implements IUserRepository {
         id: true,
         name: true,
         email: true,
-        avatar: true,
         password: false,
         birthDate: true,
         document: true,
         documentType: true,
         role: true,
+        avatar: true,
         createdAt: true,
         updatedAt: true,
       },
       orderBy: { createdAt: 'desc' },
     });
 
-    if (!users) return err(resourceNotFound('Usuários não encontrados!'));
+    if (users.length === 0)
+      return err(resourceNotFound('Usuários não encontrados!'));
 
     const total_items = await this.prismaService.user.count();
     const total_pages = Math.ceil(total_items / take);
@@ -117,19 +119,6 @@ export class PrismaUserRepository implements IUserRepository {
   async getProfile(userId: string): Promise<Result<GetUserProfileResponse>> {
     const user = await this.prismaService.user.findUnique({
       where: { id: userId },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        password: false,
-        avatar: true,
-        birthDate: true,
-        document: true,
-        documentType: true,
-        role: true,
-        createdAt: true,
-        updatedAt: true,
-      },
     });
 
     if (!user) return err(resourceNotFound('Usuário não encontrado!'));

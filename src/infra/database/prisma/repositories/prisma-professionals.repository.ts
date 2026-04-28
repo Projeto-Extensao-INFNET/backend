@@ -4,7 +4,7 @@ import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER } from '@/shared/constants';
 
 import { ok, type Result } from '@/shared/errors/result';
 
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { CacheService } from '@/infra/cache/cache.service';
 
 import type {

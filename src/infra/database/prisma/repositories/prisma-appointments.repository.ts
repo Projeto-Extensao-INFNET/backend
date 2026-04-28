@@ -5,7 +5,7 @@ import {
   resourceNotFound,
 } from '@/shared/errors/exceptions/exceptions';
 
-import type { PrismaService } from '../prisma/prisma.service';
+import type { PrismaService } from '../prisma.service';
 
 export abstract class IPrismaAppointmentsRepository {
   abstract createAppointment: (
