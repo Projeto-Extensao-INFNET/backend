@@ -1,6 +1,6 @@
 import { Injectable, Request } from '@nestjs/common';
 
-import { IUserRepository } from '@/infra/database/repositories/prisma-user-repository';
+import { IUserRepository } from '@/infra/database/prisma/repositories/prisma-user-repository';
 
 import {
   badRequest,
@@ -8,7 +8,6 @@ import {
 } from '@/shared/errors/exceptions/exceptions';
 import { err, ok, type Result } from '@/shared/errors/result';
 
-import type { UserModel } from '@/domain/models/user.model';
 import type {
   PaginationQueryDto,
   PaginationResultDto,
@@ -17,6 +16,7 @@ import type { GetUserProfileResponse } from '@/presentation/dtos/user/get-user.d
 import type { EditProfileDto } from '@/presentation/dtos/user/edit-profile.dto';
 import type { DeleteProfileResponseDto } from '@/presentation/dtos/user/delete-profile.dto';
 import type { AuthenticatedUserResponse } from '@/presentation/dtos/auth/auth-user';
+import type { OmittedUserPassword } from '@/shared/types';
 
 @Injectable()
 export class UserService {
@@ -24,11 +24,17 @@ export class UserService {
 
   async getUsers(
     query: PaginationQueryDto,
-  ): Promise<Result<PaginationResultDto<Omit<UserModel, 'password'>>>> {
+  ): Promise<Result<PaginationResultDto<OmittedUserPassword>>> {
     const users = await this.repo.getAllUsers(query);
     if (!users.ok) return users;
 
     return ok(users.value);
+  }
+
+  async findById(id: string): Promise<Result<OmittedUserPassword>> {
+    const user = await this.repo.findById(id);
+    if (!user.ok) return user;
+    return ok(user.value);
   }
 
   async getProfile(userId: string): Promise<Result<GetUserProfileResponse>> {
