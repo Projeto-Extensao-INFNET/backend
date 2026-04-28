@@ -10,13 +10,13 @@ import {
   SignInDto,
   SignInResponseDto,
 } from '@/presentation/dtos/auth/signIn.dto';
+import {
+  SignUpDto,
+  SignUpResponseDto,
+} from '@/presentation/dtos/auth/signUp.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { env } from '@/infra/config/env';
 import { AuthService } from '@/application/services/auth/auth.service';
-import {
-  SignUpDto,
-  type SignUpResponseDto,
-} from '@/presentation/dtos/auth/signUp.dto';
 import { COOKIES_MAX_AGE } from '@/shared/constants';
 import { successResponse } from '@/shared/errors/responses/success.response';
 import { handleError } from '@/shared/errors/handleError';
@@ -44,21 +44,7 @@ export class AuthController {
     status: 201,
     description:
       'User created successfully. Retorna os dados do usuário criado.',
-    schema: {
-      example: {
-        status: 201,
-        message: 'Usuário criado com sucesso!',
-        data: {
-          id: 'uuid',
-          name: 'John Doe',
-          email: 'john@example.com',
-          birthDate: '1990-01-01T00:00:00.000Z',
-          role: 'PATIENT',
-          documentType: 'CPF',
-          document: '12345678901',
-        },
-      },
-    },
+    type: SignUpResponseDto,
   })
   @ApiResponse({
     status: 400,

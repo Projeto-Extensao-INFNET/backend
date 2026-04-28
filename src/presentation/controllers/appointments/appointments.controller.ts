@@ -50,8 +50,6 @@ export class AppointmentsController {
     description: 'Bad request - Invalid appointment data',
   })
   @ApiResponse({ status: 404, description: 'Recurso não encontrado!' })
-  @ApiResponse({ status: 404, description: 'Recurso não encontrado!' })
-  @ApiResponse({ status: 409, description: 'Agendamento indisponível!' })
   @ApiResponse({ status: 409, description: 'Agendamento indisponível!' })
   async createAppointments(@Body() body: CreateAppointmentDto) {
     return this.service.createAppointment(body);
