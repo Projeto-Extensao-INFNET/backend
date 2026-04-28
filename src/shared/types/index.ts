@@ -15,3 +15,5 @@ export type Payload = {
 };
 
 export type OmittedUserPassword = Omit<UserModel, 'password'>;
+
+export type CreateUserInput = Omit<UserModel, 'id' | 'createdAt' | 'updatedAt'>;
