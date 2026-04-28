@@ -18,6 +18,7 @@ import type {
   SignInDto,
   SignInResponseDto,
 } from '@/presentation/dtos/auth/signIn.dto';
+import { PrismaAuthUserMapper } from '@/infra/database/prisma/mappers/prisma-user.mapper';
 
 @Injectable()
 export class AuthService {
@@ -33,34 +34,27 @@ export class AuthService {
       return err(badRequest('Requisição inválida! Os campos estão incorretos'));
 
     const existingEmail = await this.prismaService.user.findUnique({
-      where: {
-        email: data.email,
-      },
+      where: { email: data.email },
     });
 
     if (existingEmail) return err(conflict('Credenciais inválidas!'));
 
     // Verifica se documento já existe
     const existingDocument = await this.prismaService.user.findUnique({
-      where: {
-        document: data.document,
-      },
+      where: { document: data.document },
     });
 
     if (existingDocument) return err(conflict('Credenciais inválidas!'));
 
     const hashedPassword = await hashPassword(data.password);
 
+    const raw = PrismaAuthUserMapper.toPrisma({
+      ...data,
+      password: hashedPassword,
+    });
+
     const user = await this.prismaService.user.create({
-      data: {
-        name: data.name,
-        email: data.email,
-        password: hashedPassword,
-        birthDate: data.birthDate,
-        role: data.role,
-        documentType: data.documentType,
-        document: data.document,
-      },
+      data: raw,
       select: {
         id: true,
         name: true,
@@ -79,9 +73,7 @@ export class AuthService {
   // Login
   async SignIn(data: SignInDto): Promise<Result<SignInResponseDto>> {
     const user = await this.prismaService.user.findUnique({
-      where: {
-        email: data.email,
-      },
+      where: { email: data.email },
       select: {
         id: true,
         name: true,
@@ -115,12 +107,8 @@ export class AuthService {
 
     // atualiza o refreshToken no banco de dados
     await this.prismaService.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        refreshToken: hashedRefreshToken,
-      },
+      where: { id: user.id },
+      data: { refreshToken: hashedRefreshToken },
     });
 
     return ok({
