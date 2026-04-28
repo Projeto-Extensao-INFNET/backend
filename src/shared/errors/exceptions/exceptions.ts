@@ -20,3 +20,6 @@ export const conflict = (message = 'Conflito!') =>
 
 export const resourceNotFound = (resource: string) =>
   appError('RESOURCE_NOT_FOUND', `${resource} não encontrado!`);
+
+export const databaseError = (message = 'Database error') =>
+  appError('DATABASE_ERROR', message);
