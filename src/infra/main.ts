@@ -19,7 +19,7 @@ async function bootstrap() {
 
   setupSwagger(app);
 
-  app.setGlobalPrefix('api'); // url da API => http://localhost:3333/api/
+  app.setGlobalPrefix('api/v1'); // url da API => http://localhost:3333/api/v1
 
   await app.listen(env.PORT);
   logger.log(`Project is running on: http://localhost:${env.PORT}/api`);
