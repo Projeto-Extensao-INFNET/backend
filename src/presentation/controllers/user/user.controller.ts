@@ -107,7 +107,7 @@ export class UserController {
     description: 'Unprocessable entity - file validation failed',
   })
   @ApiResponse({ status: 404, description: 'Recurso não encontrado!' })
-  async exec(
+  async uploadAvatar(
     @Req() req: AuthenticatedUserResponse,
     @UploadedFile(
       new ParseFilePipeBuilder()
