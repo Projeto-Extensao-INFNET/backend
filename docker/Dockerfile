@@ -16,7 +16,7 @@ WORKDIR /app
 
 RUN corepack enable
 
-ENV NODE_ENV=development
+ENV NODE_ENV=production
 
 # Copia dependências do stage anterior
 COPY --from=deps /app/node_modules ./node_modules
@@ -28,5 +28,4 @@ COPY prisma ./prisma
 
 EXPOSE 3333
 
-# Hot-reload em desenvolvimento
-CMD ["pnpm", "start:dev"]
+CMD ["pnpm", "start:prod"]
