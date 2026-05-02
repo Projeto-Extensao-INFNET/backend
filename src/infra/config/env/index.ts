@@ -1,8 +1,10 @@
 import { loadEnvFile } from 'node:process';
+import { resolve } from 'node:path';
 import z from 'zod';
 
-// Carrega o arquivo .env
-loadEnvFile('.env');
+// Carrega o arquivo .env baseado no NODE_ENV usando caminho absoluto
+const ENV_FILE = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
+loadEnvFile(resolve(process.cwd(), ENV_FILE));
 
 // VALIDAÇÃO DAS VARIÁVEIS DE AMBIENTE COM ZOD
 export const envSchema = z.object({
