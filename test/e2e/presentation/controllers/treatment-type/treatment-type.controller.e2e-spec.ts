@@ -16,6 +16,3 @@ describe.skip('TreatmentTypeController', () => {
     expect(controller).toBeDefined();
   });
 });
-
-
-

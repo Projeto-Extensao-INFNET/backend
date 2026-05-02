@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { LogoutController } from '@/infra/auth/controllers/logout.controller';
+import { LogoutController } from '@/presentation/controllers/auth/logout.controller';
 
 describe.skip('LogoutController', () => {
   let controller: LogoutController;
@@ -16,6 +16,3 @@ describe.skip('LogoutController', () => {
     expect(controller).toBeDefined();
   });
 });
-
-
-

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RefreshTokenService } from '@/infra/auth/services/refresh-token.service';
+import { RefreshTokenService } from '@/application/services/auth/refresh-token.service';
 
 describe.skip('RefreshTokenService', () => {
   let service: RefreshTokenService;

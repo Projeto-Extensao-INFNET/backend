@@ -16,6 +16,3 @@ describe.skip('SpecialtyController', () => {
     expect(controller).toBeDefined();
   });
 });
-
-
-
