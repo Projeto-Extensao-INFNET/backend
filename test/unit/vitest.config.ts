@@ -68,13 +68,4 @@ export default defineConfig({
       module: { type: 'es6' },
     }),
   ],
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, '../../src'),
-      '@Services': resolve(__dirname, '../../src/application/services'),
-      '@Controllers': resolve(__dirname, '../../src/infra/http/controllers'),
-      '@constants': resolve(__dirname, '../../src/shared/constants'),
-      '@dtos': resolve(__dirname, '../../src/infra/http/dtos'),
-    },
-  },
 });
