@@ -1,9 +1,10 @@
-import { ok, type Result } from '@/shared/errors/result';
-import { CreateAppointmentDto } from '@/presentation/dtos/appointments/create-appointment.dto';
 import {
   conflict,
   resourceNotFound,
 } from '@/shared/errors/exceptions/exceptions';
+import { err, ok, type Result } from '@/shared/errors/result';
+
+import { CreateAppointmentDto } from '@/presentation/dtos/appointments/create-appointment.dto';
 
 import type { PrismaService } from '../prisma.service';
 
@@ -27,7 +28,7 @@ export class PrismaAppointmentsRepository
         where: { id: data.userId },
       });
 
-      if (!userExists) resourceNotFound('Usuário não encontrado!');
+      if (!userExists) return err(resourceNotFound('Usuário não encontrado!'));
 
       // Valida se Agenda do Profissional existe e possíveis conflitos/falta de campos
       const scheduleExists = await prisma.schedule.findUnique({
@@ -35,20 +36,23 @@ export class PrismaAppointmentsRepository
         include: { UserAgenda: true, professional: true },
       });
 
-      if (!scheduleExists) resourceNotFound('Agendamento não encontrado!');
+      if (!scheduleExists)
+        return err(resourceNotFound('Agendamento não encontrado!'));
 
-      if (!scheduleExists?.isAvailable) conflict('Agendamento indisponível!');
+      if (!scheduleExists?.isAvailable)
+        return err(conflict('Agendamento indisponível!'));
 
-      if (scheduleExists?.UserAgenda) conflict('Agendamento indisponível!');
+      if (scheduleExists?.UserAgenda)
+        return err(conflict('Agendamento indisponível!'));
 
       if (scheduleExists?.professional.specialtyId !== data.specialtyId)
-        conflict('Agendamento indisponível!');
+        return err(conflict('Agendamento indisponível!'));
 
       if (
         scheduleExists?.professional.typeOfTreatmentId !==
         data.typeOfTreatmentId
       )
-        conflict('Agendamento indisponível!');
+        return err(conflict('Agendamento indisponível!'));
 
       // Cria o agendamento
       await prisma.userAgenda.upsert({
