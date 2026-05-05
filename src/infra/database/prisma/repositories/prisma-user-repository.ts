@@ -78,30 +78,33 @@ export class PrismaUserRepository implements IUserRepository {
 
     if (skip < 0) return err(badRequest('Query Params inválidos!'));
 
-    const users = await this.prismaService.user.findMany({
-      skip,
-      take,
+    const [users, total_items] = await this.prismaService.$transaction([
+      this.prismaService.user.findMany({
+        skip,
+        take,
 
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        password: false,
-        birthDate: true,
-        document: true,
-        documentType: true,
-        role: true,
-        avatar: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-      orderBy: { createdAt: 'desc' },
-    });
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          password: false,
+          birthDate: true,
+          document: true,
+          documentType: true,
+          role: true,
+          avatar: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+
+      this.prismaService.user.count(),
+    ]);
 
     if (users.length === 0)
       return err(resourceNotFound('Usuários não encontrados!'));
 
-    const total_items = await this.prismaService.user.count();
     const total_pages = Math.ceil(total_items / take);
 
     return ok({
