@@ -46,45 +46,48 @@ export class PrismaProfessionalsRepository implements IProfessionalsRepository {
       return ok(cachedProfessionals);
     }
 
-    // bate no banco se não tiver dados cacheados ou ttl expirar
-    const professionals = await this.prismaService.professional.findMany({
-      skip,
-      take,
-      select: {
-        id: true,
-        typeOfQuery: true,
-        price: true,
-        paymentMethod: true,
-        document: true,
-        documentType: true,
-        gender: true,
-        phone: true,
-        userId: true,
-        specialtyId: true,
-        typeOfTreatmentId: true,
-        user: {
-          select: {
-            name: true,
-            email: true,
-            createdAt: true,
-            avatar: true,
-            role: true,
+    const [professionals, total_items] = await this.prismaService.$transaction([
+      // bate no banco se não tiver dados cacheados ou ttl expirar
+      this.prismaService.professional.findMany({
+        skip,
+        take,
+        select: {
+          id: true,
+          typeOfQuery: true,
+          price: true,
+          paymentMethod: true,
+          document: true,
+          documentType: true,
+          gender: true,
+          phone: true,
+          userId: true,
+          specialtyId: true,
+          typeOfTreatmentId: true,
+          user: {
+            select: {
+              name: true,
+              email: true,
+              createdAt: true,
+              avatar: true,
+              role: true,
+            },
+          },
+          specialty: {
+            select: {
+              name: true,
+            },
+          },
+          typeOfTreatment: {
+            select: {
+              name: true,
+            },
           },
         },
-        specialty: {
-          select: {
-            name: true,
-          },
-        },
-        typeOfTreatment: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    });
+      }),
 
-    const total_items = await this.prismaService.professional.count();
+      this.prismaService.professional.count(),
+    ]);
+
     const total_pages = Math.ceil(total_items / take);
 
     const result: PaginationResultDto<ProfessionalModel> = {
